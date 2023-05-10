@@ -9,7 +9,6 @@
                 <thead>
                   <tr>
                     <th>Name</th>
-                    <th>User ID</th>
                     <th>Username</th>
                     <th>User Code</th>
                     <th>Email</th>
@@ -23,8 +22,7 @@
                 <tbody>
                   @foreach($users as $user)
                   <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->user_id }}</td>
+                    <td>{{ $user->first_name. ' ' . $user->last_name }}</td>
                     <td>{{ $user->username }}</td>
                     <td>{{ $user->user_code }}</td>
                     <td>{{ $user->email }}</td>
@@ -35,7 +33,7 @@
                     <td class="d-flex">
                         <a href="{{ route('users.show', $user->id) }}" class="btn btn-success mx-2">Show</a>
                         <a href="{{ route('users.edit', $user->username) }}" class="btn btn-warning mx-2">Edit</a>
-                        <form action="{{ route('users.destroy', $user->username) }}" method="POST">
+                        <form action="{{ route('users.destroy', $user->username) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this room?')">
                           @csrf
                           @method('DELETE')
                           <button type="submit" class="btn btn-danger">Delete</button>
