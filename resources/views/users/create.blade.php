@@ -9,13 +9,13 @@
         <div class="col-lg-6">
             <form method="POST" action="{{ route('users.store') }}" class="">
                 @csrf
-                <div class="form-group">
+                {{-- <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}" required>
                     @error('name')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> --}}
                 <div class="form-group">
                     <label for="username">Username</label>
                     <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username') }}" unique>
