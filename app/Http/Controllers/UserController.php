@@ -127,7 +127,7 @@ class UserController extends Controller
                 $username
             ]);
 
-            return redirect()->back()->withErrors($validator)->withInput();
+            return redirect('/users')->withErrors($validator)->withSuccess('Selamat Data Berhasil Di Update')->withInput();
         }
 
         /**
