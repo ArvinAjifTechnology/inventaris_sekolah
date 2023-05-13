@@ -34,10 +34,13 @@
                             <a class="nav-link {{ Request::is('users*') ? 'active' : '' }}" href="{{ url('/users') }}">{{ __('Users') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('rooms*') ? 'active' : '' }}" href="{{ url('/rooms') }}">{{ __('Rooms') }}</a>
+                            <a class="nav-link {{ Request::is('rooms*') ? 'active' : '' }}" href="{{ url('/rooms') }}">{{ __('Ruangan') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('items*') ? 'active' : '' }}" href="{{ url('/items') }}">{{ __('Items') }}</a>
+                            <a class="nav-link {{ Request::is('items*') ? 'active' : '' }}" href="{{ url('/items') }}">{{ __('Barang') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('borrows*') ? 'active' : '' }}" href="{{ url('/borrows') }}">{{ __('Peminjaman') }}</a>
                         </li>
                     </ul>
 
