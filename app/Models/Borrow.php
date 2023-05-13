@@ -22,13 +22,13 @@ class Borrow extends Model
 
     public static function insert($request)
     {
-        DB::insert('INSERT INTO items (item_code,item_name,room_id,description, `condition`, amount) VALUES (?, ?, ?, ?, ?,?)', [
-            $request->input('item_code'),
-            $request->input('item_name'),
-            $request->input('room_id'),
-            $request->input('description'),
-            $request->input('condition'),
-            $request->input('amount'),
+        DB::insert('INSERT INTO items (item_id,user_id,borrow_code,borrow_date, retun_date, borrow_status) VALUES (?, ?, ?, ?, ?,?)', [
+            $request->input('item_id'),
+            $request->input('user_id'),
+            $request->input('borrow_code'),
+            $request->input('borrow_date'),
+            $request->input('retun_date'),
+            $request->input('borrow_status'),
         ]);
     }
 
