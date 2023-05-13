@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BorrowController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,7 +18,7 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/welcome', function () {
+Route::get('/', function () {
     return view('welcome');
 });
 
@@ -26,4 +27,5 @@ Auth::routes();
 Route::resource('users', UserController::class)->names('users');
 Route::resource('rooms', RoomController::class);
 Route::resource('items', ItemController::class);
+Route::resource('borrows', BorrowController::class);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

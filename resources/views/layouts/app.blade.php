@@ -31,10 +31,16 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="{{ url('/users') }}">{{ __('Users') }}</a>
+                            <a class="nav-link {{ Request::is('users*') ? 'active' : '' }}" href="{{ url('/users') }}">{{ __('Users') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request:: }}" href="{{ url('/users') }}">{{ __('Users') }}</a>
+                            <a class="nav-link {{ Request::is('rooms*') ? 'active' : '' }}" href="{{ url('/rooms') }}">{{ __('Ruangan') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('items*') ? 'active' : '' }}" href="{{ url('/items') }}">{{ __('Barang') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('borrows*') ? 'active' : '' }}" href="{{ url('/borrows') }}">{{ __('Peminjaman') }}</a>
                         </li>
                     </ul>
 
@@ -56,7 +62,7 @@
                         @else
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
+                                    {{ Auth::user()->full_name }}
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

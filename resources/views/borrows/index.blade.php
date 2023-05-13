@@ -1,9 +1,12 @@
-@extends('layouts.app')
-
-@section('content')
+@extends('layouts.app') @section('content')
 <div class="container">
     <div class="row">
         <div class="col-md-12">
+            <a
+                href="{{ route('borrows.create') }}"
+                class="btn btn-primary btn-sm mb-2"
+                >Tambah Data Peminjaman</a
+            >
             <table class="table">
                 <thead>
                     <tr>
@@ -20,18 +23,17 @@
                 </thead>
                 <tbody>
                     @foreach($borrows as $borrow)
-                        <tr>
-                            <td>{{ $borrow->item_id }}</td>
-                            <td>{{ $borrow->user_id }}</td>
-                            <td>{{ $borrow->borrow_code }}</td>
-                            <td>{{ $borrow->borrow_date }}</td>
-                            <td>{{ $borrow->return_date }}</td>
-                            <td>{{ $borrow->borrow_status }}</td>
-                        </tr>
+                    <tr>
+                        <td>{{ $borrow->item_id }}</td>
+                        <td>{{ $borrow->user_id }}</td>
+                        <td>{{ $borrow->borrow_code }}</td>
+                        <td>{{ $borrow->borrow_date }}</td>
+                        <td>{{ $borrow->return_date }}</td>
+                        <td>{{ $borrow->borrow_status }}</td>
+                    </tr>
                     @endforeach
                 </tbody>
             </table>
-
         </div>
     </div>
 </div>

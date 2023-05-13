@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Borrow;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Item;
+use App\Models\User;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class BorrowController extends Controller
 {
@@ -12,7 +16,8 @@ class BorrowController extends Controller
      */
     public function index()
     {
-        $borrows = DB::select('select * from borrows');
+        $borrows = Borrow::getAll();
+        return view('borrows.index', compact('borrows'));
     }
 
     /**
@@ -20,7 +25,10 @@ class BorrowController extends Controller
      */
     public function create()
     {
-        //
+        $items = Item::getAll();
+        $users = User::all();
+
+        return view('borrows.create', compact('items', 'users'));
     }
 
     /**
@@ -28,7 +36,23 @@ class BorrowController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'borrow_code' => ['required', 'string'],
+            'borrow_date' => ['required', 'string', Rule::unique('items')],
+            'return_date' => ['required', 'string'],
+            'item_id' => ['required', 'integer'],
+            'user_id' => ['required', 'integer'],
+            'borrow_status' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/items/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+        Borrow::insert($request);
+
+        return redirect('/items')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
     }
 
     /**
