@@ -50,7 +50,7 @@ class BorrowController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        Item::insert($request);
+        Borrow::insert($request);
 
         return redirect('/items')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
     }
