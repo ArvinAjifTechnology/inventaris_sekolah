@@ -10,7 +10,7 @@
             <a href="{{ route('items.create') }}" class="btn btn-primary mb-2"
                 >Tambah Data</a
             >
-            <table class="table table-primary">
+            <table class="table table-success">
                 <thead>
                     <tr>
                         <th>#</th>
