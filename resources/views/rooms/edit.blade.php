@@ -7,6 +7,7 @@
             <form method="POST" action="{{ route('rooms.update', $room[0]->id) }}" class="">
                 @csrf
                 @method('PUT')
+                <input type="hidden" name="id" value="{{ $id }}">
                 <div class="form-group">
                     <label for="room_code">Room Code</label>
                     <input type="text" id="room_code" name="room_code" class="form-control @error('room_code') is-invalid @enderror" value="{{ old('room_code', $room[0]->room_code ?? '') }}" required>
