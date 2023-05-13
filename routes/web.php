@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 
@@ -24,4 +25,5 @@ Auth::routes();
 
 Route::resource('users', UserController::class);
 Route::resource('rooms', RoomController::class);
+Route::resource('items', ItemController::class);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
