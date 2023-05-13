@@ -18,7 +18,7 @@
                     <select id="item_id" name="item_id" class="form-control @error('item_id') is-invalid @enderror">
                         <option value="">Pilih Item</option>
                         @foreach($items as $item)
-                            <option value="{{ $item->id }}" {{ old('item_id') == $item->id ? 'selected' : '' }}>{{ $item->item_name }}</option>
+                            <option value="{{ $item->id }}" {{ old('item_id') == $item->id ? 'selected' : '' }}>{{ $item->item_name . '-'. $item->item_code}}</option>
                         @endforeach
                     </select>
                     @error('item_id')
