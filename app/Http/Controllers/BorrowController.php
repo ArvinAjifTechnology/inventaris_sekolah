@@ -6,6 +6,8 @@ use App\Models\Borrow;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class BorrowController extends Controller
 {
@@ -34,7 +36,23 @@ class BorrowController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'borrow_code' => ['required', 'string'],
+            'borrow_date' => ['required', 'string', Rule::unique('items')],
+            'return_date' => ['required', 'string'],
+            'item_id' => ['required', 'integer'],
+            'user_id' => ['required', 'integer'],
+            'borrow_status' => ['required', 'string'],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect('/items/create')
+                ->withErrors($validator)
+                ->withInput();
+        }
+        Item::insert($request);
+
+        return redirect('/items')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
     }
 
     /**
