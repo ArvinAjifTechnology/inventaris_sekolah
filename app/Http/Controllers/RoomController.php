@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -16,10 +17,7 @@ class RoomController extends Controller
     public function index()
     {
         // $rooms= DB::select('select * from rooms');
-        $rooms = DB::table('rooms')
-            ->join('users', 'rooms.user_id', '=', 'users.id')
-            ->select('rooms.*', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"))
-            ->get();
+        $rooms = Room::getAll(); //model
 
         return view('rooms.index', compact('rooms'));
     }
@@ -48,21 +46,15 @@ class RoomController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect('/rooms')
-            ->withErrors($validator)
-            ->withInput();
+            return redirect('/rooms/create')
+                ->withErrors($validator)
+                ->withInput();
         }
         $fullName = $request->first_name . $request->last_name;
 
-        DB::insert('INSERT INTO rooms (room_code,room_name,capacity,user_id,description) VALUES (?, ?, ?, ?, ?)', [
-            $request->input('room_code'),
-            $request->input('room_name'),
-            $request->input('capacity'),
-            $request->input('user_id'),
-            $request->input('description')
-        ]);
+        Room::insert($request);
 
-        return redirect('/rooms')->withErrors($validator)->withInput()->withSuccess('Selamat Data Bberhasil Di Tambahkan');
+        return redirect('/rooms')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
     }
 
     /**
@@ -78,7 +70,7 @@ class RoomController extends Controller
      */
     public function edit(string $id)
     {
-        $room = DB::select('select * from rooms');
+        $room = Room::findId($id);
         $users = User::latest()->get();
         return view('rooms.edit', compact('room', 'id', 'users'));
     }
@@ -88,11 +80,11 @@ class RoomController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $user = DB::select('select * from users where id = ?', [$id]);
-
+        $id = $request->input('id');
+        $room = DB::select('select * from rooms where id = ?', [$id]);
         $validator = Validator::make($request->all(), [
             'room_name' => ['required', 'string'],
-            'room_code' => ['required', 'string', Rule::unique('rooms')->ignore($user[0]->id)],
+            'room_code' => ['required', 'string', Rule::unique('rooms')->ignore($room[0]->id)],
             'capacity' => ['required', 'string'],
             'user_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
@@ -100,19 +92,14 @@ class RoomController extends Controller
 
         if ($validator->fails()) {
             return redirect('/rooms/edit')
-            ->withErrors($validator)
-            ->withInput();
+                ->withErrors($validator)
+                ->withInput();
         }
         $fullName = $request->input('first_name') . $request->input('last_name');
-        DB::update('UPDATE rooms SET room_code = ? ,room_name = ? ,capacity = ? ,user_id = ? ,description = ? ', [
-            $request->input('room_code'),
-            $request->input('room_name'),
-            $request->input('capacity'),
-            $request->input('user_id'),
-            $request->input('description')
-        ]);
+        // Mengupdate User
+        Room::edit($request);
 
-        return redirect('/rooms')->withErrors($validator)->withSuccess('Selamat Data Berhasil Di Update')->withInput();
+        return redirect('/rooms')->withErrors($validator)->with('status', 'Selamat Data Berhasil Di Update')->withInput();
     }
 
     /**
@@ -120,7 +107,7 @@ class RoomController extends Controller
      */
     public function destroy(string $id)
     {
-        DB::delete('DELETE FROM users WHERE id = ?', [$id]);
-            return redirect('/users')->with('success', 'Data berhasil Di Hapus');
+        Room::destroy($id);
+        return redirect('/rooms')->with('status', 'Data berhasil Di Hapus');
     }
 }
