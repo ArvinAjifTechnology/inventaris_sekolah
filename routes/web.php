@@ -23,7 +23,7 @@ Route::get('/welcome', function () {
 
 Auth::routes();
 
-Route::resource('users', UserController::class);
+Route::resource('users', UserController::class)->names('users');
 Route::resource('rooms', RoomController::class);
 Route::resource('items', ItemController::class);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
