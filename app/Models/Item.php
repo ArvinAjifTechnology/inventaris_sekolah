@@ -20,30 +20,36 @@ class Item extends Model
 
     public static function findId($id)
     {
-        DB::select('select * from items where id = ?',[$id]);
+        return DB::select('select * from items where id = ?', [$id]);
     }
 
     public static function insert($request)
     {
-        DB::insert('INSERT INTO items (item_code,item_name,room_id,description, `condition`, amount) VALUES (?, ?, ?, ?, ?,?)', [
-            $request->input('item_code'),
+        // DB::unprepared('CREATE TRIGGER tr_item_insert
+        //     BEFORE INSERT ON items
+        //     FOR EACH ROW
+        //     BEGIN
+        //         SET NEW.item_code = CONCAT("ITM", LPAD((SELECT COUNT(*) + 1 FROM items), 6, "0"));
+        //     END;
+        // ');
+        DB::insert('INSERT INTO items (item_name,room_id,description, `condition`, quantity) VALUES (?, ?, ?, ?,?)', [
             $request->input('item_name'),
             $request->input('room_id'),
             $request->input('description'),
             $request->input('condition'),
-            $request->input('amount'),
+            $request->input('quantity'),
         ]);
     }
 
     public static function edit($request)
     {
-        DB::insert('UPDATE items SET item_code= ? ,item_name= ? ,room_id= ? ,description= ? , `condition`= ? , amount= ? WHERE id = ?', [
+        DB::insert('UPDATE items SET item_code= ? ,item_name= ? ,room_id= ? ,description= ? , `condition`= ? , quantity= ? WHERE id = ?', [
             $request->input('item_code'),
             $request->input('item_name'),
             $request->input('room_id'),
             $request->input('description'),
             $request->input('condition'),
-            $request->input('amount'),
+            $request->input('quantity'),
             $request->input('id')
         ]);
     }
@@ -56,5 +62,10 @@ class Item extends Model
     public function room()
     {
         return $this->belongsTo(Room::class);
+    }
+
+    public function borrows()
+    {
+        return $this->hasMany(Borrow::class);
     }
 }

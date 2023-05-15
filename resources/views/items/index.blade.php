@@ -32,7 +32,7 @@
                         <td>{{ $item->room_name }}</td>
                         <td>{{ $item->description }}</td>
                         <td>{{ $item->condition }}</td>
-                        <td>{{ $item->amount }}</td>
+                        <td>{{ $item->quantity }}</td>
                         <td>
                             <a
                                 href="{{ route('items.show', $item->id) }}"

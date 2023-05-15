@@ -28,4 +28,5 @@ Route::resource('users', UserController::class)->names('users');
 Route::resource('rooms', RoomController::class);
 Route::resource('items', ItemController::class);
 Route::resource('borrows', BorrowController::class);
+Route::put('borrows/{id}/return', [BorrowController::class, 'returnBorrow'])->name('borrows.return');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

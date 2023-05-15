@@ -36,11 +36,10 @@ class ItemController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'item_name' => ['required', 'string'],
-            'item_code' => ['required', 'string', Rule::unique('items')],
             'room_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
             'condition' => ['required', 'string'],
-            'amount' => ['required', 'integer'],
+            'quantity' => ['required', 'integer'],
         ]);
 
         if ($validator->fails()) {
@@ -84,7 +83,7 @@ class ItemController extends Controller
             'room_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
             'condition' => ['required', 'string'],
-            'amount' => ['required', 'integer'],
+            'quantity' => ['required', 'integer'],
         ]);
 
         if ($validator->fails()) {

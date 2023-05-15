@@ -105,4 +105,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(Room::class);
     }
+
+    public function items()
+    {
+        return $this->hasMany(Item::class);
+    }
+
+    public function borrows()
+    {
+        return $this->hasMany(Borrow::class);
+    }
 }

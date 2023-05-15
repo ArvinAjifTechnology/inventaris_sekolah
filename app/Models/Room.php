@@ -20,7 +20,7 @@ class Room extends Model
 
     public static function findId($id)
     {
-        DB::select('select * from rooms where id = ?', [$id]);
+        return DB::select('select * from rooms where id = ?', [$id]);
     }
 
     public static function insert($request)

@@ -6,7 +6,7 @@
         <div class="col-lg-6">
             <form method="POST" action="{{ route('items.store') }}" class="">
                 @csrf
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="item_code">Item Code</label>
                     <input type="text" id="item_code" name="item_code"
                         class="form-control @error('item_code') is-invalid @enderror" value="{{ old('item_code') }}"
@@ -14,7 +14,7 @@
                     @error('item_code')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="item_name">Item Name</label>
                     <input type="text" id="item_name" name="item_name"
@@ -59,10 +59,10 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="amount">Amount</label>
-                    <input type="number" id="amount" name="amount"
-                        class="form-control @error('amount') is-invalid @enderror" value="{{ old('amount') }}" required>
-                    @error('amount')
+                    <label for="quantity">Amount</label>
+                    <input type="number" id="quantity" name="quantity"
+                        class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}" required>
+                    @error('quantity')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

@@ -54,9 +54,9 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="amount">Amount</label>
-                    <input type="number" id="amount" name="amount" class="form-control @error('amount') is-invalid @enderror" value="{{ old('amount', $item[0]->amount) }}" required>
-                    @error('amount')
+                    <label for="quantity">Amount</label>
+                    <input type="number" id="quantity" name="quantity" class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity', $item[0]->quantity) }}" required>
+                    @error('quantity')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

@@ -16,7 +16,7 @@ class BorrowController extends Controller
      */
     public function index()
     {
-        $borrows = Borrow::getAll();
+        $borrows = Borrow::all();
         return view('borrows.index', compact('borrows'));
     }
 
@@ -37,22 +37,46 @@ class BorrowController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'borrow_code' => ['required', 'string'],
-            'borrow_date' => ['required', 'string', Rule::unique('items')],
+            'borrow_date' => ['required', 'string'],
             'return_date' => ['required', 'string'],
             'item_id' => ['required', 'integer'],
             'user_id' => ['required', 'integer'],
-            'borrow_status' => ['required', 'string'],
+            'borrow_quantity' => ['required', 'integer'],
         ]);
 
         if ($validator->fails()) {
-            return redirect('/items/create')
+            return redirect('/borrows/create')
                 ->withErrors($validator)
                 ->withInput();
         }
-        Borrow::insert($request);
+        // Borrow::insert($request);
 
-        return redirect('/items')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
+        // $item = Item::find($borrow->item_id);
+        // $item->quantity += 1;
+        // $item->save();
+
+        $item = Item::find($request->input('item_id'));
+        if ($item->quantity > 0) {
+            $borrow = new Borrow();
+            $borrow->borrow_date = $request->input('borrow_date');
+            $borrow->return_date = $request->input('return_date');
+            $borrow->item_id = $request->input('item_id');
+            $borrow->user_id = $request->input('user_id');
+            $borrow->borrow_quantity = $request->input('borrow_quantity');
+            $borrow->fine = 0;
+            $borrow->borrow_status = 'dipinjam';
+            $borrow->save();
+
+            $item->quantity -= $request->input('borrow_quantity');
+            $item->save();
+
+            return redirect('/borrows')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
+        } else {
+            return redirect('/borrows/create')->withErrors(['error' => 'Stok barang habis'])->withInput();
+        }
+
+
+        // return redirect('/borrows')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
     }
 
     /**
@@ -85,5 +109,23 @@ class BorrowController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function returnBorrow(Request $request, $id)
+    {
+        $borrow = Borrow::find($id);
+        if (!$borrow) {
+            return redirect()->back()->with('error', 'Data not found');
+        }
+        $item = Item::find($borrow->item_id);
+        $item->quantity += $borrow->borrow_quantity;
+        $item->update();
+        // dd($borrow->item->quantity);
+        $borrow->return_date = date('Y-m-d');
+        $borrow->borrow_status = 'tersedia';
+        $borrow->update();
+
+
+        return redirect()->back()->with('success', 'Item returned successfully');
     }
 }
