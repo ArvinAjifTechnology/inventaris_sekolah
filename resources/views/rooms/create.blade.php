@@ -6,13 +6,13 @@
         <div class="col-lg-6">
             <form method="POST" action="{{ route('rooms.store') }}" class="">
                 @csrf
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="room_code">Room Code</label>
                     <input type="text" id="room_code" name="room_code" class="form-control @error('room_code') is-invalid @enderror" value="{{ old('room_code') }}" required>
                     @error('room_code')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="room_name">Room Name</label>
                     <input type="text" id="room_name" name="room_name" class="form-control @error('room_name') is-invalid @enderror" value="{{ old('room_name') }}" required>

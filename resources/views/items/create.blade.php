@@ -51,25 +51,45 @@
                     <select id="condition" name="condition"
                         class="form-control @error('condition') is-invalid @enderror">
                         <option value="">Pilih Condition</option>
-                        <option value="Baik" {{ old('condition')=='Baik' ? 'selected' : '' }}>Baik</option>
-                        <option value="Rusak" {{ old('condition')=='Rusak' ? 'selected' : '' }}>Rusak</option>
+                        <option value="good" {{ old('condition')=='good' ? 'selected' : '' }}>Baik</option>
+                        <option value="fair" {{ old('condition')=='fair' ? 'selected' : '' }}>Sedang</option>
+                        <option value="bad" {{ old('condition')=='bad' ? 'selected' : '' }}>Rusak</option>
                     </select>
                     @error('condition')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="quantity">Amount</label>
-                    <input type="number" id="quantity" name="quantity"
-                        class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}" required>
-                    @error('quantity')
+                </div>
+                <div class="form-group">
+                    <label for="rental_price">Harga Pinjam</label>
+                    <input type="number" id="rental_price" name="rental_price"
+                        class="form-control @error('rental_price') is-invalid @enderror"
+                        value="{{ old('rental_price') }}" required>
+                    @error('rental_price')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary mt-4">Submit</button>
-            </form>
-
+                <div class="form-group">
+                    <label for="late_fee_per_day">Denda/Hari</label>
+                    <input type="number" id="late_fee_per_day" name="late_fee_per_day"
+                        class="form-control @error('late_fee_per_day') is-invalid @enderror"
+                        value="{{ old('late_fee_per_day') }}" required>
+                    @error('late_fee_per_day')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <label for="quantity">Jumlah</label>
+                <input type="number" id="quantity" name="quantity"
+                    class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}" required>
+                @error('quantity')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
         </div>
+        <button type="submit" class="btn btn-primary mt-4">Submit</button>
+        </form>
+
     </div>
+</div>
 </div>
 @endsection

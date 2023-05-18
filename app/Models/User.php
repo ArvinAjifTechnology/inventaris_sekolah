@@ -58,14 +58,13 @@ class User extends Authenticatable
 
     public static function insert($request)
     {
-        DB::insert('INSERT INTO users (name,username,user_code,email,first_name, last_name,level, gender, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
+        DB::insert('INSERT INTO users (name,username,email,first_name, last_name,role, gender, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', [
             $request->input('name'),
             $request->input('username'),
-            $request->input('user_code'),
             $request->input('email'),
             $request->input('first_name'),
             $request->input('last_name'),
-            $request->input('level'),
+            $request->input('role'),
             $request->input('gender'),
             bcrypt($request->input('email'))
         ]);
@@ -73,14 +72,14 @@ class User extends Authenticatable
 
     public static function edit($fullName, $request, $username)
     {
-        DB::update('UPDATE users SET name = ?, username = ?, user_code = ?, email = ?, first_name = ?, last_name = ?, level = ?, gender = ?, password = ? WHERE username = ?', [
+        DB::update('UPDATE users SET name = ?, username = ?, email = ?, first_name = ?, last_name = ?, role = ?, gender = ?, password = ? WHERE username = ?', [
             $fullName,
             $request->input('username'),
             $request->input('user_code'),
             $request->input('email'),
             $request->input('first_name'),
             $request->input('last_name'),
-            $request->input('level'),
+            $request->input('role'),
             $request->input('gender'),
             bcrypt($request->input('email')),
             $username

@@ -2,9 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Borrow extends Model
 {
@@ -64,6 +65,73 @@ class Borrow extends Model
             $request->input('id')
         ]);
     }
+
+    public function calculateLateFee($borrow)
+    {
+        // hitung selisih hari dari tanggal pengembalian yang seharusnya
+        $dueDate = Carbon::parse($this->return_date);
+        $actualReturnDate = Carbon::now();
+        $daysLate = $actualReturnDate->diffInDays($dueDate, false);
+        // dd($daysLate);
+        // $daysLate = 99;
+        if ($actualReturnDate < $dueDate) {
+            $daysLate = 0;
+        }
+        // hitung denda
+        $lateFee = 0;
+        $late_fee_per_day  = $this->item->late_fee_per_day;
+        if ($daysLate > 0) {
+            $lateFee = $daysLate * $late_fee_per_day * $borrow->borrow_quantity;
+        }
+
+        return $lateFee;
+    }
+
+    public function calculateTotalRentalPrice($borrow)
+    {
+        // $borrowDate = Carbon::parse($this->borrow_date);
+        // $returnDate = Carbon::parse($this->return_date);
+        // $totalDays = $returnDate->diffInDays($borrowDate);
+        // // $totalDays = 99;
+        // $rental_price = $this->item->rental_price;
+
+        // // $total_rental_price = $totalDays * $borrow->borrow_quantity  * $rental_price;
+
+        // if ($totalDays > 0) {
+        //     $total_rental_price = $totalDays * $rental_price * $borrow->borrow_quantity;
+        //     return $total_rental_price;
+        // }
+        // // $this->load('borrow');
+        // $total_rental_price = 0;
+
+        // // if ($totalDays >= 0 && $this->borrow) {
+        // //     $total_rental_price = $totalDays * $rental_price * $borrow->borrow_quantity;
+        // //     return $total_rental_price;
+        // // } else {
+        // //     $total_rental_price = $totalDays * $rental_price * $borrow->borrow_quantity;
+        // //     return $total_rental_price;
+        // // }
+        // return $total_rental_price;
+
+        $borrowDate = Carbon::parse($this->borrow_date);
+        $returnDate = Carbon::parse($this->return_date);
+        $actualReturnDate = Carbon::now();
+
+        if ($actualReturnDate <= $returnDate) {
+            // Pengembalian dilakukan sebelum atau pada tanggal pengembalian
+            $totalDays = $actualReturnDate->diffInDays($borrowDate) + 1;
+        } else {
+            // Pengembalian dilakukan setelah tanggal pengembalian
+            $totalDays = $returnDate->diffInDays($borrowDate) + 1;
+        }
+
+        $rental_price = $this->item->rental_price;
+        $total_rental_price = $totalDays * $rental_price * $borrow->borrow_quantity;
+
+        return $total_rental_price;
+    }
+
+
 
     public function item()
     {

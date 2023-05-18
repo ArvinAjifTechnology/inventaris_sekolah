@@ -6,6 +6,7 @@ use App\Models\Borrow;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\User;
+use App\Rules\SufficientQuantityRule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
@@ -16,7 +17,7 @@ class BorrowController extends Controller
      */
     public function index()
     {
-        $borrows = Borrow::all();
+        $borrows = Borrow::latest()->get();
         return view('borrows.index', compact('borrows'));
     }
 
@@ -37,11 +38,11 @@ class BorrowController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'borrow_date' => ['required', 'string'],
-            'return_date' => ['required', 'string'],
+            'borrow_date' => ['required', 'date', 'after_or_equal:today'],
+            'return_date' => ['required', 'date', 'after:borrow_date'],
             'item_id' => ['required', 'integer'],
             'user_id' => ['required', 'integer'],
-            'borrow_quantity' => ['required', 'integer'],
+            'borrow_quantity' => ['required', 'integer', new SufficientQuantityRule],
         ]);
 
         if ($validator->fails()) {
@@ -63,7 +64,8 @@ class BorrowController extends Controller
             $borrow->item_id = $request->input('item_id');
             $borrow->user_id = $request->input('user_id');
             $borrow->borrow_quantity = $request->input('borrow_quantity');
-            $borrow->fine = 0;
+            $borrow->late_fee = 0;
+            $borrow->total_rental_price = 0;
             $borrow->borrow_status = 'dipinjam';
             $borrow->save();
 
@@ -84,7 +86,8 @@ class BorrowController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $borrow = Borrow::find($id);
+        return view('borrows.show', compact('borrow'));
     }
 
     /**
@@ -121,8 +124,10 @@ class BorrowController extends Controller
         $item->quantity += $borrow->borrow_quantity;
         $item->update();
         // dd($borrow->item->quantity);
-        $borrow->return_date = date('Y-m-d');
-        $borrow->borrow_status = 'tersedia';
+        // $borrow->return_date = date('Y-m-d');
+        $borrow->total_rental_price = $borrow->calculateTotalRentalPrice($borrow);
+        $borrow->late_fee = $borrow->calculateLateFee($borrow);
+        $borrow->borrow_status = 'selesai';
         $borrow->update();
 
 

@@ -10,6 +10,10 @@ class Item extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'rental_price' => 'float',
+    ];
+
     public static function getAll()
     {
         return DB::table('items')
@@ -32,23 +36,27 @@ class Item extends Model
         //         SET NEW.item_code = CONCAT("ITM", LPAD((SELECT COUNT(*) + 1 FROM items), 6, "0"));
         //     END;
         // ');
-        DB::insert('INSERT INTO items (item_name,room_id,description, `condition`, quantity) VALUES (?, ?, ?, ?,?)', [
+        DB::insert('INSERT INTO items (item_name,room_id,description, `condition`, rental_price, late_fee_per_day, quantity) VALUES (?, ?, ?, ?, ?, ?, ?)', [
             $request->input('item_name'),
             $request->input('room_id'),
             $request->input('description'),
             $request->input('condition'),
+            $request->input('rental_price'),
+            $request->input('late_fee_per_day'),
             $request->input('quantity'),
         ]);
     }
 
     public static function edit($request)
     {
-        DB::insert('UPDATE items SET item_code= ? ,item_name= ? ,room_id= ? ,description= ? , `condition`= ? , quantity= ? WHERE id = ?', [
+        DB::insert('UPDATE items SET item_code= ? ,item_name= ? ,room_id= ? ,description= ? , `condition`= ? , rental_price= ?, late_fee_per_day= ?, quantity= ? WHERE id = ?', [
             $request->input('item_code'),
             $request->input('item_name'),
             $request->input('room_id'),
             $request->input('description'),
             $request->input('condition'),
+            $request->input('rental_price'),
+            $request->input('late_fee_per_day'),
             $request->input('quantity'),
             $request->input('id')
         ]);

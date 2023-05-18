@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
@@ -14,13 +15,12 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
-            $table->integer('user_id')->nullable();
             $table->string('username')->unique()->nullable();
             $table->string('user_code')->unique()->nullable();
             $table->string('email')->unique();
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
-            $table->enum('level', ['admin', 'teacher', 'student'])->nullable();
+            $table->enum('role', ['admin', 'operator', 'borrower'])->nullable();
             $table->enum('gender', ['laki-laki', 'perempuan'])->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

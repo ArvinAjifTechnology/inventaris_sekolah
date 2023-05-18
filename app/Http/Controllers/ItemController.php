@@ -39,6 +39,8 @@ class ItemController extends Controller
             'room_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
             'condition' => ['required', 'string'],
+            'rental_price' => ['required', 'integer'],
+            'late_fee_per_day' => ['required', 'integer'],
             'quantity' => ['required', 'integer'],
         ]);
 
@@ -83,6 +85,8 @@ class ItemController extends Controller
             'room_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
             'condition' => ['required', 'string'],
+            'rental_price' => ['required', 'integer'],
+            'late_fee_per_day' => ['required', 'integer'],
             'quantity' => ['required', 'integer'],
         ]);
 

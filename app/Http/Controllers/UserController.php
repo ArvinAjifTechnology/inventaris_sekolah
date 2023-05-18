@@ -42,7 +42,7 @@ class UserController extends Controller
             'user_code' => ['required', 'string', Rule::unique('users')],
             'username' => ['required', 'string', Rule::unique('users')],
             'email' => ['required', 'email', Rule::unique('users')],
-            'level' => ['required', 'string'],
+            'role' => ['required', 'string'],
             'gender' => ['required', 'string'],
         ]);
 
@@ -94,7 +94,7 @@ class UserController extends Controller
             'user_code' => ['required', 'string', Rule::unique('users')->ignore($user[0]->id)],
             'username' => ['required', 'string', Rule::unique('users')->ignore($user[0]->id)],
             'email' => ['required', 'email', Rule::unique('users')->ignore($user[0]->id)],
-            'level' => ['required', 'string'],
+            'role' => ['required', 'string'],
             'gender' => ['required', 'string'],
         ]);
 

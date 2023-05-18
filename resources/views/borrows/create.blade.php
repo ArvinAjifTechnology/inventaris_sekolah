@@ -37,16 +37,30 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="borrow_date">Borrow Date</label>
                     <input type="date" id="borrow_date" name="borrow_date" class="form-control @error('borrow_date') is-invalid @enderror" value="{{ old('borrow_date') }}" required>
                     @error('borrow_date')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> -->
                 <div class="form-group">
+                    <label for="borrow_date">Borrow Date</label>
+                    <input type="date" id="borrow_date" name="borrow_date" class="form-control @error('borrow_date') is-invalid @enderror" value="{{ old('borrow_date') }}" min="{{ date('Y-m-d') }}" required>
+                    @error('borrow_date')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+                <!-- <div class="form-group">
                     <label for="return_date">Return Date</label>
                     <input type="date" id="return_date" name="return_date" class="form-control @error('return_date') is-invalid @enderror" value="{{ old('return_date') }}" required>
+                    @error('return_date')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div> -->
+                <div class="form-group">
+                    <label for="return_date">Return Date</label>
+                    <input type="date" id="return_date" name="return_date" class="form-control @error('return_date') is-invalid @enderror" value="{{ old('return_date') }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}" required>
                     @error('return_date')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

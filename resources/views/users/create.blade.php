@@ -23,13 +23,13 @@
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label for="user_code">User Code</label>
                     <input type="text" id="user_code" name="user_code" class="form-control @error('user_code') is-invalid @enderror" value="{{ old('user_code') }}" unique>
                     @error('user_code')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
-                </div>
+                </div> -->
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email') }}" required>
@@ -46,11 +46,11 @@
                     <input type="text" id="last_name" name="last_name" class="form-control" value="{{ old('last_name') }}">
                 </div>
                 <div class="form-group">
-                    <label for="level">Level</label>
-                    <select id="level" name="level" class="form-control">
-                        <option value="admin" {{ old('level') == 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="teacher" {{ old('level') == 'teacher' ? 'selected' : '' }}>Teacher</option>
-                        <option value="student" {{ old('level') == 'student' ? 'selected' : '' }}>Student</option>
+                    <label for="role">Level</label>
+                    <select id="role" name="role" class="form-control">
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="operator" {{ old('role') == 'operator' ? 'selected' : '' }}>Opretor</option>
+                        <option value="borrower" {{ old('role') == 'borrower' ? 'selected' : '' }}>Peminjam</option>
                     </select>
                 </div>
                 <div class="form-group">
