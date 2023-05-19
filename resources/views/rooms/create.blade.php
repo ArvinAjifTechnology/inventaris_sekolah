@@ -21,13 +21,6 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="capacity">Capacity</label>
-                    <input type="text" id="capacity" name="capacity" class="form-control @error('capacity') is-invalid @enderror" value="{{ old('capacity') }}" required>
-                    @error('capacity')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="form-group">
                     <label for="user_id">User ID</label>
                     <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror">
                         <option value="">Pilih User</option>

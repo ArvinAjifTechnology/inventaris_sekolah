@@ -39,7 +39,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
-            'user_code' => ['required', 'string', Rule::unique('users')],
+            // 'user_code' => ['required', 'string', Rule::unique('users')],
             'username' => ['required', 'string', Rule::unique('users')],
             'email' => ['required', 'email', Rule::unique('users')],
             'role' => ['required', 'string'],
@@ -55,7 +55,7 @@ class UserController extends Controller
 
         User::insert($request);
 
-        return redirect()->back()->withErrors($validator)->with('status', 'Selamat Data Berhasil Di Tambahkan')->withInput();
+        return redirect('users/')->withErrors($validator)->with('status', 'Selamat Data Berhasil Di Tambahkan')->withInput();
     }
 
     /**
@@ -91,7 +91,7 @@ class UserController extends Controller
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
-            'user_code' => ['required', 'string', Rule::unique('users')->ignore($user[0]->id)],
+            // 'user_code' => ['required', 'string', Rule::unique('users')->ignore($user[0]->id)],
             'username' => ['required', 'string', Rule::unique('users')->ignore($user[0]->id)],
             'email' => ['required', 'email', Rule::unique('users')->ignore($user[0]->id)],
             'role' => ['required', 'string'],

@@ -40,7 +40,6 @@ class RoomController extends Controller
         $validator = Validator::make($request->all(), [
             'room_name' => ['required', 'string'],
             // 'room_code' => ['required', 'string', Rule::unique('rooms')],
-            'capacity' => ['required', 'string'],
             'user_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
         ]);
@@ -85,7 +84,6 @@ class RoomController extends Controller
         $validator = Validator::make($request->all(), [
             'room_name' => ['required', 'string'],
             // 'room_code' => ['required', 'string', Rule::unique('rooms')->ignore($room[0]->id)],
-            'capacity' => ['required', 'string'],
             'user_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
         ]);

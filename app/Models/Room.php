@@ -25,9 +25,8 @@ class Room extends Model
 
     public static function insert($request)
     {
-        DB::insert('INSERT INTO rooms (room_name,capacity,user_id,description) VALUES (?, ?, ?, ?, ?)', [
+        DB::insert('INSERT INTO rooms (room_name,user_id,description) VALUES ( ?, ?, ?)', [
             $request->input('room_name'),
-            $request->input('capacity'),
             $request->input('user_id'),
             $request->input('description')
         ]);
@@ -35,9 +34,8 @@ class Room extends Model
 
     public static function edit($request)
     {
-        DB::update('UPDATE rooms SET room_name = ? ,capacity = ? ,user_id = ? ,description = ? WHERE id = ?', [
+        DB::update('UPDATE rooms SET room_name = ? ,user_id = ? ,description = ? WHERE id = ?', [
             $request->input('room_name'),
-            $request->input('capacity'),
             $request->input('user_id'),
             $request->input('description'),
             $request->input('id')

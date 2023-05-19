@@ -7,11 +7,7 @@
                 {{ session("status") }}
             </div>
             @endif
-            <a
-                href="{{ route('users.create') }}"
-                class="btn btn-primary mb-4 mt-2"
-                >Tambah Data</a
-            >
+            <a href="{{ route('users.create') }}" class="btn btn-primary mb-4 mt-2">Tambah Data</a>
             <table class="table table-primary">
                 <thead>
                     <tr>
@@ -35,27 +31,28 @@
                         <td>{{ $user->email }}</td>
                         <td>{{ $user->first_name }}</td>
                         <td>{{ $user->last_name }}</td>
-                        <td>{{ $user->role }}</td>
+                        <!-- <td>{{ $user->role }}</td> -->
+                        <td>
+                            @if ($user->role == 'admin')
+                            <span class="badge bg-primary">{{ $user->role }}</span>
+                            @elseif ($user->role == 'operator')
+                            <span class="badge bg-success">{{ $user->role }}</span>
+                            @elseif ($user->role == 'borrower')
+                            <span class="badge bg-info">{{ $user->role }}</span>
+                            @endif
+                        </td>
+
                         <td>{{ $user->gender }}</td>
-                        <td class="d-flex">
-                            <a
-                                href="{{ route('users.show', $user->id) }}"
-                                class="btn btn-success mx-2"
-                                >Show</a
-                            >
-                            <a
-                                href="{{ route('users.edit', $user->username) }}"
-                                class="btn btn-warning mx-2"
-                                >Edit</a
-                            >
-                            <form
-                                action="{{ route('users.destroy', $user->username) }}"
-                                method="POST"
-                                onsubmit="return confirm('Are you sure you want to delete this room?')"
-                            >
+                        <td>
+                            <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-success"><i
+                                    class="fas fa-eye"></i></a>
+                            <a href="{{ route('users.edit', $user->username) }}" class="btn btn-sm btn-warning"><i
+                                    class="fas fa-edit"></i></a>
+                            <form action="{{ route('users.destroy', $user->username) }}" method="POST" class=" d-inline"
+                                onsubmit="return confirm('Are you sure you want to delete this room?')">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    Delete
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </form>
                         </td>

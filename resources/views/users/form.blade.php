@@ -1,15 +1,17 @@
 {{-- <div class="form-group">
     <label for="name">Name</label>
-    <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $user[0]->name) }}" required>
+    <input type="text" id="name" name="name" class="form-control @error('name') is-invalid @enderror"
+        value="{{ old('name', $user[0]->name) }}" required>
     @error('name')
-        <div class="invalid-feedback">{{ $message }}</div>
+    <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div> --}}
 <div class="form-group">
     <label for="username">Username</label>
-    <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror" value="{{ old('username', $user[0]->username) }}" unique>
+    <input type="text" id="username" name="username" class="form-control @error('username') is-invalid @enderror"
+        value="{{ old('username', $user[0]->username) }}" unique>
     @error('username')
-        <div class="invalid-feedback">{{ $message }}</div>
+    <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
 <!-- <div class="form-group">
@@ -21,31 +23,36 @@
 </div> -->
 <div class="form-group">
     <label for="email">Email</label>
-    <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $user[0]->email) }}" required>
+    <input type="email" id="email" name="email" class="form-control @error('email') is-invalid @enderror"
+        value="{{ old('email', $user[0]->email) }}" required>
     @error('email')
-        <div class="invalid-feedback">{{ $message }}</div>
+    <div class="invalid-feedback">{{ $message }}</div>
     @enderror
 </div>
 <div class="form-group">
     <label for="first_name">First Name</label>
-    <input type="text" id="first_name" name="first_name" class="form-control" value="{{ old('first_name', $user[0]->first_name) }}">
+    <input type="text" id="first_name" name="first_name" class="form-control"
+        value="{{ old('first_name', $user[0]->first_name) }}">
 </div>
 <div class="form-group">
     <label for="last_name">Last Name</label>
-    <input type="text" id="last_name" name="last_name" class="form-control" value="{{ old('last_name', $user[0]->last_name) }}">
+    <input type="text" id="last_name" name="last_name" class="form-control"
+        value="{{ old('last_name', $user[0]->last_name) }}">
 </div>
 <div class="form-group">
-    <label for="level">Level</label>
-    <select id="level" name="level" class="form-control">
-        <option value="admin" {{ old('level', $user[0]->level) == 'admin' ? 'selected' : '' }}>Admin</option>
-        <option value="operator" {{ old('level', $user[0]->level) == 'operator' ? 'selected' : '' }}>Operator</option>
-        <option value="borrower" {{ old('level', $user[0]->level) == 'borrower' ? 'selected' : '' }}>Peminjam</option>
+    <label for="role">Level</label>
+    <select id="role" name="role" class="form-control">
+        <option value="admin" {{ old('role', $user[0]->role) == 'admin' ? 'selected' : '' }}>Admin</option>
+        <option value="operator" {{ old('role', $user[0]->role) == 'operator' ? 'selected' : '' }}>Operator</option>
+        <option value="borrower" {{ old('role', $user[0]->role) == 'borrower' ? 'selected' : '' }}>Peminjam</option>
     </select>
 </div>
 <div class="form-group">
     <label for="gender">Gender</label>
     <select id="gender" name="gender" class="form-control">
-        <option value="laki-laki" {{ old('gender', $user[0]->gender) == 'laki-laki' ? 'selected' : '' }}>Laki-laki</option>
-        <option value="perempuan" {{ old('gender', $user[0]->gender) == 'perempuan' ? 'selected' : '' }}>perempuan</option>
+        <option value="laki-laki" {{ old('gender', $user[0]->gender) == 'laki-laki' ? 'selected' : '' }}>Laki-laki
+        </option>
+        <option value="perempuan" {{ old('gender', $user[0]->gender) == 'perempuan' ? 'selected' : '' }}>perempuan
+        </option>
     </select>
 </div>

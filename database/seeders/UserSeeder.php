@@ -57,5 +57,18 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
         ]);
+        User::create([
+            'name' => 'Borrower',
+            'username' => 'borrower',
+            'user_code' => 'BWR' . Str::random(6),
+            'email' => 'borrower@example.com',
+            'first_name' => 'David',
+            'last_name' => 'Johnson',
+            'role' => 'borrower',
+            'gender' => 'laki-laki',
+            'email_verified_at' => now(),
+            'password' => Hash::make('password'),
+            'remember_token' => Str::random(10),
+        ]);
     }
 }

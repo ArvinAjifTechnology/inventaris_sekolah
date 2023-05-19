@@ -28,7 +28,6 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $room->room_code }}</td>
                         <td>{{ $room->room_name }}</td>
-                        <td>{{ $room->capacity }}</td>
                         <td>{{ $room->user_name }}</td>
                         <td>{{ $room->description }}</td>
                         <td>
