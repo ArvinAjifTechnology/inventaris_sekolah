@@ -36,7 +36,7 @@ Route::middleware('admin')->group(function () {
     Route::put('/admin/borrows/{id}/return', [BorrowController::class, 'returnBorrow'])->name('borrows.return');
 });
 
-Route::middleware(['operator','admin'])->group(function () {
+Route::middleware(['operator'])->group(function () {
     // route yang hanya bisa diakses oleh operator
     Route::resource('/operator/rooms', RoomController::class)->only(['index', 'show']);
     Route::resource('/operator/items', ItemController::class);
@@ -47,7 +47,7 @@ Route::middleware(['operator','admin'])->group(function () {
 Route::middleware('borrower')->group(function () {
     // route yang hanya bisa diakses oleh borrower
     // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
-    // Route::resource('borrows', BorrowController::class);
+    Route::resource('/borrower/borrows', BorrowController::class);
 });
 Route::middleware('AdminOrOperator')->group(function () {
     // route yang hanya bisa diakses oleh borrower

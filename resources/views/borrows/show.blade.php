@@ -35,21 +35,25 @@
                     </p>
                 </div>
                 <div class="card-footer">
-                    <a
-                        href="{{ route('borrows.edit', $borrow->id) }}"
-                        class="btn btn-primary"
-                        >Edit</a
-                    >
-                    <form
-                        action="{{ route('borrows.destroy', $borrow->id) }}"
-                        method="POST"
-                        style="display: inline-block"
-                    >
+                    @if($borrow->borrow_status==='selesai')
+                    <button type="submit" class="btn btn-success" disabled>
+                        Selesai
+                    </button>
+                    @else
+                    @can('admin')
+                    <a href="{{ url('/admin/borrows/'. $borrow->id . '/edit') }}" class="btn btn-primary">Edit</a>
+                    @endcan
+                    @can('operator')
+                    <a href="{{ url('/operator/borrows/'. $borrow->id . '/edit') }}" class="btn btn-primary">Edit</a>
+                    @endcan
+                    @endif
+                    {{-- <form action="{{ route('/admin/borrows/', $borrow->id) }}" method="POST"
+                        style="display: inline-block">
                         @csrf @method('DELETE')
                         <button type="submit" class="btn btn-danger">
                             Delete
                         </button>
-                    </form>
+                    </form> --}}
                 </div>
             </div>
         </div>

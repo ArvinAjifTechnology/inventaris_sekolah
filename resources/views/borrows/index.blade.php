@@ -48,6 +48,9 @@
                             @can('operator')
                             <a href="{{ url('/operator/borrows', $borrow->id) }}" class="btn btn-info">Show</a>
                             @endcan
+                            @can('borrower')
+                            <a href="{{ url('/borrower/borrows', $borrow->id) }}" class="btn btn-info">Show</a>
+                            @endcan
                             @if($borrow->borrow_status == 'selesai')
                             <button class="btn btn-success" disabled>
                                 Selesai

@@ -40,19 +40,19 @@
                     <ul class="navbar-nav me-auto">
                         @can('admin')
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('users*') ? 'active' : '' }}"
+                            <a class="nav-link {{ Request::is('admin/users*') ? 'active' : '' }}"
                                 href="{{ route('admin.users.index') }}">{{ __("Users") }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('rooms*') ? 'active' : '' }}"
+                            <a class="nav-link {{ Request::is('admin/rooms*') ? 'active' : '' }}"
                                 href="{{ url('admin/rooms') }}">{{ __("Ruangan") }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('items*') ? 'active' : '' }}"
+                            <a class="nav-link {{ Request::is('admin/items*') ? 'active' : '' }}"
                                 href="{{ url('admin/items') }}">{{ __("Barang") }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link {{ Request::is('borrows*') ? 'active' : '' }}"
+                            <a class="nav-link {{ Request::is('admin/borrows*') ? 'active' : '' }}"
                                 href="{{ url('admin/borrows') }}">{{ __("Peminjaman") }}</a>
                         </li>
                         @endcan @can('operator')

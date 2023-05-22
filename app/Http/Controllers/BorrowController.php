@@ -121,7 +121,16 @@ class BorrowController extends Controller
      */
     public function show(string $id)
     {
-        $borrow = Borrow::find($id);
+        if (Gate::allows('admin')) {
+            $borrow = Borrow::find($id);
+        } elseif (Gate::allows('operator')) {
+            $borrow = Borrow::find($id);
+        } elseif (Gate::allows('borrower')) {
+            $borrow = Borrow::where('user_id', '=', Auth::user()->id)->find($id);
+            // $borrow = Borrow::all()->where('user_id', '=', Auth::user()->id);
+        } else {
+            abort(403, 'Unauthorized');
+        }
         return view('borrows.show', compact('borrow'));
     }
 
