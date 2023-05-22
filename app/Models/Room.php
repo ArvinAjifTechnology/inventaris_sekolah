@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class Room extends Model
 {
@@ -14,6 +15,15 @@ class Room extends Model
     {
         return DB::table('rooms')
             ->join('users', 'rooms.user_id', '=', 'users.id')
+            ->select('rooms.*', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"))
+            ->get();
+    }
+
+    public static function getAllForOperator()
+    {
+        return DB::table('rooms')
+            ->join('users', 'rooms.user_id', '=', 'users.id')
+            ->where('users.id', Auth::user()->id)
             ->select('rooms.*', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"))
             ->get();
     }
@@ -44,7 +54,7 @@ class Room extends Model
 
     public static function destroy($id)
     {
-        DB::delete('DELETE FROM users WHERE id = ?', [$id]);
+        DB::delete('DELETE FROM rooms WHERE id = ?', [$id]);
     }
 
     /**

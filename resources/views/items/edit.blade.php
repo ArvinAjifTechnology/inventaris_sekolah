@@ -4,7 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-6">
-            <form method="POST" action="{{ route('items.update', $item[0]->id) }}" class="">
+            @can('admin')
+            <form method="POST" action="{{ url('/admin/items/'. $item[0]->id) }}" class="">
+            @endcan
+            @can('operator')
+            <form method="POST" action="{{ url('/operator/items/'. $item[0]->id) }}" class="">
+            @endcan
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id" value="{{ $id }}">

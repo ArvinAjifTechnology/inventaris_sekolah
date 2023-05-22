@@ -7,8 +7,8 @@
                 {{ session("status") }}
             </div>
             @endif
-            <a href="{{ route('users.create') }}" class="btn btn-primary mb-4 mt-2">Tambah Data</a>
-            <table class="table table-primary">
+            <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-4 mt-2">Tambah Data</a>
+            <table class="table datatable">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -44,12 +44,13 @@
 
                         <td>{{ $user->gender }}</td>
                         <td>
-                            <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-success"><i
+                            <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-sm btn-success"><i
                                     class="fas fa-eye"></i></a>
-                            <a href="{{ route('users.edit', $user->username) }}" class="btn btn-sm btn-warning"><i
+                            <a href="{{ route('admin.users.edit', $user->username) }}" class="btn btn-sm btn-warning"><i
                                     class="fas fa-edit"></i></a>
-                            <form action="{{ route('users.destroy', $user->username) }}" method="POST" class=" d-inline"
-                                onsubmit="return confirm('Are you sure you want to delete this room?')">
+                            <form action="{{ route('admin.users.destroy', $user->username) }}" method="POST"
+                                class="d-inline"
+                                onsubmit="return confirm('Are you sure you want to delete this User ?')">
                                 @csrf @method('DELETE')
                                 <button type="submit" class="btn btn-sm btn-danger">
                                     <i class="fas fa-trash"></i>

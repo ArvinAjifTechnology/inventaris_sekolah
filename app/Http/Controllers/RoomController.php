@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+
 use Illuminate\Support\Facades\Validator;
 
 class RoomController extends Controller
@@ -17,7 +19,14 @@ class RoomController extends Controller
     public function index()
     {
         // $rooms= DB::select('select * from rooms');
-        $rooms = Room::getAll(); //model
+        if (Gate::allows('admin')) {
+            // akses yang diizinkan untuk admin
+            $rooms = Room::getAll(); //model
+        } elseif (Gate::allows('operator')) {
+            $rooms = Room::getAllForOperator();
+        } else {
+            abort(403, 'Unauthorized');
+        }
 
         return view('rooms.index', compact('rooms'));
     }
@@ -27,7 +36,7 @@ class RoomController extends Controller
      */
     public function create()
     {
-        $users = User::latest()->get();
+        $users = User::latest()->where('role', '=', 'operator')->get();
         // $user = Collection::make($user);
         return view('rooms.create', compact('users'));
     }
@@ -45,15 +54,15 @@ class RoomController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect('/rooms/create')
-                ->withErrors($validator)
-                ->withInput();
+            return redirect('/admin/rooms/create')
+            ->withErrors($validator)
+            ->withInput();
         }
         $fullName = $request->first_name . $request->last_name;
 
         Room::insert($request);
 
-        return redirect('/rooms')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
+        return redirect('/admin/rooms')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
     }
 
     /**
@@ -61,7 +70,16 @@ class RoomController extends Controller
      */
     public function show(string $id)
     {
-        //
+        if (Gate::allows('admin')) {
+            // akses yang diizinkan untuk admin
+            $room = Room::find($id); //model
+        } elseif (Gate::allows('operator')) {
+            $room = Room::find($id);
+        } else {
+            abort(403, 'Unauthorized');
+        }
+
+        return view('rooms.show', compact('room'));
     }
 
     /**
@@ -70,7 +88,7 @@ class RoomController extends Controller
     public function edit(string $id)
     {
         $room = Room::findId($id);
-        $users = User::latest()->get();
+        $users = User::latest()->where('role', 'operator')->get();
         return view('rooms.edit', compact('room', 'id', 'users'));
     }
 
@@ -87,17 +105,17 @@ class RoomController extends Controller
             'user_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
         ]);
-
-        if ($validator->fails()) {
-            return redirect('/rooms/edit')
+            if ($validator->fails()) {
+                return redirect('/admin/rooms/'. $id .'/edit')
                 ->withErrors($validator)
                 ->withInput();
-        }
-        $fullName = $request->input('first_name') . $request->input('last_name');
-        // Mengupdate User
-        Room::edit($request);
+            }
+            $fullName = $request->input('first_name') . $request->input('last_name');
+            // Mengupdate User
+            Room::edit($request);
+            return redirect('admin/rooms')->withErrors($validator)->with('status', 'Selamat Data Berhasil Di Update')->withInput();
 
-        return redirect('/rooms')->withErrors($validator)->with('status', 'Selamat Data Berhasil Di Update')->withInput();
+
     }
 
     /**
@@ -105,7 +123,17 @@ class RoomController extends Controller
      */
     public function destroy(string $id)
     {
+        $room = Room::all()->where('id', $id);
+        $room->items()->delete();
+        $room->user()->delete();
         Room::destroy($id);
-        return redirect('/rooms')->with('status', 'Data berhasil Di Hapus');
+
+        if (Gate::allows('admin')) {
+            return redirect('/admin/rooms')->with('status', 'Data berhasil Di Hapus');
+        }elseif (Gate::allows('operator')) {
+            return redirect('/oprator/rooms')->with('status', 'Data berhasil Di Hapus');
+        } else {
+            abort(403, 'Unauthorized');
+        }
     }
 }

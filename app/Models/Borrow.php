@@ -87,6 +87,11 @@ class Borrow extends Model
         return $lateFee;
     }
 
+    public static function destroy($id)
+    {
+        DB::delete('DELETE FROM borrows WHERE id = ?', [$id]);
+    }
+
     public function calculateTotalRentalPrice($borrow)
     {
         // $borrowDate = Carbon::parse($this->borrow_date);

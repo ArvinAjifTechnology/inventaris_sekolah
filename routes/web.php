@@ -6,6 +6,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BorrowController;
+use Illuminate\Support\Facades\Gate;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,9 +25,37 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::resource('users', UserController::class)->names('users');
-Route::resource('rooms', RoomController::class);
-Route::resource('items', ItemController::class);
-Route::resource('borrows', BorrowController::class);
-Route::put('borrows/{id}/return', [BorrowController::class, 'returnBorrow'])->name('borrows.return');
+
+
+Route::middleware('admin')->group(function () {
+    // route yang hanya bisa diakses oleh admin
+    Route::resource('/admin/users', UserController::class)->names('admin.users');
+    Route::resource('/admin/rooms', RoomController::class);
+    Route::resource('/admin/items', ItemController::class);
+    Route::resource('/admin/borrows', BorrowController::class);
+    Route::put('/admin/borrows/{id}/return', [BorrowController::class, 'returnBorrow'])->name('borrows.return');
+});
+
+Route::middleware(['operator','admin'])->group(function () {
+    // route yang hanya bisa diakses oleh operator
+    Route::resource('/operator/rooms', RoomController::class)->only(['index', 'show']);
+    Route::resource('/operator/items', ItemController::class);
+    Route::resource('/operator/borrows', BorrowController::class);
+    Route::put('/operator/borrows/{id}/return', [BorrowController::class, 'returnBorrow'])->name('borrows.return');
+});
+
+Route::middleware('borrower')->group(function () {
+    // route yang hanya bisa diakses oleh borrower
+    // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
+    // Route::resource('borrows', BorrowController::class);
+});
+Route::middleware('AdminOrOperator')->group(function () {
+    // route yang hanya bisa diakses oleh borrower
+    // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
+    Route::resource('borrows', BorrowController::class);
+});
+
+
+
+
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

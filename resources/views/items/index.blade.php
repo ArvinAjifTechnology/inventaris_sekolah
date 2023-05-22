@@ -7,7 +7,12 @@
                 {{ session("status") }}
             </div>
             @endif
-            <a href="{{ route('items.create') }}" class="btn btn-primary mb-2">Tambah Data</a>
+            @can('admin')
+            <a href="{{ url('/admin/items/create') }}" class="btn btn-primary mb-2">Tambah Data</a>
+            @endcan
+            @can('operator')
+            <a href="{{ url('/operator/items/create') }}" class="btn btn-primary mb-2">Tambah Data</a>
+            @endcan
 
             <table class="table table-success">
                 <thead>
@@ -30,9 +35,24 @@
                         <td>{{ $item->item_name }}</td>
                         <td>{{ $item->room_name }}</td>
                         <td>{{ $item->description }}</td>
-                        <td>{{ $item->condition }}</td>
+                        <td>{{ ucfirst($item->condition)}}</td>
                         <td>{{ $item->quantity }}</td>
                         <td>
+                            @can('admin')
+
+                            <a href="{{ url('/admin/items', $item->id) }}" class="btn btn-sm btn-primary">View</a>
+                            <a href="{{ url('admin/items/'. $item->id.'/edit') }}"
+                                class="btn btn-sm btn-warning">Edit</a>
+                            <form action="{{ url('/admin/items/'. $item->id) }}" method="POST"
+                                style="display: inline-block">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Are you sure you want to delete this item?')">
+                                    Delete
+                                </button>
+                            </form>
+                            @endcan
+                            @can('operator')
                             <a href="{{ route('items.show', $item->id) }}" class="btn btn-sm btn-primary">View</a>
                             <a href="{{ route('items.edit', $item->id) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form action="{{ route('items.destroy', $item->id) }}" method="POST"
@@ -43,6 +63,7 @@
                                     Delete
                                 </button>
                             </form>
+                            @endcan
                         </td>
                     </tr>
                     @endforeach

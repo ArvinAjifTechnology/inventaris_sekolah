@@ -7,7 +7,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-6">
-            <form method="POST" action="{{ route('users.store') }}" class="">
+            <form method="POST" action="{{ route('admin.users.store') }}" class="">
                 @csrf
                 {{-- <div class="form-group">
                     <label for="name">Name</label>

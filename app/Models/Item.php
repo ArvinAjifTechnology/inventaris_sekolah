@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\Auth;
 
 class Item extends Model
 {
@@ -20,6 +21,18 @@ class Item extends Model
             ->join('rooms', 'items.room_id', '=', 'rooms.id')
             ->select('items.*', "rooms.room_name AS room_name")
             ->get();
+    }
+
+    public static function getAllForOperator()
+    {
+        // return DB::table('items')
+        //     ->join('rooms', 'items.room_id', '=', 'rooms.id')
+        //     ->where('rooms.id', Auth::user()->rooms->id)
+        //     ->select('items.*', "rooms.room_name AS room_name")
+        //     ->get();
+        return Item::whereHas('room', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->get();
     }
 
     public static function findId($id)

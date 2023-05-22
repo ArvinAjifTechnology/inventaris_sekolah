@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Rules\SufficientQuantityRule;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Auth;
 
 class BorrowController extends Controller
 {
@@ -17,7 +19,15 @@ class BorrowController extends Controller
      */
     public function index()
     {
-        $borrows = Borrow::latest()->get();
+        if (Gate::allows('admin')) {
+            $borrows = Borrow::latest()->get();
+        } elseif (Gate::allows('operator')) {
+            $borrows = Borrow::latest()->get();
+        } elseif (Gate::allows('borrower')) {
+            $borrows = Borrow::latest()->where('user_id', Auth::user()->id)->get();
+        } else {
+            abort(403, 'Unauthorized');
+        }
         return view('borrows.index', compact('borrows'));
     }
 
@@ -26,8 +36,8 @@ class BorrowController extends Controller
      */
     public function create()
     {
-        $items = Item::getAll();
-        $users = User::all();
+        $items = Item::all()->where('condition', '=', 'good');
+        $users = User::all()->where('role', '=', 'borrower');
 
         return view('borrows.create', compact('items', 'users'));
     }
@@ -45,11 +55,24 @@ class BorrowController extends Controller
             'borrow_quantity' => ['required', 'integer', new SufficientQuantityRule],
         ]);
 
-        if ($validator->fails()) {
-            return redirect('/borrows/create')
-                ->withErrors($validator)
-                ->withInput();
+
+        if (Gate::allows('admin')) {
+            if ($validator->fails()) {
+                return redirect('/admin/borrows/create')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+        } elseif (Gate::allows('operator')) {
+            if ($validator->fails()) {
+                return redirect('/operator/borrows/create')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+        } else {
+            abort(403, 'Unauthorized');
         }
+
+
         // Borrow::insert($request);
 
         // $item = Item::find($borrow->item_id);
@@ -71,10 +94,22 @@ class BorrowController extends Controller
 
             $item->quantity -= $request->input('borrow_quantity');
             $item->save();
-
-            return redirect('/borrows')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
+            if (Gate::allows('admin')) {
+                return redirect('/admin/borrows')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
+            } elseif (Gate::allows('operator')) {
+                return redirect('/operator/borrows')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
+            } else {
+                abort(403, 'Unauthorized');
+            }
+            // return redirect('/borrows')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
         } else {
-            return redirect('/borrows/create')->withErrors(['error' => 'Stok barang habis'])->withInput();
+            if (Gate::allows('admin')) {
+                return redirect('admin/borrows/create')->withErrors(['error' => 'Stok barang habis'])->withInput();
+            } elseif (Gate::allows('operator')) {
+                return redirect('operator/borrows/create')->withErrors(['error' => 'Stok barang habis'])->withInput();
+            } else {
+                abort(403, 'Unauthorized');
+            }
         }
 
 
@@ -95,7 +130,10 @@ class BorrowController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $borrow = Borrow::find($id);
+        $items = Item::all()->where('condition', '=', 'good');
+        $users = User::all()->where('role', '=', 'borrower');
+        return view('borrows.edit', compact('borrow', 'items', 'users'));
     }
 
     /**
@@ -103,7 +141,86 @@ class BorrowController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'borrow_date' => ['required', 'date', 'after_or_equal:today'],
+            'return_date' => ['required', 'date', 'after:borrow_date'],
+            'item_id' => ['required', 'integer'],
+            'user_id' => ['required', 'integer'],
+            'borrow_quantity' => ['required', 'integer', new SufficientQuantityRule],
+        ]);
+
+        if (Gate::allows('admin')) {
+            if ($validator->fails()) {
+                return redirect('/admin/borrows/' . $id . '/edit')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+        } elseif (Gate::allows('operator')) {
+            if ($validator->fails()) {
+                return redirect('/operator/borrows/' . $id . '/edit')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+        } else {
+            abort(403, 'Unauthorized');
+        }
+
+        $item = Item::find($request->input('item_id'));
+        if ($item->quantity > 0) {
+            $borrow = Borrow::find($id); // Ambil data peminjaman yang akan diupdate
+
+            $borrow->borrow_date = $request->input('borrow_date');
+            $borrow->return_date = $request->input('return_date');
+            $borrow->item_id = $request->input('item_id');
+            $borrow->user_id = $request->input('user_id');
+            // Dapatkan jumlah peminjaman sebelumnya
+            $previousQuantity = $borrow->borrow_quantity;
+            // $borrow->borrow_quantity = $request->input('borrow_quantity');
+            $borrow->late_fee = 0;
+            $borrow->total_rental_price = 0;
+            $borrow->borrow_status = 'dipinjam';
+
+
+            // dd($previousQuantity);
+            // Update model Borrow dengan input pengguna
+            $borrow->borrow_quantity = $request->input('borrow_quantity');
+
+            // Dapatkan perubahan absolut pada jumlah peminjaman
+            $absoluteChange = $borrow->borrow_quantity - $previousQuantity;
+
+            // Dapatkan model Item yang terkait
+            $item = $borrow->item;
+
+            // Tentukan apakah akan menambah atau mengurangi stok barang
+            if ($borrow->borrow_quantity > $previousQuantity) {
+                // Jika jumlah peminjaman bertambah, tambahkan ke stok barang
+                $item->quantity -= $absoluteChange;
+                // dd($previousQuantity, $absoluteChange, $item->quantity);
+            } elseif ($borrow->borrow_quantity < $previousQuantity) {
+                // Jika jumlah peminjaman berkurang, kurangi dari stok barang
+                $item->quantity -= $absoluteChange;
+            }
+
+            // Simpan perubahan pada model Borrow dan Item
+            $borrow->save();
+            $item->save();
+
+            if (Gate::allows('admin')) {
+                return redirect('/admin/borrows')->with('status', 'Data berhasil diperbarui');
+            } elseif (Gate::allows('operator')) {
+                return redirect('/operator/borrows')->with('status', 'Data berhasil diperbarui');
+            } else {
+                abort(403, 'Unauthorized');
+            }
+        } else {
+            if (Gate::allows('admin')) {
+                return redirect('admin/borrows/' . $id . '/edit')->withErrors(['error' => 'Stok barang habis'])->withInput();
+            } elseif (Gate::allows('operator')) {
+                return redirect('operator/borrows/' . $id . '/edit')->withErrors(['error' => 'Stok barang habis'])->withInput();
+            } else {
+                abort(403, 'Unauthorized');
+            }
+        }
     }
 
     /**
@@ -111,7 +228,12 @@ class BorrowController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $borrow = Borrow::all()->where('id', '=', $id);
+        $borrow->item()->delete();
+        $borrow->user()->delete();
+        Borrow::destroy($id);
+
+        return redirect('/items')->with('status', 'Data berhasil Di Hapus');
     }
 
     public function returnBorrow(Request $request, $id)
@@ -131,6 +253,6 @@ class BorrowController extends Controller
         $borrow->update();
 
 
-        return redirect()->back()->with('success', 'Item returned successfully');
+        return redirect()->back()->with('status', 'Item returned successfully');
     }
 }
