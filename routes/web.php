@@ -6,6 +6,7 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BorrowController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Gate;
 
 /*
@@ -34,6 +35,7 @@ Route::middleware('admin')->group(function () {
     Route::resource('/admin/items', ItemController::class);
     Route::resource('/admin/borrows', BorrowController::class);
     Route::put('/admin/borrows/{id}/return', [BorrowController::class, 'returnBorrow'])->name('borrows.return');
+    Route::post('/admin/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('admin.users.reset-password');
 });
 
 Route::middleware(['operator'])->group(function () {
@@ -53,6 +55,18 @@ Route::middleware('AdminOrOperator')->group(function () {
     // route yang hanya bisa diakses oleh borrower
     // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
     Route::resource('borrows', BorrowController::class);
+});
+Route::middleware('AdminOrOperator')->group(function () {
+    // route yang hanya bisa diakses oleh borrower
+    // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
+    Route::resource('borrows', BorrowController::class);
+});
+Route::middleware('auth')->group(function () {
+    // route yang hanya bisa diakses oleh borrower
+    // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 

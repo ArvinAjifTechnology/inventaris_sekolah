@@ -48,6 +48,13 @@
                                     class="fas fa-eye"></i></a>
                             <a href="{{ route('admin.users.edit', $user->username) }}" class="btn btn-sm btn-warning"><i
                                     class="fas fa-edit"></i></a>
+                            <form action="{{ route('admin.users.reset-password', $user->id) }}" method="POST" class="d-inline"
+                                onsubmit="return confirm('Are you sure you want to reset the password for this User?')">
+                                @csrf
+                                <button type="submit" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-key"></i>
+                                </button>
+                            </form>
                             <form action="{{ route('admin.users.destroy', $user->username) }}" method="POST"
                                 class="d-inline"
                                 onsubmit="return confirm('Are you sure you want to delete this User ?')">

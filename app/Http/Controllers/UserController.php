@@ -11,6 +11,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use \Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -138,5 +139,19 @@ class UserController extends Controller
         } else {
             abort(403, 'Unauthorized');
         }
+    }
+
+    public function resetPassword(User $user)
+    {
+        // Generate a new password
+        $newPassword = 'invsch@garut';
+
+        // Update the user's password
+        $user->password = Hash::make($newPassword);
+        $user->save();
+
+        // Send an email or notification to the user with the new password
+
+        return redirect()->back()->with('status', 'Password has been reset successfully.');
     }
 }
