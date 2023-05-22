@@ -223,9 +223,9 @@ class BorrowController extends Controller
             }
         } else {
             if (Gate::allows('admin')) {
-                return redirect('admin/borrows/' . $id . '/edit')->withErrors(['error' => 'Stok barang habis'])->withInput();
+                return redirect('/admin/borrows/' . $id . '/edit')->withErrors(['error' => 'Stok barang habis'])->withInput();
             } elseif (Gate::allows('operator')) {
-                return redirect('operator/borrows/' . $id . '/edit')->withErrors(['error' => 'Stok barang habis'])->withInput();
+                return redirect('/operator/borrows/' . $id . '/edit')->withErrors(['error' => 'Stok barang habis'])->withInput();
             } else {
                 abort(403, 'Unauthorized');
             }

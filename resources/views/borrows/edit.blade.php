@@ -4,7 +4,12 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-lg-6">
+            @can('admin')
             <form method="POST" action="{{ url('/admin/borrows/'. $borrow->id) }}" class="">
+            @endcan
+            @can('operator')
+            <form method="POST" action="{{ url('/operator/borrows/'. $borrow->id) }}" class="">
+            @endcan
                 @csrf
                 @method('PUT')
                 <div class="form-group">

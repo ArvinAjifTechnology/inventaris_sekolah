@@ -10,6 +10,9 @@
             @can('admin')
             <a href="{{ url('/admin/borrows/create') }}" class="btn btn-primary btn-sm mb-2">Tambah Data Peminjam an</a>
             @endcan
+            @can('operator')
+            <a href="{{ url('/operator/borrows/create') }}" class="btn btn-primary btn-sm mb-2">Tambah Data Peminjam an</a>
+            @endcan
             <table class="table">
                 <thead>
                     <tr>
