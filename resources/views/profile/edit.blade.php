@@ -77,7 +77,7 @@
     <label for="last_name">Last Name:</label>
     <input type="text" name="last_name" value="{{ $user->last_name }}" /><br />
     {{-- <label for="role">Role:</label> --}}
-    <!-- <select name="role">
+    {{--<select name="role">
         <option value="admin" @if ($user->
             role === 'admin') selected @endif>Admin
         </option>
@@ -86,7 +86,7 @@
         </option>
         <option value="borrower" @if ($user->
             role === 'borrower') selected @endif>Borrower
-        </option></select -->
+        </option></select--}}
     {{-- ><br />
     <label for="gender">Gender:</label>
     <select name="gender">
