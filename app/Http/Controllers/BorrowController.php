@@ -11,6 +11,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Auth;
+use App\Jobs\SendReturnReminderEmail;
+use Carbon\Carbon;
+use App\Notifications\BorrowNotification;
 
 class BorrowController extends Controller
 {
@@ -94,6 +97,8 @@ class BorrowController extends Controller
 
             $item->quantity -= $request->input('borrow_quantity');
             $item->save();
+
+            $borrow->user->notify(new BorrowNotification($borrow));
             if (Gate::allows('admin')) {
                 return redirect('/admin/borrows')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
             } elseif (Gate::allows('operator')) {
@@ -213,6 +218,7 @@ class BorrowController extends Controller
             // Simpan perubahan pada model Borrow dan Item
             $borrow->save();
             $item->save();
+            $borrow->user->notify(new BorrowNotification($borrow));
 
             if (Gate::allows('admin')) {
                 return redirect('/admin/borrows')->with('status', 'Data berhasil diperbarui');
@@ -263,5 +269,17 @@ class BorrowController extends Controller
 
 
         return redirect()->back()->with('status', 'Item returned successfully');
+        $borrow->user->notify(new BorrowNotification($borrow));
+    }
+
+    public function sendReturnReminder()
+    {
+        $borrows = Borrow::whereDate('return_date', Carbon::today())->get();
+
+        foreach ($borrows as $borrow) {
+            SendReturnReminderEmail::dispatch($borrow);
+        }
+
+        return response()->json(['message' => 'Return reminders sent successfully']);
     }
 }
