@@ -30,7 +30,7 @@ class UserController extends Controller
      */
     public function create($id = NULL)
     {
-        return view('users.create', compact('user'));
+        return view('users.create');
     }
 
     /**

@@ -31,7 +31,7 @@
                     </div>
                     <div class="form-group">
                         <label for="room_id">Room ID</label>
-                        <select id="room_id" name="room_id" class="form-control @error('room_id') is-invalid @enderror">
+                        <select id="room_id" name="room_id" class="form-control @error('room_id') is-invalid @enderror select2" data-toggle="select2">
                             <option value="">Pilih Room</option>
                             @foreach($rooms as $room)
                             <option value="{{ $room->id }}" {{ old('room_id')==$room->id ? 'selected' : '' }}>{{
@@ -54,7 +54,7 @@
                     <div class="form-group">
                         <label for="condition">Condition</label>
                         <select id="condition" name="condition"
-                            class="form-control @error('condition') is-invalid @enderror">
+                            class="form-control @error('condition') is-invalid @enderror select2" data-toggle="select2">
                             <option value="">Pilih Condition</option>
                             <option value="good" {{ old('condition')=='good' ? 'selected' : '' }}>Baik</option>
                             <option value="fair" {{ old('condition')=='fair' ? 'selected' : '' }}>Sedang</option>

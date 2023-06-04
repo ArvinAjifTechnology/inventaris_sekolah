@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group">
                     <label for="user_id">User ID</label>
-                    <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                    <select id="user_id" name="user_id" class="form-control select2 @error('user_id') is-invalid @enderror" data-toggle="select2">
                         <option value="">Pilih User</option>
                         @foreach($users as $user)
                         <option value="{{ $user->id }}" {{ old('user_id', $room[0]->user_id ?? '') == $user->id ?
