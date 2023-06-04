@@ -25,6 +25,9 @@ use App\Http\Controllers\BorrowReportController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/template', function () {
+    return view('layouts.main');
+});
 
 Auth::routes();
 
