@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Item;
 use App\Models\Room;
+use App\Models\User;
 use App\Models\Borrow;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use \Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -21,6 +22,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::getAll();
+        $users = collect($users);
         // $users = User::all();
         return view('users.index', compact('users'));
     }
@@ -76,14 +78,6 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = DB::select('select * from users  where username = ?', [$id]);
-        // $user = Collection::make($user);
-        // $user = collect($user)->map(function($item) {
-        //     return (object) $item;
-        // });
-        // $user = User::find($id);
-        // dd($user);
-        // $user = DB::select('select * from users where id = ?', [1]);
-        // $user = Collection::make($user);$user = DB::select('select * from users where id = ?', [1]);
         $user = collect($user);
         return view('users.edit', compact('user', 'id'));
     }

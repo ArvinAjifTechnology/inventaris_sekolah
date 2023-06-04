@@ -55,7 +55,13 @@ class User extends Authenticatable
 
     public static function getAll()
     {
-        return DB::select('SELECT * FROM users ORDER BY created_at DESC');
+        $currentPage = request()->get('page', 1);
+        $offset = ($currentPage - 1) * 10;
+
+        // $users = DB::select("SELECT * FROM users ORDER BY created_at DESC LIMIT 2 OFFSET $offset");
+        $users = DB::select("SELECT * FROM users ORDER BY created_at DESC");
+
+        return $users;
     }
 
     public static function insert($request)

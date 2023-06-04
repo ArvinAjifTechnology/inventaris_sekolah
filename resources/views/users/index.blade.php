@@ -1,5 +1,6 @@
 @extends('layouts.main')
 @section('content')
+
 <div class="container-fluid">
     <div class="row">
         <div class="col">
@@ -70,6 +71,10 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <!-- Tampilkan tautan navigasi halaman -->
+            {{-- {{ Illuminate\Pagination\Paginator::render($users, 'full') }} --}}
+            {{-- {{ $users->links('pagination::bootstrap-4') }} --}}
         </div>
     </div>
 </div>
