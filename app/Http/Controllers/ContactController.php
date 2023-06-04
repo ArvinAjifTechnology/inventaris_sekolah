@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ContactMail;
 
 class ContactController extends Controller
 {
     public function index()
     {
-        return view('company.contact');
+        return view('contact.index');
     }
 
     public function sendToWhatsapp(Request $request)

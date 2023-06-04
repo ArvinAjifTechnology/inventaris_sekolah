@@ -1,4 +1,6 @@
-@extends('layouts.app') @section('content')
+@extends('layouts.app')
+
+@section('content')
 <div class="container">
     <div class="row">
         <div class="col-md-12">
@@ -7,20 +9,14 @@
                 {{ session("status") }}
             </div>
             @endif
-            @can('admin')
-            <a href="{{ url('/admin/borrows/create') }}" class="btn btn-primary btn-sm mb-2">Tambah Data Peminjam an</a>
-            @endcan
-            @can('operator')
-            <a href="{{ url('/operator/borrows/create') }}" class="btn btn-primary btn-sm mb-2">Tambah Data Peminjam
-                an</a>
-            @endcan
+            <a href="{{ url('/borrower/borrows/create/search-item') }}" class="btn btn-primary btn-sm mb-2">Ajukan
+                Peminjaman</a>
             <table class="table">
                 <thead>
                     <tr>
                         <th>No</th>
                         <th>Item Name</th>
                         <th>Nama Peminjam</th>
-                        <th>Kode Verifikasi Peminjaman</th>
                         <th>Borrow Code</th>
                         <th>Borrow Date</th>
                         <th>Return Date</th>
@@ -35,7 +31,6 @@
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $borrow->item_name }}</td>
                         <td>{{ $borrow->full_name }}</td>
-                        <td>{{ $borrow->verification_code_for_borrow_request }}</td>
                         <td>{{ $borrow->borrow_code }}</td>
                         <td>{{ $borrow->borrow_date }}</td>
                         <td>{{ $borrow->return_date }}</td>
@@ -52,63 +47,61 @@
                         <td>
                             @can('admin')
                             <a href="{{ url('/admin/borrows', $borrow->id) }}" class="btn btn-info"><i
-                                    class="fas fa-eye"></i> Show</a>
+                                    class="fas fa-eye"></i></a>
                             @endcan
                             @can('operator')
                             <a href="{{ url('/operator/borrows', $borrow->id) }}" class="btn btn-info"><i
-                                    class="fas fa-eye"></i> Show</a>
+                                    class="fas fa-eye"></i></a>
                             @endcan
-
-                            @if ($borrow->borrow_status == 'completed')
+                            @can('borrower')
+                            <a href="{{ url('/borrower/borrows', $borrow->id) }}" class="btn btn-info"><i
+                                    class="fas fa-eye"></i></a>
+                            @endcan
+                            @if($borrow->borrow_status == 'completed')
                             <button class="btn btn-success" disabled>
-                                <i class="fas fa-check-circle"></i> Selesai
+                                Selesai
                             </button>
-                            @elseif ($borrow->borrow_status == 'pending')
-                            @can('admin')
-                            <a href="{{ url('admin/borrows/'.$borrow->borrow_code.'/submit-borrow-request') }}"
-                                class="btn btn-warning">
-                                <i class="fas fa-check"></i> Verifikasi
-                            </a>
-                            @endcan
-                            @can('operator')
-                            <a href="{{ url('operator/borrows/'.$borrow->borrow_code.'/submit-borrow-request') }}"
-                                class="btn btn-warning">
-                                <i class="fas fa-check"></i> Verifikasi
-                            </a>
-                            @endcan
-                            @elseif ($borrow->borrow_status == 'borrowed')
-                            @can('admin')
-                            <form action="{{ url('/admin/borrows/'.$borrow->id.'/return') }}" method="POST"
-                                style="display: inline-block">
-                                @csrf
-                                @method('PUT')
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-undo"></i> Return
-                                </button>
-                            </form>
-                            @endcan
-                            @can('operator')
-                            <form action="{{ url('/operator/borrows/'.$borrow->id.'/return') }}" method="POST"
-                                style="display: inline-block">
-                                @csrf
-                                @method('PUT')
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-undo"></i> Return
-                                </button>
-                            </form>
-                            @endcan
+                            @else
                             @can('admin')
                             <a href="{{ url('/admin/borrows/'.$borrow->id.'/edit') }}" class="btn btn-primary"><i
-                                    class="fas fa-edit"></i> Edit</a>
+                                    class="fas fa-edit"></i></a>
                             @endcan
                             @can('operator')
                             <a href="{{ url('/operator/borrows/'.$borrow->id.'/edit') }}" class="btn btn-primary"><i
-                                    class="fas fa-edit"></i> Edit</a>
+                                    class="fas fa-edit"></i></a>
+                            @endcan
+                            {{-- <form action="{{ url('/admin/borrows/destroy', $borrow->id) }}" method="POST"
+                                style="display: inline-block">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-danger">
+                                    Delete
+                                </button>
+                            </form> --}}
+                            @can('admin')
+                            <form action="{{ url('/admin/borrows/'. $borrow->id. '/return') }}" method="POST"
+                                style="display: inline-block">
+                                @csrf
+                                @method('PUT')
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                            </form>
+                            @endcan
+                            @can('operator')
+                            <form action="{{ url('/operator/borrows/'. $borrow->id. '/return') }}" method="POST"
+                                style="display: inline-block">
+                                @csrf
+                                @method('PUT')
+                                <button class="btn btn-primary" type="submit">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                            </form>
                             @endcan
                             @endif
                         </td>
                     </tr>
                     @endforeach
+
                 </tbody>
             </table>
         </div>

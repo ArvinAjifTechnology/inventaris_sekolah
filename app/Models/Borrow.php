@@ -5,19 +5,17 @@ namespace App\Models;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Notifications\BorrowNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Borrow extends Model
 {
     use HasFactory;
 
+    protected $guarded = ['id'];
+
     public static function getAll()
     {
-        // return DB::select('select * from borrows');
-        // return DB::table('borrows')
-        //     ->join('users', 'borows.user_id', '=', 'users.id')
-        //     ->select('borows.*', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"))
-        //     ->get();
         return DB::table('borrows')
             ->join('users', 'borrows.user_id', '=', 'users.id')
             ->join('items', 'borrows.item_id', '=', 'items.id')
@@ -30,48 +28,30 @@ class Borrow extends Model
         DB::select('select * from items where id = ?', [$id]);
     }
 
-    public function borrowCode()
+    public static function createBorrow($request)
     {
-    }
-
-    public static function insert($request)
-    {
-
-        // DB::unprepared('CREATE TRIGGER tr_borrow_insert
-        //     BEFORE INSERT ON borrows
-        //     FOR EACH ROW
-        //     BEGIN
-        //         SET NEW.borrow_code = CONCAT("ITM", LPAD((SELECT COUNT(*) + 1 FROM items), 6, "0"));
-        //     END;
-        // ');
-        DB::insert('INSERT INTO borrows (borrow_date,return_date,item_id, user_id, borrow_status) VALUES (?, ?, ?, ?, ?)', [
-            $request->input('borrow_date'),
-            $request->input('return_date'),
-            $request->input('item_id'),
-            $request->input('user_id'),
-            'dipinjam',
-        ]);
-    }
-
-    public static function edit($request)
-    {
-        DB::insert('UPDATE items SET item_code= ? ,item_name= ? ,room_id= ? ,description= ? , `condition`= ? , amount= ? WHERE id = ?', [
-            $request->input('item_code'),
-            $request->input('item_name'),
-            $request->input('room_id'),
-            $request->input('description'),
-            $request->input('condition'),
-            $request->input('amount'),
-            $request->input('id')
-        ]);
+        $borrow = new Borrow();
+        $borrow->borrow_date = $request->input('borrow_date');
+        $borrow->return_date = $request->input('return_date');
+        $borrow->item_id = $request->input('item_id');
+        $borrow->user_id = $request->input('user_id');
+        $borrow->borrow_quantity = $request->input('borrow_quantity');
+        $borrow->late_fee = 0;
+        $borrow->total_rental_price = 0;
+        $borrow->borrow_status = 'borrowed';
+        $borrow->sub_total = 0;
+        $borrow->save();
+        // dd($borrow->borrow_code);
+        return $borrow;
     }
 
     public function calculateLateFee($borrow)
     {
         // hitung selisih hari dari tanggal pengembalian yang seharusnya
-        $dueDate = Carbon::parse($this->return_date);
-        $actualReturnDate = Carbon::now();
-        $daysLate = $actualReturnDate->diffInDays($dueDate, false);
+        $dueDate = $this->return_date;
+        $actualReturnDate = date('Y-m-d');
+        // $daysLate = $actualReturnDate->diffInDays($dueDate, false);
+        $daysLate = DB::select('SELECT DATEDIFF(?,?) AS daysLate', [$actualReturnDate, $dueDate])[0]->daysLate;
         // dd($daysLate);
         // $daysLate = 99;
         if ($actualReturnDate < $dueDate) {
@@ -118,16 +98,22 @@ class Borrow extends Model
         // // }
         // return $total_rental_price;
 
-        $borrowDate = Carbon::parse($this->borrow_date);
-        $returnDate = Carbon::parse($this->return_date);
-        $actualReturnDate = Carbon::now();
+        // $borrowDate = Carbon::parse($this->borrow_date);
+        // $returnDate = Carbon::parse($this->return_date);
+        // $actualReturnDate = Carbon::now();
+        $borrowDate = $this->borrow_date;
+        $returnDate = $this->return_date;
+        $actualReturnDate = date('Y-m-d');
+
+        $daysLate = 0;
 
         if ($actualReturnDate <= $returnDate) {
             // Pengembalian dilakukan sebelum atau pada tanggal pengembalian
-            $totalDays = $actualReturnDate->diffInDays($borrowDate) + 1;
+            $totalDays = DB::select("SELECT DATEDIFF(?, ?)  AS daysDiff", [$actualReturnDate, $borrowDate])[0]->daysDiff + 1;
         } else {
             // Pengembalian dilakukan setelah tanggal pengembalian
-            $totalDays = $returnDate->diffInDays($borrowDate) + 1;
+            // $totalDays = $returnDate->diffInDays($borrowDate) + 1;
+            $totalDays = DB::select("SELECT DATEDIFF(?, ?)  AS daysDiff", [$returnDate, $borrowDate])[0]->daysDiff + 1;
         }
 
         $rental_price = $this->item->rental_price;
@@ -136,6 +122,68 @@ class Borrow extends Model
         return $total_rental_price;
     }
 
+    public function calculateSubTotal()
+    {
+        $sub_total = $this->late_fee + $this->total_rental_price;
+
+        return $sub_total;
+    }
+
+    public static function returnItem($id)
+    {
+        $borrow = Borrow::find($id);
+        if (!$borrow) {
+            return redirect()->back()->with('error', 'Data not found');
+        }
+
+        $item = Item::find($borrow->item_id);
+        $item->quantity += $borrow->borrow_quantity;
+        $item->update();
+
+        $borrow->total_rental_price = $borrow->calculateTotalRentalPrice($borrow);
+        $borrow->late_fee = $borrow->calculateLateFee($borrow);
+        $borrow->sub_total = $borrow->calculateSubTotal();
+        $borrow->borrow_status = 'completed';
+        $borrow->update();
+
+        $borrow->user->notify(new BorrowNotification($borrow));
+    }
+
+    public static function submitBorrowRequest($request)
+    {
+        // dd($request->all());
+        $borrow = new Borrow();
+        $borrow->verification_code_for_borrow_request = $request->input('uniqid');
+        $borrow->borrow_date = $request->input('borrow_date');
+        $borrow->return_date = $request->input('return_date');
+        $borrow->item_id = $request->input('item_id');
+        $borrow->user_id = $request->input('user_id');
+        $borrow->borrow_quantity = $request->input('borrow_quantity');
+        $borrow->late_fee = 0;
+        $borrow->total_rental_price = 0;
+        $borrow->borrow_status = 'pending';
+        $borrow->sub_total = 0;
+        $borrow->save();
+        // dd($borrow->borrow_code);
+        return $borrow;
+    }
+
+    public static function verifySubmitBorrowRequest($request, $borrow_code)
+    {
+        $borrow = Borrow::where('borrow_code', '=', $borrow_code)->first();
+        $borrow->borrow_date = $request->borrow_date;
+        $borrow->return_date = $request->input('return_date');
+        $borrow->item_id = $request->input('item_id');
+        $borrow->user_id = $request->input('user_id');
+        $borrow->borrow_quantity = $request->input('borrow_quantity');
+        $borrow->late_fee = 0;
+        $borrow->total_rental_price = 0;
+        $borrow->borrow_status = 'borrowed';
+        $borrow->sub_total = 0;
+        $borrow->save();
+
+        return $borrow;
+    }
 
 
     public function item()

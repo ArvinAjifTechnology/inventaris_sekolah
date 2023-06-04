@@ -30,8 +30,6 @@ class UserController extends Controller
      */
     public function create($id = NULL)
     {
-        $user = DB::select('select * from users where id = ?', [1]);
-        $user = Collection::make($user);
         return view('users.create', compact('user'));
     }
 
@@ -84,6 +82,9 @@ class UserController extends Controller
         // });
         // $user = User::find($id);
         // dd($user);
+        // $user = DB::select('select * from users where id = ?', [1]);
+        // $user = Collection::make($user);$user = DB::select('select * from users where id = ?', [1]);
+        $user = collect($user);
         return view('users.edit', compact('user', 'id'));
     }
 
@@ -93,6 +94,7 @@ class UserController extends Controller
     public function update(Request $request, string $username)
     {
         $user = DB::select('select * from users where username = ?', [$username]);
+        // $user = collect($user);
 
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'string'],

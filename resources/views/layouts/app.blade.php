@@ -110,6 +110,9 @@
                                 <a class="dropdown-item" href="{{ route('profile.index') }}">
                                     {{ __("Profile") }}
                                 </a>
+                                <a class="dropdown-item" href="{{ route('contact.index') }}">
+                                    {{ __("Contact") }}
+                                </a>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                          document.getElementById('logout-form').submit();">
                                     {{ __("Logout") }}
@@ -125,9 +128,47 @@
             </div>
         </nav>
 
-        <main class="py-4">@yield('content')</main>
+        <main class="py-4">
+            @yield('content')
+            @yield('form')
+        </main>
     </div>
-    <script src="{{ asset('') }}/assets/vendor/simple-datatables/simple-datatables.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {{-- <script>
+        $(document).ready(function() {
+        // Mengambil total jumlah halaman
+        var totalPages = 3;
+
+        // Mendapatkan URL halaman saat ini
+        var currentUrl = window.location.href;
+
+        // Menghitung persentase progress
+        var progress = (currentUrl.split('/').length - 4) / totalPages * 100;
+
+        // Mengupdate lebar progress bar sesuai dengan persentase
+        $('.progress-bar').css('width', progress + '%');
+        $('.progress-bar').attr('aria-valuenow', progress);
+    });
+    </script> --}}
+    <script>
+        // Ambil elemen progress bar
+    var progressBar = $(".progress-bar");
+
+    // Tentukan total jumlah langkah
+    var totalSteps = 3;
+
+    // Fungsi untuk mengupdate progress bar
+    function updateProgressBar(step) {
+        // Hitung persentase progres berdasarkan langkah saat ini
+        var percentage = (step / totalSteps) * 100;
+
+        // Update lebar dan teks pada progress bar
+        progressBar.css("width", percentage + "%");
+        progressBar.text(step + " / " + totalSteps);
+    }
+    </script>
+
+    <script src="{{ asset('') }}assets/vendor/simple-datatables/simple-datatables.js"></script>
 </body>
 
 </html>

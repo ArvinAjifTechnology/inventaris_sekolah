@@ -19,7 +19,7 @@ class SendReturnReminderEmail implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct()
+    public function __construct($borrow)
     {
         $this->borrow = $borrow;
     }
@@ -30,6 +30,5 @@ class SendReturnReminderEmail implements ShouldQueue
     public function handle(): void
     {
         Mail::to($this->borrow->user->email)->send(new ReturnReminderMail($this->borrow));
-    }
     }
 }

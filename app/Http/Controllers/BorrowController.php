@@ -2,18 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Borrow;
-use Illuminate\Http\Request;
+use App\Http\Requests\SubmitBorrowRequest;
+use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\User;
-use App\Rules\SufficientQuantityRule;
-use Illuminate\Support\Facades\Validator;
+use App\Models\Borrow;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use App\Jobs\SendReturnReminderEmail;
-use Carbon\Carbon;
+use App\Rules\SufficientQuantityRule;
 use App\Notifications\BorrowNotification;
+use Illuminate\Support\Facades\Validator;
+use App\Notifications\VerifiedSubmitBorrowRequestNotification;
 
 class BorrowController extends Controller
 {
@@ -23,14 +26,31 @@ class BorrowController extends Controller
     public function index()
     {
         if (Gate::allows('admin')) {
-            $borrows = Borrow::latest()->get();
+            $borrows = DB::select("SELECT borrows.*, items.item_name, CONCAT(users.first_name, ' ', users.last_name) AS full_name
+                                    FROM borrows
+                                    LEFT JOIN items ON borrows.item_id = items.id
+                                    LEFT JOIN users ON borrows.user_id = users.id
+                                    ORDER BY borrows.created_at DESC");
         } elseif (Gate::allows('operator')) {
-            $borrows = Borrow::latest()->get();
+            $borrows = DB::select("SELECT borrows.*, items.item_name, CONCAT(users.first_name, ' ', users.last_name) AS full_name
+                                    FROM borrows
+                                    LEFT JOIN items ON borrows.item_id = items.id
+                                    LEFT JOIN users ON borrows.user_id = users.id
+                                    ORDER BY borrows.created_at DESC");
         } elseif (Gate::allows('borrower')) {
-            $borrows = Borrow::latest()->where('user_id', Auth::user()->id)->get();
+            $user_id = Auth::user()->id;
+            $borrows = DB::select("SELECT borrows.*, items.item_name, CONCAT(users.first_name, ' ', users.last_name) AS full_name
+                                    FROM borrows
+                                    LEFT JOIN items ON borrows.item_id = items.id
+                                    LEFT JOIN users ON borrows.user_id = users.id
+                                    WHERE borrows.user_id = $user_id
+                                    ORDER BY borrows.created_at DESC");
         } else {
             abort(403, 'Unauthorized');
         }
+
+
+
         return view('borrows.index', compact('borrows'));
     }
 
@@ -41,6 +61,9 @@ class BorrowController extends Controller
     {
         $items = Item::all()->where('condition', '=', 'good');
         $users = User::all()->where('role', '=', 'borrower');
+        // $items = DB::select("SELECT * FROM items WHERE condition = 'good'");
+        // $users = DB::select("SELECT * FROM users WHERE role = 'borrower'");
+
 
         return view('borrows.create', compact('items', 'users'));
     }
@@ -84,20 +107,9 @@ class BorrowController extends Controller
 
         $item = Item::find($request->input('item_id'));
         if ($item->quantity > 0) {
-            $borrow = new Borrow();
-            $borrow->borrow_date = $request->input('borrow_date');
-            $borrow->return_date = $request->input('return_date');
-            $borrow->item_id = $request->input('item_id');
-            $borrow->user_id = $request->input('user_id');
-            $borrow->borrow_quantity = $request->input('borrow_quantity');
-            $borrow->late_fee = 0;
-            $borrow->total_rental_price = 0;
-            $borrow->borrow_status = 'dipinjam';
-            $borrow->save();
-
+            $borrow = Borrow::createBorrow($request);
             $item->quantity -= $request->input('borrow_quantity');
             $item->save();
-
             $borrow->user->notify(new BorrowNotification($borrow));
             if (Gate::allows('admin')) {
                 return redirect('/admin/borrows')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
@@ -127,15 +139,26 @@ class BorrowController extends Controller
     public function show(string $id)
     {
         if (Gate::allows('admin')) {
-            $borrow = Borrow::find($id);
+            $borrow = DB::selectOne("
+                SELECT borrows.*, users.*, items.*
+                FROM borrows
+                JOIN users ON borrows.user_id = users.id
+                JOIN items ON borrows.item_id = items.id
+                WHERE borrows.id = :id
+            ", ['id' => $id]);
         } elseif (Gate::allows('operator')) {
-            $borrow = Borrow::find($id);
-        } elseif (Gate::allows('borrower')) {
-            $borrow = Borrow::where('user_id', '=', Auth::user()->id)->find($id);
-            // $borrow = Borrow::all()->where('user_id', '=', Auth::user()->id);
+            $borrow = DB::selectOne("
+                SELECT borrows.*, users.*, items.*
+                FROM borrows
+                JOIN users ON borrows.user_id = users.id
+                JOIN items ON borrows.item_id = items.id
+                WHERE borrows.id = :id
+            ", ['id' => $id]);
         } else {
             abort(403, 'Unauthorized');
         }
+
+
         return view('borrows.show', compact('borrow'));
     }
 
@@ -144,9 +167,14 @@ class BorrowController extends Controller
      */
     public function edit(string $id)
     {
-        $borrow = Borrow::find($id);
-        $items = Item::all()->where('condition', '=', 'good');
-        $users = User::all()->where('role', '=', 'borrower');
+        // $borrow = Borrow::find($id);
+        // $items = Item::all()->where('condition', '=', 'good');
+        // $users = User::all()->where('role', '=', 'borrower');
+        // return view('borrows.edit', compact('borrow', 'items', 'users'));
+        $borrow = DB::selectOne("SELECT * FROM borrows WHERE id = $id");
+        $items = DB::select("SELECT * FROM items WHERE `condition` = 'good'");
+        $users = DB::select("SELECT *, CONCAT(users.first_name, ' ', users.last_name) AS full_name FROM users WHERE role = 'borrower'");
+
         return view('borrows.edit', compact('borrow', 'items', 'users'));
     }
 
@@ -179,7 +207,8 @@ class BorrowController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        $item = Item::find($request->input('item_id'));
+        $item_id = $request->input('item_id');
+        $item = DB::selectOne("SELECT * FROM items WHERE id = $item_id");
         if ($item->quantity > 0) {
             $borrow = Borrow::find($id); // Ambil data peminjaman yang akan diupdate
 
@@ -192,7 +221,8 @@ class BorrowController extends Controller
             // $borrow->borrow_quantity = $request->input('borrow_quantity');
             $borrow->late_fee = 0;
             $borrow->total_rental_price = 0;
-            $borrow->borrow_status = 'dipinjam';
+            $borrow->sub_total = 0;
+            $borrow->borrow_status = 'borrowed';
 
 
             // dd($previousQuantity);
@@ -253,23 +283,9 @@ class BorrowController extends Controller
 
     public function returnBorrow(Request $request, $id)
     {
-        $borrow = Borrow::find($id);
-        if (!$borrow) {
-            return redirect()->back()->with('error', 'Data not found');
-        }
-        $item = Item::find($borrow->item_id);
-        $item->quantity += $borrow->borrow_quantity;
-        $item->update();
-        // dd($borrow->item->quantity);
-        // $borrow->return_date = date('Y-m-d');
-        $borrow->total_rental_price = $borrow->calculateTotalRentalPrice($borrow);
-        $borrow->late_fee = $borrow->calculateLateFee($borrow);
-        $borrow->borrow_status = 'selesai';
-        $borrow->update();
-
+        Borrow::returnItem($id);
 
         return redirect()->back()->with('status', 'Item returned successfully');
-        $borrow->user->notify(new BorrowNotification($borrow));
     }
 
     public function sendReturnReminder()
@@ -281,5 +297,52 @@ class BorrowController extends Controller
         }
 
         return response()->json(['message' => 'Return reminders sent successfully']);
+    }
+
+    public function submitBorrowRequest(Request $request, $borrow_code)
+    {
+        $borrow = DB::selectOne("SELECT borrows.*, CONCAT(users.first_name, ' ', users.last_name) AS full_name, users.* ,items.*
+            FROM borrows
+            JOIN users ON borrows.user_id = users.id
+            JOIN items ON borrows.item_id = items.id
+            WHERE borrows.borrow_code = '$borrow_code'
+        ");
+
+        // dd($borrow);
+        $borrow_id = Borrow::where('borrow_code', '=', $borrow_code);
+        // $item = Item::where('item_code', '=', $item_code)->first();
+        // dd($request->all());
+        $request->all();
+
+        return view('borrows.verify-submit-borrow-request', compact('borrow'));
+    }
+
+    public function verifySubmitBorrowRequest(SubmitBorrowRequest $request, $borrow_code)
+    {
+        // dd($request->all());
+        $item = Item::find($request->input('item_id'));
+        if ($item->quantity > 0) {
+            $borrow = Borrow::verifySubmitBorrowRequest($request, $borrow_code);
+            $item->quantity -= $request->input('borrow_quantity');
+            $item->save();
+            $borrow->user->notify(new VerifiedSubmitBorrowRequestNotification($borrow));
+            $borrow->user->notify(new BorrowNotification($borrow));
+            if (Gate::allows('admin')) {
+                return redirect('/admin/borrows')->with('status', 'Selamat Data Berhasil Di Tambahkan');
+            } elseif (Gate::allows('operator')) {
+                return redirect('/operator/borrows')->with('status', 'Selamat Data Berhasil Di Tambahkan');
+            } else {
+                abort(403, 'Unauthorized');
+            }
+            // return redirect('/borrows')->with('status', 'Selamat Data Berhasil Di Tambahkan');
+        } else {
+            if (Gate::allows('admin')) {
+                return redirect()->back()->withErrors(['error' => 'Stok barang habis'])->withInput();
+            } elseif (Gate::allows('operator')) {
+                return redirect()->back()->withErrors(['error' => 'Stok barang habis'])->withInput();
+            } else {
+                abort(403, 'Unauthorized');
+            }
+        }
     }
 }

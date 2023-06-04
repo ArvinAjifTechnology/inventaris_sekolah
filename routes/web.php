@@ -6,8 +6,10 @@ use App\Http\Controllers\ItemController;
 use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\BorrowController;
+use App\Http\Controllers\Borrower\BorrowController as BorrowerBorrowController;
 use App\Http\Controllers\ProfileController;
-use Illuminate\Support\Facades\Gate;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\BorrowReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,8 +36,13 @@ Route::middleware('admin')->group(function () {
     Route::resource('/admin/rooms', RoomController::class);
     Route::resource('/admin/items', ItemController::class);
     Route::resource('/admin/borrows', BorrowController::class);
+    Route::get('/admin/borrows/{borrow_code}/submit-borrow-request', [BorrowController::class, 'submitBorrowRequest']);
+    Route::put('/admin/borrows/{borrow_code}/verify-submit-borrow-request', [BorrowController::class, 'verifySubmitBorrowRequest']);
     Route::put('/admin/borrows/{id}/return', [BorrowController::class, 'returnBorrow'])->name('borrows.return');
     Route::post('/admin/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('admin.users.reset-password');
+    Route::get('/borrow-report', [BorrowReportController::class, 'index'])->name('borrow-report.index');
+    Route::post('/borrow-report', [BorrowReportController::class, 'generateReport'])->name('borrow-report.generate');
+    Route::post('/borrow-report/export/', [BorrowReportController::class, 'export'])->name('borrow-report.export');
 });
 
 Route::middleware(['operator'])->group(function () {
@@ -43,18 +50,23 @@ Route::middleware(['operator'])->group(function () {
     Route::resource('/operator/rooms', RoomController::class)->only(['index', 'show']);
     Route::resource('/operator/items', ItemController::class);
     Route::resource('/operator/borrows', BorrowController::class);
+    Route::get('/operator/borrows/{borrow_code}/submit-borrow-request', [BorrowController::class, 'submitBorrowRequest']);
+    Route::put('/operator/borrows/{borrow_code}/verify-submit-borrow-request', [BorrowController::class, 'verifySubmitBorrowRequest']);
     Route::put('/operator/borrows/{id}/return', [BorrowController::class, 'returnBorrow'])->name('borrows.return');
 });
 
 Route::middleware('borrower')->group(function () {
     // route yang hanya bisa diakses oleh borrower
     // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
-    Route::resource('/borrower/borrows', BorrowController::class);
-});
-Route::middleware('AdminOrOperator')->group(function () {
-    // route yang hanya bisa diakses oleh borrower
-    // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
-    Route::resource('borrows', BorrowController::class);
+    Route::resource('/borrower/borrows', BorrowerBorrowController::class);
+    Route::get('/borrower/borrows/create/search-item', [BorrowerBorrowController::class, 'searchItemView']);
+    Route::post('/borrower/borrows/create/search-item', [BorrowerBorrowController::class, 'searchItem'])->name('borrower.borrow.search-item');
+    Route::get('/borrower/borrows/create/{item_code}/submit-borrow-request', [BorrowerBorrowController::class, 'submitBorrowRequestView']);
+    Route::get('/borrower/borrows/create/submit-borrow-request-two', [BorrowerBorrowController::class, 'submitBorrowRequestViewTwo']);
+    Route::post('/borrower/borrows/create/submit-borrow-request-two', [BorrowerBorrowController::class, 'submitBorrowRequestViewTwo']);
+    Route::post('/borrower/borrows/create/submit-borrow-request-page-two', [BorrowerBorrowController::class, 'submitBorrowRequestViewTwo']);
+    Route::post('/borrower/borrows/create/submit-borrow-request-verifiy/', [BorrowerBorrowController::class, 'verifySubmitBorrowRequestView']);
+    Route::get('/borrower/borrows/create/submit-borrow-request-verifiy/', [BorrowerBorrowController::class, 'verifySubmitBorrowRequestView']);
 });
 Route::middleware('AdminOrOperator')->group(function () {
     // route yang hanya bisa diakses oleh borrower
@@ -67,6 +79,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    // Route Contact
+    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+    Route::post('/contact-send-to-whatsapp', [ContactController::class, 'sendToWhatsapp'])->name('contact.send-to-whatsapp');
+    Route::post('/contact-send-to-email', [ContactController::class, 'sendToEmail'])->name('contact.send-to-email');
 });
 
 

@@ -22,6 +22,8 @@
 
     Total Rental Price: {{ convertToRupiah($borrow->total_rental_price) }}
 
+    Sub Total: {{ convertToRupiah($borrow->sub_total) }}
+
     {{-- <x-mail::button :url="''"> Button Text </x-mail::button> --}}
     Thanks,
     {{ config("app.name") }}
