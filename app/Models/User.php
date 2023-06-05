@@ -55,10 +55,6 @@ class User extends Authenticatable
 
     public static function getAll()
     {
-        $currentPage = request()->get('page', 1);
-        $offset = ($currentPage - 1) * 10;
-
-        // $users = DB::select("SELECT * FROM users ORDER BY created_at DESC LIMIT 2 OFFSET $offset");
         $users = DB::select("SELECT * FROM users ORDER BY created_at DESC");
 
         return $users;
@@ -78,10 +74,9 @@ class User extends Authenticatable
         ]);
     }
 
-    public static function edit($fullName, $request, $username)
+    public static function edit($request, $username)
     {
-        DB::update('UPDATE users SET name = ?, username = ?, email = ?, first_name = ?, last_name = ?, role = ?, gender = ?, password = ? WHERE username = ?', [
-            $fullName,
+        DB::update('UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, role = ?, gender = ?, password = ? WHERE username = ?', [
             $request->input('username'),
             $request->input('email'),
             $request->input('first_name'),
