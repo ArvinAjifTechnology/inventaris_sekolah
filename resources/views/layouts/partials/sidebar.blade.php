@@ -33,14 +33,14 @@
 
             <li class="side-nav-item">
                 <a href="{{ url('admin/rooms') }}" class="side-nav-link">
-                    <i class="uil-door-open"></i>
+                    <i class="uil-window"></i>
                     <span> Ruangan </span>
                 </a>
             </li>
 
             <li class="side-nav-item">
                 <a href="{{ url('admin/items') }}" class="side-nav-link">
-                    <i class="uil-shopping-cart"></i>
+                    <i class="uil-shopping-cart-alt"></i>
                     <span> Barang </span>
                 </a>
             </li>
@@ -56,14 +56,14 @@
             @can('operator')
             <li class="side-nav-item">
                 <a href="{{ url('operator/rooms') }}" class="side-nav-link">
-                    <i class="uil-door-open"></i>
+                    <i class="uil-window"></i>
                     <span> Ruangan </span>
                 </a>
             </li>
 
             <li class="side-nav-item">
                 <a href="{{ url('operator/items') }}" class="side-nav-link">
-                    <i class="uil-shopping-cart"></i>
+                    <i class="uil-shopping-cart-alt"></i>
                     <span> Barang </span>
                 </a>
             </li>

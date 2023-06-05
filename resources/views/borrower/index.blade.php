@@ -4,14 +4,9 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            @if (session('status'))
-            <div class="alert alert-success">
-                {{ session("status") }}
-            </div>
-            @endif
             <a href="{{ url('/borrower/borrows/create/search-item') }}" class="btn btn-primary btn-sm mb-2">Ajukan
                 Peminjaman</a>
-            <table class="table">
+            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>No</th>

@@ -1,16 +1,11 @@
 @extends('layouts.main') @section('content')
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
-            @if (session('status'))
-            <div class="alert alert-success">
-                {{ session("status") }}
-            </div>
-            @endif
             @can('admin')
             <a href="{{ route('rooms.create') }}" class="btn btn-primary mb-2">Tambah Data</a>
             @endcan
-            <table class="table table-primary mt-2">
+            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>No</th>

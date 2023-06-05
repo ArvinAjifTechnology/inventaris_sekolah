@@ -2,11 +2,6 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            @if (session('status'))
-            <div class="alert alert-success">
-                {{ session("status") }}
-            </div>
-            @endif
             @can('admin')
             <a href="{{ url('/admin/borrows/create') }}" class="btn btn-primary btn-sm mb-2">Tambah Data Peminjam an</a>
             @endcan
@@ -14,7 +9,7 @@
             <a href="{{ url('/operator/borrows/create') }}" class="btn btn-primary btn-sm mb-2">Tambah Data Peminjam
                 an</a>
             @endcan
-            <table class="table">
+            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>No</th>

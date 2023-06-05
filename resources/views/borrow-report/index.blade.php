@@ -66,7 +66,7 @@
         </div>
         <div class="col">
             @if ($borrows->count() > 0)
-            <table class="table table-primary">
+            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100y">
                 <thead>
                     <tr>
                         <th>Kode Peminjaman</th>
@@ -90,7 +90,7 @@
                         <td>{{ $borrow->borrow_date }}</td>
                         <td>{{ $borrow->return_date }}</td>
                         <td>{{ $borrow->borrow_status }}</td>
-                        <td>{{ $borrow->user->name }}</td>
+                        <td>{{ $borrow->user->full_name }}</td>
                         <td>{{ $borrow->user->email }}</td>
                         <td>{{ $borrow->item->item_name }}</td>
                         <td>{{ $borrow->item->item_code }}</td>
@@ -100,10 +100,10 @@
                         <!-- Tambahkan field lainnya sesuai dengan struktur tabel "borrows" -->
                     </tr>
                     @endforeach
-                    <tr>
+                    {{-- <tr>
                         <td colspan="10" align="right"><strong>Jumlah Subtotal:</strong></td>
                         <td>{{ convertToRupiah($borrows->sum('sub_total')) }}</td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
             </table>
             @else

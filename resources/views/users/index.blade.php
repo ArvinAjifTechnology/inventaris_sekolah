@@ -4,13 +4,8 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col">
-            @if (session('status'))
-            <div class="alert alert-success">
-                {{ session("status") }}
-            </div>
-            @endif
             <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-4 mt-2">Tambah Data</a>
-            <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
+            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>Name</th>
