@@ -23,7 +23,7 @@ use App\Http\Controllers\BorrowReportController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('landing_page.index');
 });
 Route::get('/template', function () {
     return view('layouts.main');
