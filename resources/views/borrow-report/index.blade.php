@@ -65,7 +65,7 @@
 
         </div>
         <div class="col">
-            @if ($borrows->count() > 0)
+            @if (!empty($borrows))
             <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100y">
                 <thead>
                     <tr>
@@ -90,10 +90,10 @@
                         <td>{{ $borrow->borrow_date }}</td>
                         <td>{{ $borrow->return_date }}</td>
                         <td>{{ $borrow->borrow_status }}</td>
-                        <td>{{ $borrow->user->full_name }}</td>
-                        <td>{{ $borrow->user->email }}</td>
-                        <td>{{ $borrow->item->item_name }}</td>
-                        <td>{{ $borrow->item->item_code }}</td>
+                        <td>{{ $borrow->user_full_name }}</td>
+                        <td>{{ $borrow->email }}</td>
+                        <td>{{ $borrow->item_name }}</td>
+                        <td>{{ $borrow->item_code }}</td>
                         <td>{{ convertToRupiah($borrow->late_fee) }}</td>
                         <td>{{ convertToRupiah($borrow->total_rental_price) }}</td>
                         <td>{{ convertToRupiah($borrow->sub_total) }}</td>
@@ -112,4 +112,4 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection\

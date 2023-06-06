@@ -35,7 +35,7 @@
                             <option value="">Pilih User</option>
                             @foreach($users as $user)
                             <option value="{{ $user->id }}" {{ old('user_id')==$user->id ? 'selected' : '' }}>{{
-                                $user->full_name }}</option>
+                                $user->user_full_name }}</option>
                             @endforeach
                         </select>
                         @error('user_id')

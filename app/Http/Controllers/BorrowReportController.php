@@ -7,6 +7,7 @@ use App\Models\Borrow;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Exports\BorrowExport;
+use Illuminate\Support\Facades\DB;
 
 class BorrowReportController extends Controller
 {
@@ -23,33 +24,32 @@ class BorrowReportController extends Controller
         $endDate = $request->input('end_date');
         $search = $request->input('search');
 
-        $query = Borrow::query();
+        $query = "SELECT borrows.*, CONCAT(users.first_name, ' ', users.last_name) AS user_full_name, users.*, items.*
+        FROM borrows
+        INNER JOIN users ON borrows.user_id = users.id
+        INNER JOIN items ON borrows.item_id = items.id";
 
         // Filter tanggal
         if ($startDate && $endDate) {
-            $query->whereBetween('borrow_date', [$startDate, $endDate]);
+            $query .= " WHERE borrows.borrow_date BETWEEN '$startDate' AND '$endDate'";
         }
 
         // Pencarian
         if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('borrow_code', 'LIKE', "%$search%")
-                    ->orWhere('borrow_status', 'LIKE', "%$search%")
-                    ->orWhereHas('item', function ($q) use ($search) {
-                        $q->where('item_name', 'LIKE', "%$search%")
-                            ->orWhere('item_code', 'LIKE', "%$search%");
-                    })
-                    ->orWhereHas('user', function ($q) use ($search) {
-                        $q->where('name', 'LIKE', "%$search%")
-                            ->orWhere('email', 'LIKE', "%$search%");
-                    });
-            });
+            $query .= " AND (borrows.borrow_code LIKE '%$search%'
+                      OR borrows.borrow_status LIKE '%$search%'
+                      OR items.item_name LIKE '%$search%'
+                      OR items.item_code LIKE '%$search%'
+                      OR users.name LIKE '%$search%'
+                      OR users.email LIKE '%$search%')";
         }
 
-        $borrows = $query->get();
+        $borrows = DB::select($query);
 
         return view('borrow-report.index', compact('borrows', 'startDate', 'endDate', 'search'));
     }
+
+
 
     public function export(Request $request)
     {
