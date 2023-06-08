@@ -99,7 +99,7 @@ CREATE table borrows(
     return_date DATE NOT NULL,
     FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE ON UPDATE CASCADE,
     -- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    borrow_status ENUM('pending', 'completed', 'borrowed') NOT NULL,
+    borrow_status ENUM('pending', 'completed', 'borrowed', 'rejected') NOT NULL,
     borrow_quantity INT(15) NOT NULL,
     late_fee float(15) NOT NULL,
     total_rental_price float(15) NOT NULL,

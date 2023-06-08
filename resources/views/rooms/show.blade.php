@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">

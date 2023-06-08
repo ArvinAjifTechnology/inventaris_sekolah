@@ -10,6 +10,8 @@ use App\Http\Controllers\Borrower\BorrowController as BorrowerBorrowController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BorrowReportController;
+use App\Http\Controllers\DashboardController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +30,10 @@ Route::get('/', function () {
 Route::get('/template', function () {
     return view('layouts.main');
 });
-
+// Route Contact
+Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
+Route::post('/contact-send-to-whatsapp', [ContactController::class, 'sendToWhatsapp'])->name('contact.send-to-whatsapp');
+Route::post('/contact-send-to-email', [ContactController::class, 'sendToEmail'])->name('contact.send-to-email');
 Auth::routes();
 
 
@@ -42,6 +47,7 @@ Route::middleware('admin')->group(function () {
     Route::get('/admin/borrows/{borrow_code}/submit-borrow-request', [BorrowController::class, 'submitBorrowRequest']);
     Route::put('/admin/borrows/{borrow_code}/verify-submit-borrow-request', [BorrowController::class, 'verifySubmitBorrowRequest']);
     Route::put('/admin/borrows/{id}/return', [BorrowController::class, 'returnBorrow'])->name('borrows.return');
+    Route::put('/admin/borrows/{id}/reject-borrow-request', [BorrowController::class, 'rejectBorrowRequest'])->name('borrows.return');
     Route::post('/admin/users/{user}/reset-password', [UserController::class, 'resetPassword'])->name('admin.users.reset-password');
     Route::get('/borrow-report', [BorrowReportController::class, 'index'])->name('borrow-report.index');
     Route::post('/borrow-report', [BorrowReportController::class, 'generateReport'])->name('borrow-report.generate');
@@ -79,16 +85,15 @@ Route::middleware('AdminOrOperator')->group(function () {
 Route::middleware('auth')->group(function () {
     // route yang hanya bisa diakses oleh borrower
     // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route Contact
-    Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
-    Route::post('/contact-send-to-whatsapp', [ContactController::class, 'sendToWhatsapp'])->name('contact.send-to-whatsapp');
-    Route::post('/contact-send-to-email', [ContactController::class, 'sendToEmail'])->name('contact.send-to-email');
+    Route::get('/change-password', [ProfileController::class, 'showChangePasswordForm'])->name('password.change');
+    Route::post('/change-password', [ProfileController::class, 'changePassword'])->name('password.update');
 });
 
 
 
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -47,7 +47,7 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'room_name' => ['required', 'string'],
+            'room_name' => ['required', 'string', Rule::unique('rooms')],
             // 'room_code' => ['required', 'string', Rule::unique('rooms')],
             'user_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
@@ -99,7 +99,7 @@ class RoomController extends Controller
         $id = $request->input('id');
         $room = DB::select('select * from rooms where id = ?', [$id]);
         $validator = Validator::make($request->all(), [
-            'room_name' => ['required', 'string'],
+            'room_name' => ['required', 'string', Rule::unique('rooms')->ignore($id)],
             'user_id' => ['required', 'integer'],
             'description' => ['required', 'string'],
         ]);

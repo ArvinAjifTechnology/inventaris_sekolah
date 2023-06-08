@@ -345,5 +345,18 @@ class BorrowController extends Controller
                 abort(403, 'Unauthorized');
             }
         }
+
+    }
+    public function rejectBorrowRequest(Request $request, $id)
+    {
+        Borrow::rejectBorrowRequest($id);
+
+        if (Gate::allows('admin')) {
+            return redirect('/admin/borrows')->with('status', 'Selamat Data Berhasil Di Tambahkan');
+        } elseif (Gate::allows('operator')) {
+            return redirect('/operator/borrows')->with('status', 'Selamat Data Berhasil Di Tambahkan');
+        } else {
+            abort(403, 'Unauthorized');
+        }
     }
 }

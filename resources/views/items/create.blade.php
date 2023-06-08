@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col-lg-6">
                 @can('admin')
                 <form method="POST" action="{{ url('admin/items') }}" class="">
@@ -85,7 +85,7 @@
                         @enderror
                     </div>
                     <label for="quantity">Jumlah</label>
-                    <input type="number" id="quantity" name="quantity"
+                    <input type="text" id="quantity" name="quantity" data-toggle="touchspin"
                         class="form-control @error('quantity') is-invalid @enderror" value="{{ old('quantity') }}"
                         required>
                     @error('quantity')

@@ -21,6 +21,12 @@
 
     <div class="h-100" id="leftside-menu-container" data-simplebar="">
         <ul class="side-nav">
+            <li class="side-nav-item">
+                <a href="{{ route('dashboard.index') }}" class="side-nav-link">
+                    <i class="uil-home-alt"></i>
+                    <span> Dashboard </span>
+                </a>
+            </li>
             <li class="side-nav-title side-nav-item">Navigation</li>
 
             @can('admin')
@@ -40,17 +46,11 @@
 
             <li class="side-nav-item">
                 <a href="{{ url('admin/items') }}" class="side-nav-link">
-                    <i class="uil-shopping-cart-alt"></i>
+                    <i class="uil-clipboard-alt"></i>
                     <span> Barang </span>
                 </a>
             </li>
 
-            <li class="side-nav-item">
-                <a href="{{ url('admin/borrows') }}" class="side-nav-link">
-                    <i class="uil-hand-holding-usd"></i>
-                    <span> Peminjaman </span>
-                </a>
-            </li>
             @endcan
 
             @can('operator')
@@ -63,43 +63,45 @@
 
             <li class="side-nav-item">
                 <a href="{{ url('operator/items') }}" class="side-nav-link">
-                    <i class="uil-shopping-cart-alt"></i>
+                    <i class="uil-clipboard-alt"></i>
                     <span> Barang </span>
                 </a>
             </li>
 
+            @endcan
+
+
+            <li class="side-nav-title side-nav-item">Main System</li>
+            @can('admin')
+            <li class="side-nav-item">
+                <a href="{{ url('admin/borrows') }}" class="side-nav-link">
+                    <i class="uil-shopping-cart-alt"></i>
+                    <span> Peminjaman </span>
+                </a>
+            </li>
+            <li class="side-nav-item">
+                <a href="{{ url('/borrows/borrow-report') }}" class="side-nav-link">
+                    <i class="uil-chart"></i>
+                    <span> Laporan Peminjaman</span>
+                </a>
+            </li>
+            @endcan
+            @can('operator')
             <li class="side-nav-item">
                 <a href="{{ url('operator/borrows') }}" class="side-nav-link">
-                    <i class="uil-hand-holding-usd"></i>
+                    <i class="uil-shopping-cart-alt"></i>
                     <span> Peminjaman </span>
                 </a>
             </li>
             @endcan
-
             @can('borrower')
             <li class="side-nav-item">
                 <a href="{{ url('borrower/borrows') }}" class="side-nav-link">
-                    <i class="uil-hand-holding-usd"></i>
+                    <i class="uil-shopping-cart-alt"></i>
                     <span> Peminjaman </span>
                 </a>
             </li>
             @endcan
-
-            <li class="side-nav-title side-nav-item">Apps</li>
-
-            <li class="side-nav-item">
-                <a href="{{ url('apps-calendar.html') }}" class="side-nav-link">
-                    <i class="uil-calender"></i>
-                    <span> Calendar </span>
-                </a>
-            </li>
-
-            <li class="side-nav-item">
-                <a href="{{ url('apps-chat.html') }}" class="side-nav-link">
-                    <i class="uil-comments-alt"></i>
-                    <span> Chat </span>
-                </a>
-            </li>
         </ul>
 
         <div class="help-box text-white text-center">

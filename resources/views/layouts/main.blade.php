@@ -33,6 +33,7 @@
     data-layout-config='{"leftSideBarTheme":"dark","layoutBoxed":false, "leftSidebarCondensed":false, "leftSidebarScrollable":false,"darkMode":false, "showRightSidebarOnStart": true}'>
     <!-- Begin page -->
     <div class="wrapper">
+        @auth
         @include('layouts.partials.sidebar')
         <!-- ============================================================== -->
         <!-- Start Page Content here -->
@@ -46,6 +47,10 @@
 
             </div>
             <!-- content -->
+            @endauth
+            @guest
+            @yield('content')
+            @endguest
 
             <!-- Footer Start -->
             <footer class="footer">
@@ -198,6 +203,7 @@
 
     <!-- demo app -->
     <script src="{{ asset('') }}assets/js/pages/demo.datatable-init.js"></script>
+    <script src="{{ asset('') }}assets/js/pages/demo.dashboard.js"></script>
     <script src="{{ asset('') }}assets/js/pages/demo.toastr.js"></script>
     <!-- end demo js-->
     @if(session('status'))
@@ -206,6 +212,7 @@
     </script>
     @endif
 
+    @stack('js')
 
 </body>
 

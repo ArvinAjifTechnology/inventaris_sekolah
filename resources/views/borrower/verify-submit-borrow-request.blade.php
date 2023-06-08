@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col-md-6">
             <div class="progress">
                 <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0"
@@ -12,7 +12,7 @@
     </div>
 </div>
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col-lg-6">
             <form method="POST" action="{{ url('/borrower/borrows/') }}" class="">
                 @csrf

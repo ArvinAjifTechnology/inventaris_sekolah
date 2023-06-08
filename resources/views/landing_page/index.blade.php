@@ -931,7 +931,9 @@
                 </div>
 
                 <div class="col-lg-5 col-md-12" data-aos="fade-up" data-aos-delay="300">
-                    <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+                    <form action="{{ route('contact.send-to-email') }}" method="post" role="form"
+                        class="php-email-form">
+                        @csrf
                         <div class="form-group">
                             <input type="text" name="name" class="form-control" id="name" placeholder="Your Name"
                                 required>
@@ -948,13 +950,38 @@
                             <textarea class="form-control" name="message" rows="5" placeholder="Message"
                                 required></textarea>
                         </div>
+                        @if (session('success'))
                         <div class="my-3">
                             <div class="loading">Loading</div>
                             <div class="error-message"></div>
                             <div class="sent-message">Your message has been sent. Thank you!</div>
                         </div>
+                        @endif
                         <div class="text-center"><button type="submit">Send Message</button></div>
                     </form>
+                    {{-- <form action="{{route('contact.send-to-email') }}" method="post" role="form" class="">
+                        @csrf
+                        <div class="row">
+                            <div class="col-md-6 form-group" data-aos="fade-up">
+                                <input type="text" name="name" class="form-control" id="name" placeholder="Your Name"
+                                    required>
+                            </div>
+                            <div class="col-md-6 form-group mt-3 mt-md-0" data-aos="fade-up">
+                                <input type="email" class="form-control" name="email" id="email"
+                                    placeholder="Your Email" required>
+                            </div>
+                        </div>
+                        <div class="form-group mt-3" data-aos="fade-up">
+                            <input type="text" class="form-control" name="subject" id="subject" placeholder="Subject"
+                                required>
+                        </div>
+                        <div class="form-group mt-3" data-aos="fade-up">
+                            <textarea class="form-control" name="message" rows="5" placeholder="Message"
+                                required></textarea>
+                        </div>
+                        <div class="text-center" data-aos="fade-up"><button type="submit"
+                                class="btn btn-primary mt-3">Send Message</button></div>
+                    </form><!-- End Contact Form --> --}}
                 </div>
 
             </div>

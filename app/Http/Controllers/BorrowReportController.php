@@ -24,29 +24,31 @@ class BorrowReportController extends Controller
         $endDate = $request->input('end_date');
         $search = $request->input('search');
 
-        $query = "SELECT borrows.*, CONCAT(users.first_name, ' ', users.last_name) AS user_full_name, users.*, items.*
-        FROM borrows
-        INNER JOIN users ON borrows.user_id = users.id
-        INNER JOIN items ON borrows.item_id = items.id";
+        $borrows = Borrow::selectRaw("borrows.*,
+                             CONCAT(users.first_name, ' ', users.last_name) AS user_full_name,
+                             users.*,
+                             items.*,
+                             SUM(borrows.sub_total) AS revenue")
+            ->join('users', 'borrows.user_id', '=', 'users.id')
+            ->join('items', 'borrows.item_id', '=', 'items.id')
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('borrows.borrow_date', [$startDate, $endDate]);
+            })
+            ->where(function ($query) use ($search) {
+                $query->where('borrows.borrow_code', 'LIKE', '%' . $search . '%')
+                    ->orWhere('borrows.borrow_status', 'LIKE', '%' . $search . '%')
+                    ->orWhere('items.item_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('items.item_code', 'LIKE', '%' . $search . '%')
+                    ->orWhere('users.name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('users.email', 'LIKE', '%' . $search . '%');
+            })
+            ->groupBy('borrows.id')
+            ->get();
 
-        // Filter tanggal
-        if ($startDate && $endDate) {
-            $query .= " WHERE borrows.borrow_date BETWEEN '$startDate' AND '$endDate'";
-        }
+        $revenue = $borrows->revenue;
 
-        // Pencarian
-        if ($search) {
-            $query .= " AND (borrows.borrow_code LIKE '%$search%'
-                      OR borrows.borrow_status LIKE '%$search%'
-                      OR items.item_name LIKE '%$search%'
-                      OR items.item_code LIKE '%$search%'
-                      OR users.name LIKE '%$search%'
-                      OR users.email LIKE '%$search%')";
-        }
 
-        $borrows = DB::select($query);
-
-        return view('borrow-report.index', compact('borrows', 'startDate', 'endDate', 'search'));
+        return view('borrow-report.index', compact('borrows', 'startDate', 'endDate', 'search', 'revenue'));
     }
 
 

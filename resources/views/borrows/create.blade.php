@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col-lg-6">
             @error('error')
             <div class="alert alert-danger">

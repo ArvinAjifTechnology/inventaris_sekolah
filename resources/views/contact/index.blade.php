@@ -22,7 +22,7 @@
                             <h5 class="card-title">Send To Whatsapp</h5>
                             <form action="{{route('contact.send-to-whatsapp') }}" method="post" role="form" class="">
                                 @csrf
-                                <div class="row">
+                                <div class="row" style="height: 100vh;">
                                     <div class="col-md-6 form-group" data-aos="fade-up">
                                         <input type="text" name="name" class="form-control" id="name"
                                             placeholder="Your Name" required>
@@ -48,7 +48,7 @@
                             <h5 class="card-title">Send To Email</h5>
                             <form action="{{route('contact.send-to-email') }}" method="post" role="form" class="">
                                 @csrf
-                                <div class="row">
+                                <div class="row" style="height: 100vh;">
                                     <div class="col-md-6 form-group" data-aos="fade-up">
                                         <input type="text" name="name" class="form-control" id="name"
                                             placeholder="Your Name" required>

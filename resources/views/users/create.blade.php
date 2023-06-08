@@ -5,7 +5,7 @@
 $user=[0];
 @endphp
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col-lg-6">
             <form method="POST" action="{{ route('admin.users.store') }}" class="">
                 @csrf
@@ -26,13 +26,6 @@ $user=[0];
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <!-- <div class="form-group">
-                    <label for="user_code">User Code</label>
-                    <input type="text" id="user_code" name="user_code" class="form-control @error('user_code') is-invalid @enderror" value="{{ old('user_code') }}" unique>
-                    @error('user_code')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div> -->
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email"

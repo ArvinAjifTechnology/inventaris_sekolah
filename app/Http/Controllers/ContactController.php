@@ -40,6 +40,6 @@ class ContactController extends Controller
 
         Mail::to('arvinajif3@gmail.com')->send(new ContactMail($data));
 
-        return redirect('/contact')->with('success', 'Your message has been sent.');
+        return redirect()->back()->with('success', 'Your message has been sent.');
     }
 }

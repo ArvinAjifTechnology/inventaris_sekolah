@@ -1,6 +1,6 @@
 @extends('layouts.main') @section('content')
 <div class="container-fluid">
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-md-12">
             @can('admin')
             <a href="{{ route('rooms.create') }}" class="btn btn-primary mb-2">Tambah Data</a>
