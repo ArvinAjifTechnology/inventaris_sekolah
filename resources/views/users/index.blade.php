@@ -5,7 +5,7 @@
     <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col">
             <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-4 mt-2">Tambah Data</a>
-            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">
+            <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>Name</th>

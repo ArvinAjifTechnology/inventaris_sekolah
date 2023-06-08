@@ -9,7 +9,7 @@
             <a href="{{ url('/operator/borrows/create') }}" class="btn btn-primary btn-sm mb-2">Tambah Data Peminjam
                 an</a>
             @endcan
-            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">
+            <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>No</th>

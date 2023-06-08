@@ -6,7 +6,7 @@
         <div class="col-md-12">
             <a href="{{ url('/borrower/borrows/create/search-item') }}" class="btn btn-primary btn-sm mb-2">Ajukan
                 Peminjaman</a>
-            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100">
+            <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>No</th>

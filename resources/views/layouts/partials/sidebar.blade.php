@@ -80,7 +80,7 @@
                 </a>
             </li>
             <li class="side-nav-item">
-                <a href="{{ url('/borrows/borrow-report') }}" class="side-nav-link">
+                <a href="{{ url('/borrow-report') }}" class="side-nav-link">
                     <i class="uil-chart"></i>
                     <span> Laporan Peminjaman</span>
                 </a>

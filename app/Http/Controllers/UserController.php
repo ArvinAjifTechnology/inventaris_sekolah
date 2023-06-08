@@ -119,7 +119,6 @@ class UserController extends Controller
         $user = DB::selectOne('SELECT * FROM users WHERE username = ?', [$username]);
         if ($user) {
             $roomIds = DB::delete('DELETE FROM rooms WHERE user_id = ?', [$user->id]); // Get the room IDs associated with the user
-            // dd($roomIds);
             $borrowIds = DB::delete('DELETE FROM borrows WHERE user_id = ?', [$user->id]); // Get the borrow IDs associated with the user
 
         User::destroy($username); // Delete the user

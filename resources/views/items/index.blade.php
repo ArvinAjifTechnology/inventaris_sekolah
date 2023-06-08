@@ -9,7 +9,7 @@
             <a href="{{ url('/operator/items/create') }}" class="btn btn-primary mb-2">Tambah Data</a>
             @endcan
 
-            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100"">
+            <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100"">
                 <thead>
                     <tr>
                         <th>#</th>

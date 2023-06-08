@@ -45,8 +45,8 @@ class BorrowReportController extends Controller
             ->groupBy('borrows.id')
             ->get();
 
-        $revenue = $borrows->revenue;
-
+        $revenue = $borrows->first()->revenue;
+        convertToRupiah($revenue);
 
         return view('borrow-report.index', compact('borrows', 'startDate', 'endDate', 'search', 'revenue'));
     }

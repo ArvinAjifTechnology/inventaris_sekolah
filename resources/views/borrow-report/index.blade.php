@@ -2,13 +2,13 @@
 
 @section('content')
 <!-- resources/views/borrow-report/index.blade.php -->
-<div class="container mb-5">
+<div class="container mb-3">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
                 <form action="{{ route('borrow-report.generate') }}" method="post" class="card-body">
                     @csrf
-                    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
+                    <div class="row justify-content-center d-flex align-content-center">
                         <div class="col-md-4 mb-3">
                             <label for="start_date" class="form-label">Tanggal Mulai:</label>
                             <input type="date" id="start_date" name="start_date" class="form-control" />
@@ -35,7 +35,7 @@
 
 
 <div class="container">
-    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
+    <div class="row">
         <div>
             {{-- <a
                 href="{{ route('borrow-report.export', ['type' => 'pdf', 'start_date' => $startDate, 'end_date' => $endDate, 'search' => $search]) }}"
@@ -65,15 +65,14 @@
 
         </div>
         <div class="col">
-            @dd($revenue)
             @if (!empty($borrows))
             <div class="card">
                 <div class="card-header">Revenue</div>
                 <div class="card-body">
-                    {{ convertToRupiah($borrows->revenue) }}
+                    {{ convertToRupiah($borrows->first()->revenue) }}
                 </div>
             </div>
-            <table id="datatable-buttons" class="table table-striped dt-responsive nowrap w-100y">
+            <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100y">
                 <thead>
                     <tr>
                         <th>Kode Peminjaman</th>
