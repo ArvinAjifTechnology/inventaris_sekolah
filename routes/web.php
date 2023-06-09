@@ -77,11 +77,7 @@ Route::middleware('borrower')->group(function () {
     Route::post('/borrower/borrows/create/submit-borrow-request-verifiy/', [BorrowerBorrowController::class, 'verifySubmitBorrowRequestView']);
     Route::get('/borrower/borrows/create/submit-borrow-request-verifiy/', [BorrowerBorrowController::class, 'verifySubmitBorrowRequestView']);
 });
-Route::middleware('AdminOrOperator')->group(function () {
-    // route yang hanya bisa diakses oleh borrower
-    // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');
-    Route::resource('borrows', BorrowController::class);
-});
+
 Route::middleware('auth')->group(function () {
     // route yang hanya bisa diakses oleh borrower
     // Route::get('/borrower/dashboard', 'BorrowerController@dashboard');

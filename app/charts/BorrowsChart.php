@@ -16,15 +16,6 @@ class BorrowsChart
 
     public function build()
     {
-        //     $pending = $borrows->where('borrow_status', 'pending')->count();
-        //     $borrowed = $borrows->where('borrow_status', 'borrowed')->count();
-        //     $completed = $borrows->where('borrow_status', 'completed')->count();
-        // // dd($data);
-        // return $this->chart->lineChart()
-        //     ->setTitle('Count Of Borrowed')
-        //     ->setSubtitle(date('Y'))
-        //     ->addData('Borrow Status',[$pending, $borrowed, $completed])
-        //     ->setLabels(['Pending', 'Borrowed', 'Completed']);
         $startDate = now()->subMonth()->startOfMonth(); // Tanggal mulai sebulan yang lalu
         $endDate = now()->endOfDay(); // Tanggal akhir sebulan yang lalu
         $borrows = Borrow::whereBetween('created_at', [$startDate, $endDate])->get();

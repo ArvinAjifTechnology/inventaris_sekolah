@@ -25,10 +25,10 @@ class BorrowReportController extends Controller
         $search = $request->input('search');
 
         $borrows = Borrow::selectRaw("borrows.*,
-                             CONCAT(users.first_name, ' ', users.last_name) AS user_full_name,
-                             users.*,
-                             items.*,
-                             SUM(borrows.sub_total) AS revenue")
+                        CONCAT(users.first_name, ' ', users.last_name) AS user_full_name,
+                        users.*,
+                        items.*,
+                        SUM(borrows.sub_total) AS revenue")
             ->join('users', 'borrows.user_id', '=', 'users.id')
             ->join('items', 'borrows.item_id', '=', 'items.id')
             ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
@@ -42,7 +42,7 @@ class BorrowReportController extends Controller
                     ->orWhere('users.name', 'LIKE', '%' . $search . '%')
                     ->orWhere('users.email', 'LIKE', '%' . $search . '%');
             })
-            ->groupBy('borrows.id')
+            ->groupBy('borrows.id', 'borrows.updated_at')
             ->get();
 
         $revenue = $borrows->first()->revenue;

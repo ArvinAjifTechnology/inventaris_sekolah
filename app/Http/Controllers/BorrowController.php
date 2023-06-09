@@ -59,7 +59,7 @@ class BorrowController extends Controller
      */
     public function create()
     {
-        $items = DB::select('SELECT * FROM items WHERE `condition` = ?', ['good']);
+        $items = DB::select('SELECT * FROM items WHERE `condition` = ?', ['good', 'fair']);
         $users = DB::select('SELECT * , CONCAT(users.first_name, " ", users.last_name) AS user_full_name FROM users WHERE role = ?', ['borrower']);
         // $items = DB::select("SELECT * FROM items WHERE condition = 'good'");
         // $users = DB::select("SELECT * FROM users WHERE role = 'borrower'");
@@ -291,7 +291,7 @@ class BorrowController extends Controller
 
     public function sendReturnReminder()
     {
-        $borrows = Borrow::whereDate('return_date', Carbon::today())->get();
+        $borrows = Borrow::where('borrow_status', 'borrowed')->whereDate('return_date', Carbon::today())->get();
 
         foreach ($borrows as $borrow) {
             SendReturnReminderEmail::dispatch($borrow);
@@ -345,7 +345,6 @@ class BorrowController extends Controller
                 abort(403, 'Unauthorized');
             }
         }
-
     }
     public function rejectBorrowRequest(Request $request, $id)
     {

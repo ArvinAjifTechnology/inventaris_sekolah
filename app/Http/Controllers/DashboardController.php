@@ -2,17 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Models\Borrow;
+use App\Charts\ItemsChart;
+use App\Charts\UsersChart;
 use App\Charts\BorrowsChart;
 use App\Charts\RevenueChart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Models\Borrow;
-use App\Models\User;
-use App\Charts\UsersChart;
+use Illuminate\Support\Facades\Gate;
 
 class DashboardController extends Controller
 {
-    public function index(UsersChart $usersChart, BorrowsChart $borrowsChart, RevenueChart $revenueChart)
+    public function index(UsersChart $usersChart, BorrowsChart $borrowsChart, RevenueChart $revenueChart, ItemsChart $itemsChart)
     {
         $revenue = DB::select("SELECT SUM(sub_total) AS revenue FROM borrows")[0]->revenue;
         $borrowed_quantity = DB::select("SELECT COUNT(borrow_code) AS borrowed_quantity FROM borrows")[0]->borrowed_quantity;
@@ -34,6 +36,7 @@ class DashboardController extends Controller
             'usersChart' => $usersChart->build(),
             'borrowsChart' => $borrowsChart->build(),
             'revenueChart' => $revenueChart->build(),
+            'itemsChart' => $itemsChart->build(),
             // 'borrowChart'
         ]);
     }

@@ -91,8 +91,8 @@
                     @error('quantity')
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
+                    <button type="submit" class="btn btn-primary mt-4">Submit</button>
         </div>
-        <button type="submit" class="btn btn-primary mt-4">Submit</button>
         </form>
 
     </div>

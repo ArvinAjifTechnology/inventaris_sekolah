@@ -37,15 +37,9 @@
                 formatter: function(value) {
                     return 'Rp ' + Intl.NumberFormat('id-ID').format(value);
                 }
-            },
-        xaxis: {
-            labels: {
-                formatter: function(value) {
-                    return 'Rp ' + Intl.NumberFormat('id-ID').format(value);
-                }
             }
         }
-        }
+
     }
 
     var chart = new ApexCharts(document.querySelector("#{!! $chart->id() !!}"), options);

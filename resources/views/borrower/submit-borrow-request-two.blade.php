@@ -3,7 +3,7 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
+    <div class="row justify-content-center d-flex align-content-center mt-3">
         <div class="col-md-6">
             <div class="progress">
                 <div class="progress-bar" role="progressbar" style="width: 66%;" aria-valuenow="66" aria-valuemin="0"
@@ -13,7 +13,7 @@
     </div>
 </div>
 <div class="container">
-    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
+    <div class="row justify-content-center d-flex align-content-center">
         <div class="col-lg-6">
             <form method="POST" action="{{ url('/borrower/borrows/create/submit-borrow-request-verifiy/') }}" class="">
                 @csrf

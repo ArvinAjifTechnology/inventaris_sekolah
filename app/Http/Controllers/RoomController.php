@@ -27,6 +27,14 @@ class RoomController extends Controller
         } else {
             abort(403, 'Unauthorized');
         }
+        if (Gate::allows('admin')) {
+            // akses yang diizinkan untuk admin
+            $rooms = Room::getAll(); //model
+        } elseif (Gate::allows('operator')) {
+            $rooms = Room::getAllForOperator();
+        } else {
+            abort(403, 'Unauthorized');
+        }
 
         return view('rooms.index', compact('rooms'));
     }
@@ -36,7 +44,12 @@ class RoomController extends Controller
      */
     public function create()
     {
-        $users = User::latest()->where('role', '=', 'operator')->get();
+        if (Gate::allows('admin')) {
+            // akses yang diizinkan untuk admin
+            $users = User::latest()->where('role', '=', 'operator')->get();
+        } else {
+            abort(403, 'Unauthorized');
+        }
         // $user = Collection::make($user);
         return view('rooms.create', compact('users'));
     }

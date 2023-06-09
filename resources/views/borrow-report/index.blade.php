@@ -2,7 +2,7 @@
 
 @section('content')
 <!-- resources/views/borrow-report/index.blade.php -->
-<div class="container mb-3">
+<div class="container mb-1 mt-3">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
@@ -66,13 +66,7 @@
         </div>
         <div class="col">
             @if (!empty($borrows))
-            <div class="card">
-                <div class="card-header">Revenue</div>
-                <div class="card-body">
-                    {{ convertToRupiah($borrows->first()->revenue) }}
-                </div>
-            </div>
-            <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100y">
+            <table id="scroll-horizontal-datatable" class="table table-primary">
                 <thead>
                     <tr>
                         <th>Kode Peminjaman</th>
@@ -106,6 +100,12 @@
                         <!-- Tambahkan field lainnya sesuai dengan struktur tabel "borrows" -->
                     </tr>
                     @endforeach
+                    <div class="card">
+                        <div class="card-header">Revenue</div>
+                        <div class="card-body">
+                            {{ convertToRupiah($borrows->first()->revenue) }}
+                        </div>
+                    </div>
                     {{-- <tr>
                         <td colspan="10" align="right"><strong>Jumlah Subtotal:</strong></td>
                         <td>{{ convertToRupiah($borrows->sum('sub_total')) }}</td>
@@ -118,4 +118,4 @@
         </div>
     </div>
 </div>
-@endsection\
+@endsection

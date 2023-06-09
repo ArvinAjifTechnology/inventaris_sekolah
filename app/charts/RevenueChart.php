@@ -16,15 +16,6 @@ class RevenueChart
 
     public function build()
     {
-        //     $pending = $borrows->where('borrow_status', 'pending')->count();
-        //     $borrowed = $borrows->where('borrow_status', 'borrowed')->count();
-        //     $completed = $borrows->where('borrow_status', 'completed')->count();
-        // // dd($data);
-        // return $this->chart->lineChart()
-        //     ->setTitle('Count Of Borrowed')
-        //     ->setSubtitle(date('Y'))
-        //     ->addData('Borrow Status',[$pending, $borrowed, $completed])
-        //     ->setLabels(['Pending', 'Borrowed', 'Completed']);
         $startDate = now()->subMonth()->startOfMonth();
         $endDate = now()->endOfDay();
         $borrows = Borrow::whereBetween('created_at', [$startDate, $endDate])->get();
@@ -46,24 +37,6 @@ class RevenueChart
             ->setSubtitle(date('Y'))
             ->addData('Revenue', $revenueData)
             ->setLabels(convertToRupiah(array_keys($data)));
-
-        // Convert sub_total values to rupiah format
-        // $revenueChart->dataset('Revenue', 'line', $revenueData)
-        //     ->options([
-        //         'tooltip' => [
-        //             'callbacks' => [
-        //                 'label' => 'function(tooltipItem, data) {
-        //             var datasetLabel = data.datasets[tooltipItem.datasetIndex].label || "";
-        //             var label = data.labels[tooltipItem.index];
-        //             var value = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-        //             if (datasetLabel) {
-        //                 label += ": " + convertToRupiah(value);
-        //             }
-        //             return label;
-        //         }'
-        //             ]
-        //         ]
-        //     ]);
 
         return $revenueChart;
     }
