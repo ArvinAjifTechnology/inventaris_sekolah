@@ -1,14 +1,14 @@
 -- DDL
-CREATE DATABASE inventaris_sekolah;
+CREATE DATABASE sintaks;
 
-USE inventaris_sekolah;
+USE sintaks;
 
 CREATE TABLE rooms(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     kode_ruangan VARCHAR(20) UNIQUE,
     room_name VARCHAR(50) NOT NULL,
     user_id INT UNSIGNED,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    -- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     description TEXT NUll,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -44,15 +44,15 @@ ALTER TABLE barang rename items;
 
 DROP TABLE items;
 
-DROP DATABASE inventaris_sekolah;
+DROP DATABASE sintaks;
 
 -- DMl
 
 -- Buat Ulang Database dan tablenya
 
-CREATE DATABASE inventaris_sekolah;
+CREATE DATABASE sintaks;
 
-USE inventaris_sekolah;
+USE sintaks;
 
 CREATE TABLE users (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -75,7 +75,7 @@ CREATE TABLE rooms(
     room_code VARCHAR(20) UNIQUE,
     room_name VARCHAR(50) NOT NULL,
     user_id INT UNSIGNED,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    -- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     description TEXT NUll,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -105,7 +105,7 @@ CREATE table borrows(
     borrow_date DATE NOT NULL,
     return_date DATE NOT NULL,
     FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    -- FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     borrow_status ENUM('pending', 'completed', 'borrowed', 'rejected') NOT NULL,
     borrow_quantity INT(15) NOT NULL,
     late_fee float(15) NOT NULL,
@@ -132,20 +132,19 @@ INSERT INTO users (username, user_code, email, first_name, last_name, role, gend
 ('moch_zayyan', 'OPR0004', 'moch_zayyan@example.com', 'Muhammad', 'Zayyan', 'operator', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW());
 
 INSERT INTO rooms(room_code, room_name, user_id, description, created_at, updated_at)
-VALUE ('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas', NOW(), NOW());
+VALUE ('RMAM8213B-0000001', 'R-A-1-01', 4, 'Ruang Kelas', NOW(), NOW());
 
 INSERT INTO rooms(room_code, room_name, user_id, description, created_at, updated_at) VALUE
-('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas', NOW(), NOW()),
-('RM7328878-0000002', 'R-A-1-02', 4, 'Ruang Kelas', NOW(), NOW()),
-('RM7HJS823-0000003', 'R-A-1-03', 2, 'Ruang Kelas', NOW(), NOW()),
-('RMSHD8732-0000004', 'R-A-1-04', 4, 'Ruang Kelas', NOW(), NOW());
+('RMAM8213B-0000002', 'R-A-1-02', 5, 'Ruang Kelas', NOW(), NOW()),
+('RM7328878-0000003', 'R-A-1-03', 6, 'Ruang Kelas', NOW(), NOW()),
+('RM7HJS823-0000004', 'R-A-1-04', 11, 'Ruang Kelas', NOW(), NOW());
 
 INSERT INTO items (item_code, item_name, room_id, description, `condition`, rental_price, late_fee_per_day, quantity, created_at, updated_at)
-VALUE ('ITM001', 'Meja', 4, 'Meja', 'good', 10000, 20000, 22, NOW(), NOW());
+VALUE ('ITM001', 'Meja', 1, 'Meja', 'good', 10000, 20000, 22, NOW(), NOW());
 
 INSERT INTO items (item_code, item_name, room_id, description, `condition`, rental_price, late_fee_per_day, quantity, created_at, updated_at)
-VALUES ('ITM002', 'Buku', 5, 'Buku', 'good', 1000, 10000, 2, NOW(), NOW()),
-('ITM003', 'Lemari', 6, 'Lemari', 'fair', 18000, 22000, 1, NOW(), NOW()),
+VALUES ('ITM002', 'Buku', 2, 'Buku', 'good', 1000, 10000, 2, NOW(), NOW()),
+('ITM003', 'Lemari', 3, 'Lemari', 'fair', 18000, 22000, 1, NOW(), NOW()),
 ('ITM004', 'Kursi', 4, 'Kursi', 'good', 14000, 18000, 42, NOW(), NOW());
 
 
@@ -180,3 +179,7 @@ FROM items, rooms
 WHERE items.room_id = rooms.id;
 
 DESC items;
+
+SELECT *
+FROM rooms
+JOIN items ON rooms.id = items.room_id;
