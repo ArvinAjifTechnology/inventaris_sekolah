@@ -146,4 +146,36 @@ INSERT INTO rooms(room_code, room_name, user_id, description) VALUE
 ('RM7HJS823-0000003', 'R-A-1-03', 2, 'Ruang Kelas'),
 ('RMSHD8732-0000004', 'R-A-1-04', 4, 'Ruang Kelas');
 
+
+INSERT INTO items (item_code, item_name, room_id, description, `condition`, rental_price, late_fee_per_day, quantity, created_at, updated_at)
+VALUE ('ITM001', 'Meja', 4, 'Meja', 'good', 10000, 20000, 22, NOW(), NOW());
+
+INSERT INTO items (item_code, item_name, room_id, description, `condition`, rental_price, late_fee_per_day, quantity, created_at, updated_at)
+VALUE ('ITM002', 'Buku', 5, 'Buku', 'good', 1000, 10000, 2, NOW(), NOW()),
+VALUE ('ITM003', 'Lemari', 6, 'Lemari', 'fair', 18000, 22000, 1, NOW(), NOW()),
+VALUE ('ITM004', 'Kursi', 4, 'Kursi', 'good', 14000, 18000, 42, NOW(), NOW());
+
+
+INSERT INTO borrows (verification_code_for_borrow_request, item_id, user_id, borrow_code, borrow_date, return_date, borrow_status, borrow_quantity, late_fee, total_rental_price, sub_total, created_at, updated_at)
+VALUE (NULL, 1, 7, 'BRW001', '2023-06-01', '2023-06-03', 'completed', 2, 0.0, 6000, 6000, NOW(), NOW());
+
+INSERT INTO borrows (verification_code_for_borrow_request, item_id, user_id, borrow_code, borrow_date, return_date, borrow_status, borrow_quantity, late_fee, total_rental_price, sub_total, created_at, updated_at)
+VALUES
+('KJSADB', 3, 8, 'BRW002', '2023-06-03', '2023-06-06', 'pending', 1, 0, 0, 0, NOW(), NOW()),
+(NULL, 4, 9, 'BRW004', '2023-06-04', '2023-06-07', 'completed', 39, 0.0, 1792000, 1792000, NOW(), NOW()),
+(NULL, 4, 9, 'BRW005', '2023-06-05', '2023-06-08', 'borrowed', 3, 0, 0, 0, NOW(), NOW());
+
+UPDATE borrows
+SET borrow_status = 'borrowed',
+    late_fee = 0,
+    total_rental_price = 0,
+    sub_total = 0,
+    updated_at = NOW()
+WHERE id = 2;
+
+DELETE FROM borrows WHERE id = 3;
+
+-- DML LANJUTAN
+
+
 DESC items;
