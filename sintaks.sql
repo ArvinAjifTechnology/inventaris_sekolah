@@ -176,6 +176,6 @@ WHERE id = 2;
 DELETE FROM borrows WHERE id = 3;
 
 -- DML LANJUTAN
-
+SELECT * FROM items LIMIT 3;
 
 DESC items;
