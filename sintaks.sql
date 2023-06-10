@@ -8,7 +8,7 @@ CREATE TABLE rooms(
     kode_ruangan VARCHAR(20) UNIQUE,
     room_name VARCHAR(50) NOT NULL,
     user_id INT UNSIGNED,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     description TEXT NUll,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -75,7 +75,7 @@ CREATE TABLE rooms(
     room_code VARCHAR(20) UNIQUE,
     room_name VARCHAR(50) NOT NULL,
     user_id INT UNSIGNED,
-    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE ON UPDATE CASCADE,
     description TEXT NUll,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -131,29 +131,22 @@ INSERT INTO users (username, user_code, email, first_name, last_name, role, gend
 ('na.jaemin', 'ADM0004', 'na.jaemin@example.com', 'Na', 'Jaemin', 'admin', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW()),
 ('moch_zayyan', 'OPR0004', 'moch_zayyan@example.com', 'Muhammad', 'Zayyan', 'operator', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW());
 
-INSERT INTO rooms(room_code, room_name, user_id, description)
-VALUE ('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas');
+INSERT INTO rooms(room_code, room_name, user_id, description, created_at, updated_at)
+VALUE ('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas', NOW(), NOW());
 
-INSERT INTO rooms(room_code, room_name, user_id, description) VALUE
-('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas'),
-('RM7328878-0000002', 'R-A-1-02', 4, 'Ruang Kelas'),
-('RM7HJS823-0000003', 'R-A-1-03', 2, 'Ruang Kelas'),
-('RMSHD8732-0000004', 'R-A-1-04', 4, 'Ruang Kelas');
-
-INSERT INTO rooms(room_code, room_name, user_id, description) VALUE
-('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas'),
-('RM7328878-0000002', 'R-A-1-02', 4, 'Ruang Kelas'),
-('RM7HJS823-0000003', 'R-A-1-03', 2, 'Ruang Kelas'),
-('RMSHD8732-0000004', 'R-A-1-04', 4, 'Ruang Kelas');
-
+INSERT INTO rooms(room_code, room_name, user_id, description, created_at, updated_at) VALUE
+('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas', NOW(), NOW()),
+('RM7328878-0000002', 'R-A-1-02', 4, 'Ruang Kelas', NOW(), NOW()),
+('RM7HJS823-0000003', 'R-A-1-03', 2, 'Ruang Kelas', NOW(), NOW()),
+('RMSHD8732-0000004', 'R-A-1-04', 4, 'Ruang Kelas', NOW(), NOW());
 
 INSERT INTO items (item_code, item_name, room_id, description, `condition`, rental_price, late_fee_per_day, quantity, created_at, updated_at)
 VALUE ('ITM001', 'Meja', 4, 'Meja', 'good', 10000, 20000, 22, NOW(), NOW());
 
 INSERT INTO items (item_code, item_name, room_id, description, `condition`, rental_price, late_fee_per_day, quantity, created_at, updated_at)
-VALUE ('ITM002', 'Buku', 5, 'Buku', 'good', 1000, 10000, 2, NOW(), NOW()),
-VALUE ('ITM003', 'Lemari', 6, 'Lemari', 'fair', 18000, 22000, 1, NOW(), NOW()),
-VALUE ('ITM004', 'Kursi', 4, 'Kursi', 'good', 14000, 18000, 42, NOW(), NOW());
+VALUES ('ITM002', 'Buku', 5, 'Buku', 'good', 1000, 10000, 2, NOW(), NOW()),
+('ITM003', 'Lemari', 6, 'Lemari', 'fair', 18000, 22000, 1, NOW(), NOW()),
+('ITM004', 'Kursi', 4, 'Kursi', 'good', 14000, 18000, 42, NOW(), NOW());
 
 
 INSERT INTO borrows (verification_code_for_borrow_request, item_id, user_id, borrow_code, borrow_date, return_date, borrow_status, borrow_quantity, late_fee, total_rental_price, sub_total, created_at, updated_at)
@@ -182,5 +175,8 @@ SELECT * FROM items LIMIT 2,4;
 
 SELECT * FROM items ORDER BY item_name ASC;
 
+SELECT *
+FROM items, rooms
+WHERE items.room_id = rooms.id;
 
 DESC items;
