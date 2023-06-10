@@ -120,9 +120,16 @@ INSERT INTO users (username, user_code, email, first_name, last_name, role, gend
 VALUE ('arvin.ajif', 'JD001', 'arvin.ajif@example.com', 'Arvin', 'Ajif', 'admin', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW());
 
 INSERT INTO users (username, user_code, email, first_name, last_name, role, gender, email_verified_at, password, remember_token, created_at, updated_at) VALUE
-('arvin.ajif', 'ADM0001', 'arvin.ajif@example.com', 'Arvin', 'Ajif', 'admin', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW())
-('ali_ahmad', 'ADM0001', 'ali_ahmad@example.com', 'Ali', 'Ahmad', 'admin', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW())
-;
+('ali_ahmad', 'ADM0002', 'ali_ahmad@example.com', 'Ali', 'Ahmad', 'admin', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW()),
+('muthia.mutmainah_aprinelia', 'ADM0003', 'muthia.mutmainah_aplinelia@example.com', 'Muthia Mutmainah', 'Aprinelia', 'admin', 'perempuan', NULL, 'password123', NULL, NOW(), NOW()),
+('dita.karang', 'OPR0001', 'dita.karang@example.com', 'Dita', 'Bayeo', 'operator', 'perempuan', NULL, 'password123', NULL, NOW(), NOW()),
+('lee.soodam', 'OPR0002', 'lee.soodam@example.com', 'Neng', 'Dami', 'operator', 'perempuan', NULL, 'password123', NULL, NOW(), NOW()),
+('park_jinny', 'OPR0003', 'park_jinny@example.com', 'Pink', 'Princess', 'operator', 'perempuan', NULL, 'password123', NULL, NOW(), NOW()),
+('ogawa_mizuki', 'BRW0001', 'ogawa_mizuki@example.com', 'Oh', 'Mija', 'borrower', 'perempuan', NULL, 'password123', NULL, NOW(), NOW()),
+('park_minji', 'BRW0002', 'park_minji@example.com', 'Orenji', 'Vitaminji', 'borrower', 'perempuan', NULL, 'password123', NULL, NOW(), NOW()),
+('ji.yeong_ju', 'BRW0003', 'ji.yeong_ju@example.com', 'Zuu', 'Baedah', 'borrower', 'perempuan', NULL, 'password123', NULL, NOW(), NOW()),
+('na.jaemin', 'ADM0004', 'na.jaemin@example.com', 'Na', 'Jaemin', 'admin', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW()),
+('moch_zayyan', 'OPR0004', 'moch_zayyan@example.com', 'Muhammad', 'Zayyan', 'operator', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW());
 
 INSERT INTO rooms(room_code, room_name, user_id, description)
 VALUE ('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas');
