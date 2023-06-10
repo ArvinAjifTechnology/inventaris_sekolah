@@ -115,6 +115,15 @@ CREATE table borrows(
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+
+INSERT INTO users (username, user_code, email, first_name, last_name, role, gender, email_verified_at, password, remember_token, created_at, updated_at)
+VALUE ('arvin.ajif', 'JD001', 'arvin.ajif@example.com', 'Arvin', 'Ajif', 'admin', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW());
+
+INSERT INTO users (username, user_code, email, first_name, last_name, role, gender, email_verified_at, password, remember_token, created_at, updated_at) VALUE
+('arvin.ajif', 'ADM0001', 'arvin.ajif@example.com', 'Arvin', 'Ajif', 'admin', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW())
+('ali_ahmad', 'ADM0001', 'ali_ahmad@example.com', 'Ali', 'Ahmad', 'admin', 'laki-laki', NULL, 'password123', NULL, NOW(), NOW())
+;
+
 INSERT INTO rooms(room_code, room_name, user_id, description)
 VALUE ('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas');
 
@@ -123,3 +132,11 @@ INSERT INTO rooms(room_code, room_name, user_id, description) VALUE
 ('RM7328878-0000002', 'R-A-1-02', 4, 'Ruang Kelas'),
 ('RM7HJS823-0000003', 'R-A-1-03', 2, 'Ruang Kelas'),
 ('RMSHD8732-0000004', 'R-A-1-04', 4, 'Ruang Kelas');
+
+INSERT INTO rooms(room_code, room_name, user_id, description) VALUE
+('RMAM8213B-0000001', 'R-A-1-01', 2, 'Ruang Kelas'),
+('RM7328878-0000002', 'R-A-1-02', 4, 'Ruang Kelas'),
+('RM7HJS823-0000003', 'R-A-1-03', 2, 'Ruang Kelas'),
+('RMSHD8732-0000004', 'R-A-1-04', 4, 'Ruang Kelas');
+
+DESC items;
