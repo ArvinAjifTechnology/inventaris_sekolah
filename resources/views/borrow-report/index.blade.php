@@ -65,6 +65,12 @@
 
         </div>
         <div class="col">
+            <div class="card">
+                <div class="card-header">Revenue</div>
+                <div class="card-body">
+                    {{ convertToRupiah($borrows->sum('sub_total')) }}
+                </div>
+            </div>
             @if (!empty($borrows))
             <table id="scroll-horizontal-datatable" class="table table-primary">
                 <thead>
@@ -100,12 +106,6 @@
                         <!-- Tambahkan field lainnya sesuai dengan struktur tabel "borrows" -->
                     </tr>
                     @endforeach
-                    <div class="card">
-                        <div class="card-header">Revenue</div>
-                        <div class="card-body">
-                            {{ convertToRupiah($borrows->first()->revenue) }}
-                        </div>
-                    </div>
                     {{-- <tr>
                         <td colspan="10" align="right"><strong>Jumlah Subtotal:</strong></td>
                         <td>{{ convertToRupiah($borrows->sum('sub_total')) }}</td>

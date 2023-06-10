@@ -42,13 +42,10 @@ class BorrowReportController extends Controller
                     ->orWhere('users.name', 'LIKE', '%' . $search . '%')
                     ->orWhere('users.email', 'LIKE', '%' . $search . '%');
             })
-            ->groupBy('borrows.id', 'borrows.updated_at')
+            ->groupBy('borrows.id')
             ->get();
 
-        $revenue = $borrows->first()->revenue;
-        convertToRupiah($revenue);
-
-        return view('borrow-report.index', compact('borrows', 'startDate', 'endDate', 'search', 'revenue'));
+        return view('borrow-report.index', compact('borrows', 'startDate', 'endDate', 'search'));
     }
 
 

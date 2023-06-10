@@ -59,7 +59,7 @@ class BorrowController extends Controller
      */
     public function create()
     {
-        $items = DB::select('SELECT * FROM items WHERE `condition` = ?', ['good', 'fair']);
+        $items = DB::select('SELECT * FROM items WHERE `condition` = ?', ['good']);
         $users = DB::select('SELECT * , CONCAT(users.first_name, " ", users.last_name) AS user_full_name FROM users WHERE role = ?', ['borrower']);
         // $items = DB::select("SELECT * FROM items WHERE condition = 'good'");
         // $users = DB::select("SELECT * FROM users WHERE role = 'borrower'");
