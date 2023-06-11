@@ -13,19 +13,31 @@ class Room extends Model
 
     public static function getAll()
     {
-        return DB::table('rooms')
-            ->join('users', 'rooms.user_id', '=', 'users.id')
-            ->select('rooms.*', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"))
-            ->get();
+        $query = "SELECT rooms.*, CONCAT(users.first_name, ' ', users.last_name) AS user_name
+          FROM rooms
+          INNER JOIN users ON rooms.user_id = users.id";
+
+        $result = DB::select($query);
+
+        // Mengonversi hasil ke dalam bentuk koleksi objek jika diperlukan
+        $rooms = collect($result);
+        return $rooms;
     }
 
     public static function getAllForOperator()
     {
-        return DB::table('rooms')
-            ->join('users', 'rooms.user_id', '=', 'users.id')
-            ->where('users.id', Auth::user()->id)
-            ->select('rooms.*', DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS user_name"))
-            ->get();
+        $query = "SELECT rooms.*, CONCAT(users.first_name, ' ', users.last_name) AS user_name
+        FROM rooms
+        INNER JOIN users ON rooms.user_id = users.id
+        WHERE users.id = " . Auth::user()->id;
+
+        $result = DB::select($query);
+
+        // Mengonversi hasil ke dalam bentuk koleksi objek jika diperlukan
+        $rooms = collect($result);
+
+        // Output atau penggunaan data rooms...;
+        return $rooms;
     }
 
     public static function findId($id)

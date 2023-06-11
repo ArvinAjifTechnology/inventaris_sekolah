@@ -7,6 +7,7 @@ use App\Models\Borrow;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade as PDF;
 use App\Exports\BorrowExport;
+use Illuminate\Support\Facades\DB;
 
 class BorrowReportController extends Controller
 {
@@ -23,33 +24,31 @@ class BorrowReportController extends Controller
         $endDate = $request->input('end_date');
         $search = $request->input('search');
 
-        $query = Borrow::query();
-
-        // Filter tanggal
-        if ($startDate && $endDate) {
-            $query->whereBetween('borrow_date', [$startDate, $endDate]);
-        }
-
-        // Pencarian
-        if ($search) {
-            $query->where(function ($q) use ($search) {
-                $q->where('borrow_code', 'LIKE', "%$search%")
-                    ->orWhere('borrow_status', 'LIKE', "%$search%")
-                    ->orWhereHas('item', function ($q) use ($search) {
-                        $q->where('item_name', 'LIKE', "%$search%")
-                            ->orWhere('item_code', 'LIKE', "%$search%");
-                    })
-                    ->orWhereHas('user', function ($q) use ($search) {
-                        $q->where('name', 'LIKE', "%$search%")
-                            ->orWhere('email', 'LIKE', "%$search%");
-                    });
-            });
-        }
-
-        $borrows = $query->get();
+        $borrows = Borrow::selectRaw("borrows.*,
+                        CONCAT(users.first_name, ' ', users.last_name) AS user_full_name,
+                        users.*,
+                        items.*,
+                        SUM(borrows.sub_total) AS revenue")
+            ->join('users', 'borrows.user_id', '=', 'users.id')
+            ->join('items', 'borrows.item_id', '=', 'items.id')
+            ->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('borrows.borrow_date', [$startDate, $endDate]);
+            })
+            ->where(function ($query) use ($search) {
+                $query->where('borrows.borrow_code', 'LIKE', '%' . $search . '%')
+                    ->orWhere('borrows.borrow_status', 'LIKE', '%' . $search . '%')
+                    ->orWhere('items.item_name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('items.item_code', 'LIKE', '%' . $search . '%')
+                    ->orWhere('users.name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('users.email', 'LIKE', '%' . $search . '%');
+            })
+            ->groupBy('borrows.id')
+            ->get();
 
         return view('borrow-report.index', compact('borrows', 'startDate', 'endDate', 'search'));
     }
+
+
 
     public function export(Request $request)
     {

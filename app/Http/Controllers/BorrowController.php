@@ -59,8 +59,8 @@ class BorrowController extends Controller
      */
     public function create()
     {
-        $items = Item::all()->where('condition', '=', 'good');
-        $users = User::all()->where('role', '=', 'borrower');
+        $items = DB::select('SELECT * FROM items WHERE `condition` = ?', ['good']);
+        $users = DB::select('SELECT * , CONCAT(users.first_name, " ", users.last_name) AS user_full_name FROM users WHERE role = ?', ['borrower']);
         // $items = DB::select("SELECT * FROM items WHERE condition = 'good'");
         // $users = DB::select("SELECT * FROM users WHERE role = 'borrower'");
 
@@ -273,10 +273,11 @@ class BorrowController extends Controller
      */
     public function destroy(string $id)
     {
-        $borrow = Borrow::all()->where('id', '=', $id);
-        $borrow->item()->delete();
-        $borrow->user()->delete();
-        Borrow::destroy($id);
+        $borrow = DB::selectOne('SELECT * FROM borrows WHERE id = ?', [$id]);
+
+        if ($borrow) {
+            DB::delete('DELETE FROM borrows WHERE id = ?', [$id]);
+        }
 
         return redirect('/items')->with('status', 'Data berhasil Di Hapus');
     }
@@ -290,7 +291,7 @@ class BorrowController extends Controller
 
     public function sendReturnReminder()
     {
-        $borrows = Borrow::whereDate('return_date', Carbon::today())->get();
+        $borrows = Borrow::where('borrow_status', 'borrowed')->whereDate('return_date', Carbon::today())->get();
 
         foreach ($borrows as $borrow) {
             SendReturnReminderEmail::dispatch($borrow);
@@ -343,6 +344,18 @@ class BorrowController extends Controller
             } else {
                 abort(403, 'Unauthorized');
             }
+        }
+    }
+    public function rejectBorrowRequest(Request $request, $id)
+    {
+        Borrow::rejectBorrowRequest($id);
+
+        if (Gate::allows('admin')) {
+            return redirect('/admin/borrows')->with('status', 'Selamat Data Berhasil Di Tambahkan');
+        } elseif (Gate::allows('operator')) {
+            return redirect('/operator/borrows')->with('status', 'Selamat Data Berhasil Di Tambahkan');
+        } else {
+            abort(403, 'Unauthorized');
         }
     }
 }

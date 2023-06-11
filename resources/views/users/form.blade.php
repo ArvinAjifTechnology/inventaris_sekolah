@@ -41,7 +41,7 @@
 </div>
 <div class="form-group">
     <label for="role">Level</label>
-    <select id="role" name="role" class="form-control">
+    <select id="role" name="role" class="form-control select2" data-toggle="select2">
         <option value="admin" {{ old('role', $user[0]->role) == 'admin' ? 'selected' : '' }}>Admin</option>
         <option value="operator" {{ old('role', $user[0]->role) == 'operator' ? 'selected' : '' }}>Operator</option>
         <option value="borrower" {{ old('role', $user[0]->role) == 'borrower' ? 'selected' : '' }}>Peminjam</option>
@@ -49,7 +49,7 @@
 </div>
 <div class="form-group">
     <label for="gender">Gender</label>
-    <select id="gender" name="gender" class="form-control">
+    <select id="gender" name="gender" class="form-control select2" data-toggle="select2">
         <option value="laki-laki" {{ old('gender', $user[0]->gender) == 'laki-laki' ? 'selected' : '' }}>Laki-laki
         </option>
         <option value="perempuan" {{ old('gender', $user[0]->gender) == 'perempuan' ? 'selected' : '' }}>perempuan

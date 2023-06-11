@@ -24,7 +24,7 @@ class BorrowController extends Controller
                                     FROM borrows
                                     LEFT JOIN items ON borrows.item_id = items.id
                                     LEFT JOIN users ON borrows.user_id = users.id
-                                    WHERE borrows.user_id = $user_id
+                                    WHERE borrows.user_id = $user_id AND items.condition = 'good'
                                     ORDER BY borrows.created_at DESC");
 
         return view('borrower.index', compact('borrows'));

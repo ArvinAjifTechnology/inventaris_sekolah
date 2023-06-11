@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col-lg-6">
             @error('error')
             <div class="alert alert-danger">
@@ -18,7 +18,7 @@
                     @csrf
                     <div class="form-group">
                         <label for="item_id">Item</label>
-                        <select id="item_id" name="item_id" class="form-control @error('item_id') is-invalid @enderror">
+                        <select id="item_id" name="item_id" class="form-control @error('item_id') is-invalid @enderror select2" data-toggle="select2">
                             <option value="">Pilih Item</option>
                             @foreach($items as $item)
                             <option value="{{ $item->id }}" {{ old('item_id')==$item->id ? 'selected' : '' }}>{{
@@ -31,11 +31,11 @@
                     </div>
                     <div class="form-group">
                         <label for="user_id">User</label>
-                        <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                        <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror select2" data-toggle="select2">
                             <option value="">Pilih User</option>
                             @foreach($users as $user)
                             <option value="{{ $user->id }}" {{ old('user_id')==$user->id ? 'selected' : '' }}>{{
-                                $user->full_name }}</option>
+                                $user->user_full_name }}</option>
                             @endforeach
                         </select>
                         @error('user_id')

@@ -1,14 +1,14 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <!-- resources/views/borrow-report/index.blade.php -->
-<div class="container mb-5">
+<div class="container mb-1 mt-3">
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
                 <form action="{{ route('borrow-report.generate') }}" method="post" class="card-body">
                     @csrf
-                    <div class="row">
+                    <div class="row justify-content-center d-flex align-content-center">
                         <div class="col-md-4 mb-3">
                             <label for="start_date" class="form-label">Tanggal Mulai:</label>
                             <input type="date" id="start_date" name="start_date" class="form-control" />
@@ -65,8 +65,14 @@
 
         </div>
         <div class="col">
-            @if ($borrows->count() > 0)
-            <table class="table table-primary">
+            <div class="card">
+                <div class="card-header">Revenue</div>
+                <div class="card-body">
+                    {{ convertToRupiah($borrows->sum('sub_total')) }}
+                </div>
+            </div>
+            @if (!empty($borrows))
+            <table id="scroll-horizontal-datatable" class="table table-primary">
                 <thead>
                     <tr>
                         <th>Kode Peminjaman</th>
@@ -90,20 +96,20 @@
                         <td>{{ $borrow->borrow_date }}</td>
                         <td>{{ $borrow->return_date }}</td>
                         <td>{{ $borrow->borrow_status }}</td>
-                        <td>{{ $borrow->user->name }}</td>
-                        <td>{{ $borrow->user->email }}</td>
-                        <td>{{ $borrow->item->item_name }}</td>
-                        <td>{{ $borrow->item->item_code }}</td>
+                        <td>{{ $borrow->user_full_name }}</td>
+                        <td>{{ $borrow->email }}</td>
+                        <td>{{ $borrow->item_name }}</td>
+                        <td>{{ $borrow->item_code }}</td>
                         <td>{{ convertToRupiah($borrow->late_fee) }}</td>
                         <td>{{ convertToRupiah($borrow->total_rental_price) }}</td>
                         <td>{{ convertToRupiah($borrow->sub_total) }}</td>
                         <!-- Tambahkan field lainnya sesuai dengan struktur tabel "borrows" -->
                     </tr>
                     @endforeach
-                    <tr>
+                    {{-- <tr>
                         <td colspan="10" align="right"><strong>Jumlah Subtotal:</strong></td>
                         <td>{{ convertToRupiah($borrows->sum('sub_total')) }}</td>
-                    </tr>
+                    </tr> --}}
                 </tbody>
             </table>
             @else

@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <!-- resources/views/item-report/index.blade.php -->
@@ -8,7 +8,7 @@
             <div class="card">
                 <form action="{{ route('borrower.borrow.search-item') }}" method="post" class="card-body">
                     @csrf
-                    <div class="row">
+                    <div class="row justify-content-center d-flex align-content-center"">
                         <div class="col-md-10 mb-3">
                             <input type="text" id="search" name="search" class="form-control"
                                 placeholder="Cari Nama Barang ..." value="{{ old('search') }}" />
@@ -29,7 +29,7 @@
 
 
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center d-flex align-content-center"">
         <div class="col">
             @if (!empty($items))
             <table class="table table-primary">

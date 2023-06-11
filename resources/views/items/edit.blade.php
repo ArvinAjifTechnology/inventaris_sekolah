@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col-lg-6">
             @can('admin')
             <form method="POST" action="{{ url('/admin/items/'. $item[0]->id) }}" class="">
@@ -15,7 +15,7 @@
                 <input type="hidden" name="id" value="{{ $id }}">
                 <div class="form-group">
                     <label for="item_code">Item Code</label>
-                    <input type="text" id="item_code" name="item_code" class="form-control @error('item_code') is-invalid @enderror" value="{{ old('item_code', $item[0]->item_code) }}" required>
+                    <input type="text" id="item_code" name="item_code" class="form-control @error('item_code') is-invalid @enderror" value="{{ old('item_code', $item[0]->item_code) }}" required readonly>
                     @error('item_code')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

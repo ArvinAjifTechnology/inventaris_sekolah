@@ -2,16 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Models\Item;
 use App\Models\Room;
+use App\Models\User;
 use App\Models\Borrow;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Collection;
 use \Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -21,6 +22,7 @@ class UserController extends Controller
     public function index()
     {
         $users = User::getAll();
+        $users = collect($users);
         // $users = User::all();
         return view('users.index', compact('users'));
     }
@@ -30,7 +32,7 @@ class UserController extends Controller
      */
     public function create($id = NULL)
     {
-        return view('users.create', compact('user'));
+        return view('users.create');
     }
 
     /**
@@ -76,14 +78,6 @@ class UserController extends Controller
     public function edit(string $id)
     {
         $user = DB::select('select * from users  where username = ?', [$id]);
-        // $user = Collection::make($user);
-        // $user = collect($user)->map(function($item) {
-        //     return (object) $item;
-        // });
-        // $user = User::find($id);
-        // dd($user);
-        // $user = DB::select('select * from users where id = ?', [1]);
-        // $user = Collection::make($user);$user = DB::select('select * from users where id = ?', [1]);
         $user = collect($user);
         return view('users.edit', compact('user', 'id'));
     }
@@ -112,7 +106,7 @@ class UserController extends Controller
                 ->withInput();
         }
         $fullName = $request->input('first_name') . $request->input('last_name');
-        User::edit($fullName, $request, $username);
+        User::edit($request, $username);
 
         return redirect('/admin/users')->withErrors($validator)->withSuccess('Selamat Data Berhasil Di Update')->with('status', 'Selamat Data Berhasil Di Update')->withInput();
     }
@@ -122,15 +116,10 @@ class UserController extends Controller
      */
     public function destroy(string $username)
     {
-        $user = User::where('username','=', $username)->first();
+        $user = DB::selectOne('SELECT * FROM users WHERE username = ?', [$username]);
         if ($user) {
-            $roomIds = $user->rooms()->delete(); // Get the room IDs associated with the user
-            // dd($roomIds);
-            $borrowIds = $user->borrows()->delete(); // Get the borrow IDs associated with the user
-            // Room::whereIn('id', $roomIds)->delete(); // Delete the associated rooms
-            // Borrow::whereIn('id', $borrowIds)->delete(); // Delete the associated borrows
-            // Room::destroy($roomIds); // Delete the associated Rooms
-            // Borrow::destroy($borrowIds); // Delete the associated borrows
+            $roomIds = DB::delete('DELETE FROM rooms WHERE user_id = ?', [$user->id]); // Get the room IDs associated with the user
+            $borrowIds = DB::delete('DELETE FROM borrows WHERE user_id = ?', [$user->id]); // Get the borrow IDs associated with the user
 
         User::destroy($username); // Delete the user
         }

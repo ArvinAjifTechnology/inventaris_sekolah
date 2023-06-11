@@ -20,9 +20,9 @@ class ItemController extends Controller
     {
         if (Gate::allows('admin')) {
             $items = Item::getAll();
-        }elseif (Gate::allows('operator')) {
-            $items = Item::getAll();
-        }else {
+        } elseif (Gate::allows('operator')) {
+            $items = Item::getAllForOperator();
+        } else {
             abort(403, 'Unauthorized');
         }
 
@@ -36,9 +36,9 @@ class ItemController extends Controller
     {
         if (Gate::allows('admin')) {
             $rooms = Room::all();
-        }elseif (Gate::allows('operator')) {
+        } elseif (Gate::allows('operator')) {
             $rooms = Room::latest()->where('user_id', '=', Auth::user()->id)->get();
-        }else {
+        } else {
             abort(403, 'Unauthorized');
         }
         return view('items.create', compact('rooms'));
@@ -70,7 +70,7 @@ class ItemController extends Controller
             Item::insert($request);
 
             return redirect('/admin/items')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
-        }elseif (Gate::allows('operator')) {
+        } elseif (Gate::allows('operator')) {
             if ($validator->fails()) {
                 return redirect('/operator/items/create')
                     ->withErrors($validator)
@@ -79,7 +79,6 @@ class ItemController extends Controller
             Item::insert($request);
 
             return redirect('/operator/items')->withErrors($validator)->withInput()->with('status', 'Selamat Data Berhasil Di Tambahkan');
-
         } else {
             abort(403, 'Unauthorized');
         }
@@ -103,10 +102,10 @@ class ItemController extends Controller
         if (Gate::allows('admin')) {
             $item = Item::findId($id);
             $rooms = Room::getAll();
-        }elseif (Gate::allows('operator')) {
+        } elseif (Gate::allows('operator')) {
             $item = Item::findId($id);
             $rooms = Room::latest()->where('user_id', '=', Auth::user()->id)->get();
-        }else {
+        } else {
             abort(403, 'Unauthorized');
         }
         return view('items.edit', compact('item', 'rooms', 'id'));
@@ -132,7 +131,7 @@ class ItemController extends Controller
 
         if (Gate::allows('admin')) {
             if ($validator->fails()) {
-                return redirect('/admin/items/'. $id .'edit')
+                return redirect('/admin/items/' . $id . 'edit')
                     ->withErrors($validator)
                     ->withInput();
             }
@@ -140,9 +139,9 @@ class ItemController extends Controller
             Item::edit($request);
 
             return redirect('/admin/items')->withErrors($validator)->with('status', 'Selamat Data Berhasil Di Update')->withInput();
-        }elseif (Gate::allows('operator')) {
+        } elseif (Gate::allows('operator')) {
             if ($validator->fails()) {
-                return redirect('/operator/items/'. $id .'/edit')
+                return redirect('/operator/items/' . $id . '/edit')
                     ->withErrors($validator)
                     ->withInput();
             }
@@ -167,11 +166,10 @@ class ItemController extends Controller
 
         if (Gate::allows('admin')) {
             return redirect('/admin/items')->with('status', 'Data berhasil Di Hapus');
-        }elseif (Gate::allows('operator')) {
+        } elseif (Gate::allows('operator')) {
             return redirect('/oprator/items')->with('status', 'Data berhasil Di Hapus');
         } else {
             abort(403, 'Unauthorized');
         }
-
     }
 }

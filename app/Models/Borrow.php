@@ -14,6 +14,52 @@ class Borrow extends Model
 
     protected $guarded = ['id'];
 
+    /**
+     * Baris Code Berikut Di Gunakan Untuk
+     * Melakukan Query Pada Halaman
+     * Dashboard
+     */
+
+    public static function getCurrentWeekData()
+    {
+        // Mendapatkan tanggal awal dan akhir dari minggu ini
+        $currentWeekStart = date('Y-m-d', strtotime('this week'));
+        $currentWeekEnd = date('Y-m-d', strtotime('this week +6 days'));
+
+        // Menghitung data untuk minggu ini
+        $currentWeekData = self::whereBetween('updated_at', [$currentWeekStart, $currentWeekEnd])->sum('sub_total');
+
+        return $currentWeekData;
+    }
+
+    public static function getPreviousWeekData()
+    {
+        // Mendapatkan tanggal awal dan akhir dari minggu sebelumnya
+        $previousWeekStart = date('Y-m-d', strtotime('last week'));
+        $previousWeekEnd = date('Y-m-d', strtotime('last week +6 days'));
+
+        // Menghitung data untuk minggu sebelumnya
+        $previousWeekData = self::whereBetween('updated_at', [$previousWeekStart, $previousWeekEnd])->sum('sub_total');
+        // dd($previousWeekData);
+
+        return $previousWeekData;
+    }
+
+    public static function getCurrentDayData()
+    {
+        $currentDate = date('Y-m-d');
+
+        // Menghitung data untuk hari ini
+        $currentDayData = self::whereDate('updated_at', $currentDate)->sum('sub_total');
+
+        return $currentDayData;
+    }
+    /**
+     * Baris Code Ini Digunakan Untuk
+     * Sistem Peminjaman yang Di Akses
+     * Oleh Role Admin Dan Operator
+     */
+
     public static function getAll()
     {
         return DB::table('borrows')
@@ -47,25 +93,30 @@ class Borrow extends Model
 
     public function calculateLateFee($borrow)
     {
-        // hitung selisih hari dari tanggal pengembalian yang seharusnya
         $dueDate = $this->return_date;
         $actualReturnDate = date('Y-m-d');
-        // $daysLate = $actualReturnDate->diffInDays($dueDate, false);
-        $daysLate = DB::select('SELECT DATEDIFF(?,?) AS daysLate', [$actualReturnDate, $dueDate])[0]->daysLate;
-        // dd($daysLate);
-        // $daysLate = 99;
+        $daysLate = $this->calculateDaysLate($actualReturnDate, $dueDate);
+
         if ($actualReturnDate < $dueDate) {
             $daysLate = 0;
         }
-        // hitung denda
+
         $lateFee = 0;
-        $late_fee_per_day  = $this->item->late_fee_per_day;
+        $lateFeePerDay = $this->item->late_fee_per_day;
+
         if ($daysLate > 0) {
-            $lateFee = $daysLate * $late_fee_per_day * $borrow->borrow_quantity;
+            $lateFee = $daysLate * $lateFeePerDay * $borrow->borrow_quantity;
         }
 
         return $lateFee;
     }
+
+    private function calculateDaysLate($date1, $date2)
+    {
+        $daysLate = DB::select("SELECT DATEDIFF(?, ?) AS daysLate", [$date1, $date2])[0]->daysLate;
+        return $daysLate;
+    }
+
 
     public static function destroy($id)
     {
@@ -74,53 +125,29 @@ class Borrow extends Model
 
     public function calculateTotalRentalPrice($borrow)
     {
-        // $borrowDate = Carbon::parse($this->borrow_date);
-        // $returnDate = Carbon::parse($this->return_date);
-        // $totalDays = $returnDate->diffInDays($borrowDate);
-        // // $totalDays = 99;
-        // $rental_price = $this->item->rental_price;
-
-        // // $total_rental_price = $totalDays * $borrow->borrow_quantity  * $rental_price;
-
-        // if ($totalDays > 0) {
-        //     $total_rental_price = $totalDays * $rental_price * $borrow->borrow_quantity;
-        //     return $total_rental_price;
-        // }
-        // // $this->load('borrow');
-        // $total_rental_price = 0;
-
-        // // if ($totalDays >= 0 && $this->borrow) {
-        // //     $total_rental_price = $totalDays * $rental_price * $borrow->borrow_quantity;
-        // //     return $total_rental_price;
-        // // } else {
-        // //     $total_rental_price = $totalDays * $rental_price * $borrow->borrow_quantity;
-        // //     return $total_rental_price;
-        // // }
-        // return $total_rental_price;
-
-        // $borrowDate = Carbon::parse($this->borrow_date);
-        // $returnDate = Carbon::parse($this->return_date);
-        // $actualReturnDate = Carbon::now();
         $borrowDate = $this->borrow_date;
         $returnDate = $this->return_date;
         $actualReturnDate = date('Y-m-d');
-
         $daysLate = 0;
 
         if ($actualReturnDate <= $returnDate) {
-            // Pengembalian dilakukan sebelum atau pada tanggal pengembalian
-            $totalDays = DB::select("SELECT DATEDIFF(?, ?)  AS daysDiff", [$actualReturnDate, $borrowDate])[0]->daysDiff + 1;
+            $totalDays = $this->calculateDaysDiff($actualReturnDate, $borrowDate);
         } else {
-            // Pengembalian dilakukan setelah tanggal pengembalian
-            // $totalDays = $returnDate->diffInDays($borrowDate) + 1;
-            $totalDays = DB::select("SELECT DATEDIFF(?, ?)  AS daysDiff", [$returnDate, $borrowDate])[0]->daysDiff + 1;
+            $totalDays = $this->calculateDaysDiff($returnDate, $borrowDate);
         }
 
-        $rental_price = $this->item->rental_price;
-        $total_rental_price = $totalDays * $rental_price * $borrow->borrow_quantity;
+        $rentalPrice = $this->item->rental_price;
+        $totalRentalPrice = $totalDays * $rentalPrice * $borrow->borrow_quantity;
 
-        return $total_rental_price;
+        return $totalRentalPrice;
     }
+
+    private function calculateDaysDiff($date1, $date2)
+    {
+        $daysDiff = DB::select("SELECT DATEDIFF(?, ?) AS daysDiff", [$date1, $date2])[0]->daysDiff + 1;
+        return $daysDiff;
+    }
+
 
     public function calculateSubTotal()
     {
@@ -149,9 +176,15 @@ class Borrow extends Model
         $borrow->user->notify(new BorrowNotification($borrow));
     }
 
+    /**
+     * Fungsi berikut Digunakan Oleh Role
+     * Peminjam Untuk Melakukan
+     * Proses Pengajuan
+     * Peminjaman
+     */
+
     public static function submitBorrowRequest($request)
     {
-        // dd($request->all());
         $borrow = new Borrow();
         $borrow->verification_code_for_borrow_request = $request->input('uniqid');
         $borrow->borrow_date = $request->input('borrow_date');
@@ -164,9 +197,14 @@ class Borrow extends Model
         $borrow->borrow_status = 'pending';
         $borrow->sub_total = 0;
         $borrow->save();
-        // dd($borrow->borrow_code);
         return $borrow;
     }
+
+    /**
+     * Fungsi Berikut Digunakan Oleh Role Admin
+     * Untuk Melakukan Proses Verifikasi
+     * Yang Di Ajukan Role Borrower
+     */
 
     public static function verifySubmitBorrowRequest($request, $borrow_code)
     {
@@ -185,6 +223,21 @@ class Borrow extends Model
         return $borrow;
     }
 
+    public static function rejectBorrowRequest($id)
+    {
+        $borrow = Borrow::find($id);
+        if (!$borrow) {
+            return redirect()->back()->with('error', 'Data not found');
+        }
+
+        $borrow->total_rental_price = 0;
+        $borrow->late_fee = 0;
+        $borrow->sub_total = 0;
+        $borrow->borrow_status = 'canceled';
+        $borrow->update();
+
+        $borrow->user->notify(new BorrowNotification($borrow));
+    }
 
     public function item()
     {

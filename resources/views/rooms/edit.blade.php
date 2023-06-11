@@ -1,8 +1,8 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col-lg-6">
             <form method="POST" action="{{ route('rooms.update', $room[0]->id) }}" class="">
                 @csrf
@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group">
                     <label for="user_id">User ID</label>
-                    <select id="user_id" name="user_id" class="form-control @error('user_id') is-invalid @enderror">
+                    <select id="user_id" name="user_id" class="form-control select2 @error('user_id') is-invalid @enderror" data-toggle="select2">
                         <option value="">Pilih User</option>
                         @foreach($users as $user)
                         <option value="{{ $user->id }}" {{ old('user_id', $room[0]->user_id ?? '') == $user->id ?

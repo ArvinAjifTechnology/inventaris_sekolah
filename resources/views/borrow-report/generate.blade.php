@@ -1,9 +1,9 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
 <!-- resources/views/borrow-report/generate.blade.php -->
 <div class="container">
-    <div class="row">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div>
             {{-- <a
                 href="{{ route('borrow-report.export', ['type' => 'pdf', 'start_date' => $startDate, 'end_date' => $endDate, 'search' => $search]) }}"

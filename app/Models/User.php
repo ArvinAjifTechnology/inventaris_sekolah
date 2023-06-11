@@ -27,6 +27,7 @@ class User extends Authenticatable
         'name',
         'email',
         'role',
+        'gender',
         'password',
     ];
 
@@ -55,7 +56,9 @@ class User extends Authenticatable
 
     public static function getAll()
     {
-        return DB::select('SELECT * FROM users ORDER BY created_at DESC');
+        $users = DB::select("SELECT * FROM users ORDER BY created_at DESC");
+
+        return $users;
     }
 
     public static function insert($request)
@@ -72,10 +75,9 @@ class User extends Authenticatable
         ]);
     }
 
-    public static function edit($fullName, $request, $username)
+    public static function edit($request, $username)
     {
-        DB::update('UPDATE users SET name = ?, username = ?, email = ?, first_name = ?, last_name = ?, role = ?, gender = ?, password = ? WHERE username = ?', [
-            $fullName,
+        DB::update('UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, role = ?, gender = ?, password = ? WHERE username = ?', [
             $request->input('username'),
             $request->input('email'),
             $request->input('first_name'),

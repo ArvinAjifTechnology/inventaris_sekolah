@@ -1,14 +1,11 @@
-@extends('layouts.app') @section('content')
-<div class="container">
-    <div class="row">
+@extends('layouts.main')
+@section('content')
+
+<div class="container-fluid">
+    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
         <div class="col">
-            @if (session('status'))
-            <div class="alert alert-success">
-                {{ session("status") }}
-            </div>
-            @endif
             <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-4 mt-2">Tambah Data</a>
-            <table class="table datatable">
+            <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>Name</th>
@@ -48,7 +45,8 @@
                                     class="fas fa-eye"></i></a>
                             <a href="{{ route('admin.users.edit', $user->username) }}" class="btn btn-sm btn-warning"><i
                                     class="fas fa-edit"></i></a>
-                            <form action="{{ route('admin.users.reset-password', $user->id) }}" method="POST" class="d-inline"
+                            <form action="{{ route('admin.users.reset-password', $user->id) }}" method="POST"
+                                class="d-inline"
                                 onsubmit="return confirm('Are you sure you want to reset the password for this User?')">
                                 @csrf
                                 <button type="submit" class="btn btn-sm btn-primary">
@@ -68,6 +66,10 @@
                     @endforeach
                 </tbody>
             </table>
+
+            <!-- Tampilkan tautan navigasi halaman -->
+            {{-- {{ Illuminate\Pagination\Paginator::render($users, 'full') }} --}}
+            {{-- {{ $users->links('pagination::bootstrap-4') }} --}}
         </div>
     </div>
 </div>
