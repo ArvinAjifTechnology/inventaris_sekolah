@@ -1,4 +1,5 @@
 -- DDL
+DROP DATABASE sintaks;
 CREATE DATABASE sintaks;
 
 USE sintaks;
@@ -38,7 +39,7 @@ DESC rooms;
 
 ALTER TABLE rooms CHANGE kode_ruangan room_code VARCHAR(20);
 
-ALTER TABLE items add `condition` ENUM('good', 'fair', 'bad') NOT NULL AFTER description;
+ALTER TABLE barang add `condition` ENUM('good', 'fair', 'bad') NOT NULL AFTER description;
 
 ALTER TABLE barang rename items;
 
@@ -234,7 +235,7 @@ FROM users;
 
 SELECT
 item_name,
-MID(item_name, 4,3) AS Mid Item Name,
+MID(item_name, 4,3) AS Mid_Item_Name
 FROM items;
 
 SELECT TRIM(room_name) AS trimmed_room_name
@@ -328,23 +329,14 @@ BEGIN
 END$$
 DELIMITER ;
 
-DELIMITER $$
-CREATE TRIGGER tr_user_insert
-BEFORE INSERT ON users
+DELIMITER //
+CREATE TRIGGER tr_room_insert
+BEFORE INSERT ON rooms
 FOR EACH ROW
 BEGIN
-    DECLARE role_prefix VARCHAR(3);
-    IF NEW.role = "admin" THEN
-        SET role_prefix = "ADM";
-    ELSEIF NEW.role = "operator" THEN
-        SET role_prefix = "OPT";
-    ELSEIF NEW.role = "borrower" THEN
-        SET role_prefix = "BWR";
-    END IF;
-
-    SET @random_string = LEFT(UUID(), 9);
-    SET NEW.user_code = CONCAT(role_prefix, @random_string, LPAD((SELECT COUNT(*) + 1 FROM users WHERE role = NEW.role), 9, "0"));
-END$$
+    SET @random_string = LEFT(UUID(), 9); -- Generate a 9-character random string
+    SET NEW.room_code = CONCAT("RM", @random_string, LPAD((SELECT COUNT(*) + 1 FROM rooms), 9, "0")); -- Concatenate the random string and a zero-padded sequence number to form the room code
+END//
 DELIMITER ;
 
 DROP TRIGGER IF EXISTS tr_item_insert;
@@ -413,9 +405,9 @@ DELIMITER ;
 -- View & Store Prosedur
 -- Membuat view untuk menampilkan informasi peminjaman dengan nama lengkap pengguna
 CREATE VIEW borrow_info AS
-SELECT borrows.borrow_id, users.first_name, users.last_name, borrows.borrow_date
+SELECT borrows.id, users.first_name, users.last_name, borrows.borrow_date
 FROM borrows
-JOIN users ON borrows.user_id = users.user_id;
+JOIN users ON borrows.user_id = users.id;
 
 -- Membuat stored procedure untuk menghapus peminjaman berdasarkan borrow_id
 DELIMITER //
