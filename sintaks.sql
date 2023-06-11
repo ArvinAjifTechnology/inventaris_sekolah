@@ -183,3 +183,264 @@ DESC items;
 SELECT *
 FROM rooms
 JOIN items ON rooms.id = items.room_id;
+
+-- Perhitungan Data Dan Fungsi
+
+-- Arimathic Calculator
+SELECT rental_price + late_fee_per_day AS total_fee
+FROM items;
+
+SELECT quantity - 1 AS remaining_quantity
+FROM items;
+
+SELECT rental_price * quantity AS total_rental_price
+FROM items;
+
+SELECT total_rental_price / borrow_quantity AS rental_price_per_item
+FROM borrows;
+
+SELECT quantity % 5 AS remainder
+FROM items;
+
+
+-- Aggragate Function
+SELECT COUNT(*) AS total_users
+FROM users;
+
+SELECT SUM(quantity) AS total_quantity,
+AVG(rental_price) AS average_rental_price,
+MIN(rental_price) AS minimum_rental_price,
+MAX(rental_price) AS maximum_rental_price
+FROM items;
+-- String Funtion
+
+SELECT CONCAT(first_name, ' ', last_name) AS full_name
+FROM users;
+
+SELECT CONCAT_WS('-', room_code, room_name) AS room_full_code
+FROM rooms;
+
+SELECT
+    LENGTH(username) AS username_length,
+    UPPER(first_name) AS uppercase_first_name,
+    LOWER(last_name) AS lowercase_last_name,
+    LEFT(username, 3) AS left_username,
+    RIGHT(username, 2) AS right_username,
+    SUBSTRING(email, 1, 10) AS email_prefix,
+    REPLACE(email, '@example.com', '@gmail.com') AS new_email,
+    REPEAT('*', 5) AS repeated_string,
+    REVERSE(username) AS reversed_username
+FROM users;
+
+SELECT
+item_name,
+MID(item_name, 4,3) AS 'Mid Item Name'
+
+SELECT TRIM(room_name) AS trimmed_room_name
+FROM rooms;
+
+SELECT room_name, INSTR(room_name, '1-') AS dash_position
+FROM rooms;
+
+-- Numeric Functions
+SELECT
+    CEIL(rental_price) AS ceil_rental_price,
+    CEILING(rental_price) AS ceiling_rental_price,
+    FLOOR(rental_price) AS floor_rental_price,
+    MOD(quantity, 5) AS quantity_mod_5,
+    PI() AS pi_value,
+    POW(quantity, 2) AS quantity_power_2,
+    POWER(quantity, 3) AS quantity_power_3,
+    SQRT(quantity) AS quantity_sqrt,
+    ROUND(rental_price, 2) AS rounded_rental_price,
+    TRUNCATE(rental_price, 2) AS truncated_rental_price
+FROM items;
+
+-- Date / Time Functions
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+
+SELECT
+    user_id,
+    COUNT(*) AS total_borrows,
+    CURDATE() AS 'current_date',
+    CURTIME() AS 'current_time',
+    NOW() AS current_datetime,
+    DATE_FORMAT(MAX(created_at), '%Y-%m-%d') AS formatted_created_date,
+    DATE_FORMAT(MAX(created_at), '%H:%i:%s') AS formatted_created_time,
+    DATE_FORMAT(MAX(created_at), '%Y-%m-%d %H:%i:%s') AS formatted_created_datetime,
+    DATE_ADD(MAX(created_at), INTERVAL 1 DAY) AS next_day_created_datetime,
+    DATE_SUB(MAX(created_at), INTERVAL 1 MONTH) AS previous_month_created_datetime,
+    DATEDIFF(NOW(), MAX(created_at)) AS days_difference,
+    DAYNAME(MAX(created_at)) AS day_name,
+    MONTHNAME(MAX(created_at)) AS month_name,
+    DAYOFWEEK(MAX(created_at)) AS day_of_week,
+    WEEK(MAX(created_at)) AS week_of_year,
+    YEAR(MAX(created_at)) AS year
+FROM borrows
+GROUP BY user_id
+ORDER BY total_borrows DESC LIMIT 0, 25;
+
+
+-- Grouping Data Dan Trigger
+
+SELECT user_id, COUNT(*) AS total_borrows
+FROM borrows
+GROUP BY user_id;
+
+SELECT user_id, COUNT(*) AS total_borrows
+FROM borrows
+GROUP BY user_id
+ORDER BY total_borrows DESC;
+
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+
+SELECT
+    user_id,
+    COUNT(*) AS total_borrows
+FROM
+    borrows
+GROUP BY
+    user_id
+HAVING
+    COUNT(*) >= 3
+ORDER BY
+    total_borrows DESC;
+
+-- Trigger
+
+DELIMITER $$
+CREATE TRIGGER tr_user_insert
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+    DECLARE role_prefix VARCHAR(3);
+    IF NEW.role = "admin" THEN
+        SET role_prefix = "ADM";
+    ELSEIF NEW.role = "operator" THEN
+        SET role_prefix = "OPT";
+    ELSEIF NEW.role = "borrower" THEN
+        SET role_prefix = "BWR";
+    END IF;
+
+    SET @random_string = LEFT(UUID(), 9);
+    SET NEW.user_code = CONCAT(role_prefix, @random_string, LPAD((SELECT COUNT(*) + 1 FROM users WHERE role = NEW.role), 9, "0"));
+END$$
+DELIMITER ;
+
+DELIMITER $$
+CREATE TRIGGER tr_user_insert
+BEFORE INSERT ON users
+FOR EACH ROW
+BEGIN
+    DECLARE role_prefix VARCHAR(3);
+    IF NEW.role = "admin" THEN
+        SET role_prefix = "ADM";
+    ELSEIF NEW.role = "operator" THEN
+        SET role_prefix = "OPT";
+    ELSEIF NEW.role = "borrower" THEN
+        SET role_prefix = "BWR";
+    END IF;
+
+    SET @random_string = LEFT(UUID(), 9);
+    SET NEW.user_code = CONCAT(role_prefix, @random_string, LPAD((SELECT COUNT(*) + 1 FROM users WHERE role = NEW.role), 9, "0"));
+END$$
+DELIMITER ;
+
+DROP TRIGGER IF EXISTS tr_item_insert;
+DELIMITER //
+CREATE TRIGGER tr_item_insert
+BEFORE INSERT ON items
+FOR EACH ROW
+BEGIN
+    SET @random_string = LEFT(UUID(), 6); -- Generate a 6-character random string
+    SET NEW.item_code = CONCAT("ITM", @random_string, LPAD((SELECT COUNT(*) + 1 FROM items), 6, "0"));
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER tr_borrow_insert
+BEFORE INSERT ON borrows
+FOR EACH ROW
+BEGIN
+    SET @random_string = LEFT(UUID(), 6); -- Generate a 6-character random string
+    SET NEW.borrow_code = CONCAT('BRW', @random_string, LPAD((SELECT COUNT(*) + 1 FROM borrows), 6, '0')); -- Concatenate the random string and a zero-padded sequence number to form the borrow code
+END//
+DELIMITER ;
+
+-- Membuat trigger setelah melakukan insert pada tabel borrows
+DELIMITER //
+
+-- Trigger setelah melakukan insert
+CREATE TRIGGER after_insert_borrow
+AFTER INSERT ON borrows
+FOR EACH ROW
+BEGIN
+    -- Mendapatkan jumlah peminjaman saat ini untuk user_id yang baru saja melakukan peminjaman
+    SET @total_borrows = (SELECT COUNT(*) FROM borrows WHERE user_id = NEW.user_id);
+
+    -- Memperbarui jumlah peminjaman pada tabel users
+    UPDATE users SET total_borrows = @total_borrows WHERE user_id = NEW.user_id;
+END //
+
+-- Trigger setelah melakukan update
+CREATE TRIGGER after_update_borrow
+AFTER UPDATE ON borrows
+FOR EACH ROW
+BEGIN
+    -- Mendapatkan jumlah peminjaman saat ini untuk user_id yang mengalami perubahan
+    SET @total_borrows = (SELECT COUNT(*) FROM borrows WHERE user_id = NEW.user_id);
+
+    -- Memperbarui jumlah peminjaman pada tabel users
+    UPDATE users SET total_borrows = @total_borrows WHERE user_id = NEW.user_id;
+END //
+
+-- Trigger setelah melakukan delete
+CREATE TRIGGER after_delete_borrow
+AFTER DELETE ON borrows
+FOR EACH ROW
+BEGIN
+    -- Mendapatkan jumlah peminjaman saat ini untuk user_id yang mengalami penghapusan peminjaman
+    SET @total_borrows = (SELECT COUNT(*) FROM borrows WHERE user_id = OLD.user_id);
+
+    -- Memperbarui jumlah peminjaman pada tabel users
+    UPDATE users SET total_borrows = @total_borrows WHERE user_id = OLD.user_id;
+END //
+
+//
+DELIMITER ;
+
+-- View & Store Prosedur
+-- Membuat view untuk menampilkan informasi peminjaman dengan nama lengkap pengguna
+CREATE VIEW borrow_info AS
+SELECT borrows.borrow_id, users.first_name, users.last_name, borrows.borrow_date
+FROM borrows
+JOIN users ON borrows.user_id = users.user_id;
+
+-- Membuat stored procedure untuk menghapus peminjaman berdasarkan borrow_id
+DELIMITER //
+
+CREATE PROCEDURE delete_borrow(IN borrowId INT)
+BEGIN
+    DELETE FROM borrows WHERE borrow_id = borrowId;
+    SELECT 'Peminjaman berhasil dihapus' AS message;
+END //
+
+DELIMITER ;
+
+-- Backup Dan Restore Database
+
+-- Mengembalikan seluruh database dari file backup.sql
+mysql -u <username> -p <database_name> < backup.sql
+
+-- Mengembalikan tabel tertentu dalam database dari file backup.sql
+mysql -u <username> -p <database_name> < backup.sql
+
+
+
+
+
+
+
+
+
+
