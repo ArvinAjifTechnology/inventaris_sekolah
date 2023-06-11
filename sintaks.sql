@@ -234,7 +234,8 @@ FROM users;
 
 SELECT
 item_name,
-MID(item_name, 4,3) AS 'Mid Item Name'
+MID(item_name, 4,3) AS Mid Item Name,
+FROM items;
 
 SELECT TRIM(room_name) AS trimmed_room_name
 FROM rooms;
