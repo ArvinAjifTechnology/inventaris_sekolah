@@ -2,20 +2,20 @@
 
 @section('content')
 <!-- resources/views/item-report/index.blade.php -->
-<div class="container mb-5">
-    <div class="row justify-content-center">
+<div class="container mb-5 mt-3">
+    <div class="row">
         <div class="col-md-12">
             <div class="card">
                 <form action="{{ route('borrower.borrow.search-item') }}" method="post" class="card-body">
                     @csrf
-                    <div class="row justify-content-center d-flex align-content-center"">
+                    <div class="row">
                         <div class="col-md-10 mb-3">
                             <input type="text" id="search" name="search" class="form-control"
-                                placeholder="Cari Nama Barang ..." value="{{ old('search') }}" />
+                                placeholder="{{ __('borrowrequest.SearchItemName') }}" value="{{ old('search') }}" />
                         </div>
                         <div class="col-md-2 my-0">
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary">Cari Barang</button>
+                                <button type="submit" class="btn btn-primary">{{ __('borrowrequest.SearchItem') }}</button>
                             </div>
                         </div>
                     </div>
@@ -25,26 +25,23 @@
     </div>
 </div>
 
-
-
-
 <div class="container">
-    <div class="row justify-content-center d-flex align-content-center"">
+    <div class="rowr">
         <div class="col">
             @if (!empty($items))
             <table class="table table-primary">
                 <thead>
                     <tr>
-                        <th>Kode Item</th>
-                        <th>Nama Barang</th>
-                        <th>Nama Ruangan</th>
-                        <th>Description</th>
-                        <th>condition</th>
-                        <th>Harga Pinjam</th>
-                        <th>Harga Denda/ Hari</th>
-                        <th>Jumlah Stok</th>
-                        <th>Action</th>
-                        <!-- Tambahkan field lainnya sesuai dengan struktur tabel "items" -->
+                        <th>{{ __('borrowrequest.ItemCode') }}</th>
+                        <th>{{ __('borrowrequest.ItemName') }}</th>
+                        <th>{{ __('borrowrequest.RoomName') }}</th>
+                        <th>{{ __('borrowrequest.Description') }}</th>
+                        <th>{{ __('borrowrequest.Condition') }}</th>
+                        <th>{{ __('borrowrequest.RentalPrice') }}</th>
+                        <th>{{ __('borrowrequest.LateFeePerDay') }}</th>
+                        <th>{{ __('borrowrequest.StockQuantity') }}</th>
+                        <th>{{ __('borrowrequest.Action') }}</th>
+                        <!-- Add more fields according to the structure of the "items" table -->
                     </tr>
                 </thead>
                 <tbody>
@@ -60,16 +57,15 @@
                         <td>{{ $item->quantity }}</td>
                         <td>
                             <a href="{{ url('/borrower/borrows/create/'.$item->item_code.'/submit-borrow-request') }}"
-                                class="btn btn-primary"> Ajukan
-                                Peminjaman</a>
+                                class="btn btn-primary">{{ __('borrowrequest.SubmitBorrowRequest') }}</a>
                         </td>
-                        <!-- Tambahkan field lainnya sesuai dengan struktur tabel "items" -->
+                        <!-- Add more fields according to the structure of the "items" table -->
                     </tr>
                     @endforeach
                 </tbody>
             </table>
             @else
-            <p>Tidak ada data peminjaman yang ditemukan.</p>
+            <p>{{ __('borrowrequest.NoItemsFound') }}</p>
             @endif
         </div>
     </div>

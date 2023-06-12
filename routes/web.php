@@ -11,7 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BorrowReportController;
 use App\Http\Controllers\DashboardController;
-
+use Illuminate\Support\Facades\App;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +25,7 @@ use App\Http\Controllers\DashboardController;
 */
 
 Route::get('/', function () {
+    // App::setLocale($locale);
     return view('landing_page.index');
 });
 Route::get('/template', function () {

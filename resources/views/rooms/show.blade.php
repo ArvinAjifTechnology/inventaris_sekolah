@@ -6,31 +6,31 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    Room Details
+                    {{ __('rooms.RoomDetails') }}
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Room Name: {{ $room->room_name }}</h5>
-                    <p class="card-text">Room Code: {{ $room->room_code }}</p>
-                    <p class="card-text">Description: {{ $room->description }}</p>
+                    <h5 class="card-title">{{ __('rooms.RoomName') }}: {{ $room->room_name }}</h5>
+                    <p class="card-text">{{ __('rooms.RoomCode') }}: {{ $room->room_code }}</p>
+                    <p class="card-text">{{ __('rooms.Description') }}: {{ $room->description }}</p>
                 </div>
             </div>
 
             <div class="card mt-4">
                 <div class="card-header">
-                    Items in the Room
+                    {{ __('rooms.ItemsInTheRoom') }}
                 </div>
                 <div class="card-body">
                     @if ($room->items->count() > 0)
                     <table class="table table-striped">
                         <thead>
                             <tr>
-                                <th>Item Code</th>
-                                <th>Item Name</th>
-                                <th>Description</th>
-                                <th>Condition</th>
-                                <th>Rental Price</th>
-                                <th>Late Fee per Day</th>
-                                <th>Quantity</th>
+                                <th>{{ __('rooms.ItemCode') }}</th>
+                                <th>{{ __('rooms.ItemName') }}</th>
+                                <th>{{ __('rooms.Description') }}</th>
+                                <th>{{ __('rooms.Condition') }}</th>
+                                <th>{{ __('rooms.RentalPrice') }}</th>
+                                <th>{{ __('rooms.LateFeePerDay') }}</th>
+                                <th>{{ __('rooms.Quantity') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -48,7 +48,7 @@
                         </tbody>
                     </table>
                     @else
-                    <p>No items found in this room.</p>
+                    <p>{{ __('rooms.NoItemsFound') }}</p>
                     @endif
                 </div>
             </div>

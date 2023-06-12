@@ -28,7 +28,7 @@ class Borrow extends Model
 
         // Menghitung data untuk minggu ini
         $currentWeekData = self::whereBetween('updated_at', [$currentWeekStart, $currentWeekEnd])->sum('sub_total');
-
+        // dd($currentWeekStart, $currentWeekEnd, $currentWeekData);
         return $currentWeekData;
     }
 
@@ -40,7 +40,7 @@ class Borrow extends Model
 
         // Menghitung data untuk minggu sebelumnya
         $previousWeekData = self::whereBetween('updated_at', [$previousWeekStart, $previousWeekEnd])->sum('sub_total');
-        // dd($previousWeekData);
+        // dd($previousWeekStart, $previousWeekEnd, $previousWeekData);
 
         return $previousWeekData;
     }

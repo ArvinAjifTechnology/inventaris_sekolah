@@ -2,22 +2,22 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
+    <div class="row justify-content-center d-flex align-content-center mt-3">
         <div class="col-md-12">
-            <a href="{{ url('/borrower/borrows/create/search-item') }}" class="btn btn-primary btn-sm mb-2">Ajukan
-                Peminjaman</a>
+            <a href="{{ url('/borrower/borrows/create/search-item') }}"
+                class="btn btn-primary btn-sm mb-2">{{__('borrows.BorrowRequest')}}</a>
             <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Item Name</th>
-                        <th>Nama Peminjam</th>
-                        <th>Borrow Code</th>
-                        <th>Borrow Date</th>
-                        <th>Return Date</th>
-                        <th>Jumlah Di Pinjam</th>
-                        <th>Borrow Status</th>
-                        <th>Actions</th>
+                        <th>{{ __('borrows.ItemName') }}</th>
+                        <th>{{ __('borrows.BorrowerName') }}</th>
+                        <th>{{ __('borrows.BorrowCode') }}</th>
+                        <th>{{ __('borrows.BorrowDate') }}</th>
+                        <th>{{ __('borrows.ReturnDate') }}</th>
+                        <th>{{ __('borrows.BorrowQuantity') }}</th>
+                        <th>{{ __('borrows.BorrowStatus') }}</th>
+                        <th>{{ __('borrows.Actions') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -32,11 +32,11 @@
                         <td>{{ $borrow->borrow_quantity }}</td>
                         <td>
                             @if($borrow->borrow_status == 'completed')
-                            <span class="badge bg-success">Selesai</span>
+                            <span class="badge bg-success">{{ __('borrows.CompletedStatus') }}</span>
                             @elseif($borrow->borrow_status == 'pending')
-                            <span class="badge bg-warning">Belum Di Verifikasi</span>
+                            <span class="badge bg-warning">{{ __('borrows.PendingStatus') }}</span>
                             @else
-                            <span class="badge bg-primary">Di Pinjam</span>
+                            <span class="badge bg-primary">{{ __('borrows.BorrowedStatus') }}</span>
                             @endif
                         </td>
                         <td>
@@ -49,12 +49,12 @@
                                     class="fas fa-eye"></i></a>
                             @endcan
                             @can('borrower')
-                            <a href="{{ url('/borrower/borrows', $borrow->id) }}" class="btn btn-info"><i
+                            <a href="{{ url('/borrowser/borrows', $borrow->id) }}" class="btn btn-info"><i
                                     class="fas fa-eye"></i></a>
                             @endcan
                             @if($borrow->borrow_status == 'completed')
                             <button class="btn btn-success" disabled>
-                                Selesai
+                                {{ __('borrows.CompletedStatus') }}
                             </button>
                             @else
                             @can('admin')

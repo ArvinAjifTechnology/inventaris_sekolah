@@ -1,6 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
+
 <!-- resources/views/borrow-report/index.blade.php -->
 <div class="container mb-1 mt-3">
     <div class="row justify-content-center">
@@ -10,30 +11,26 @@
                     @csrf
                     <div class="row justify-content-center d-flex align-content-center">
                         <div class="col-md-4 mb-3">
-                            <label for="start_date" class="form-label">Tanggal Mulai:</label>
+                            <label for="start_date" class="form-label">{{ __('borrowreport.StartDate') }}:</label>
                             <input type="date" id="start_date" name="start_date" class="form-control" />
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="end_date" class="form-label">Tanggal Akhir:</label>
+                            <label for="end_date" class="form-label">{{ __('borrowreport.EndDate') }}:</label>
                             <input type="date" id="end_date" name="end_date" class="form-control" />
                         </div>
                         <div class="col-md-4 mb-3">
-                            <label for="search" class="form-label">Pencarian:</label>
+                            <label for="search" class="form-label">{{ __('borrowreport.Search') }}:</label>
                             <input type="text" id="search" name="search" class="form-control" />
                         </div>
                     </div>
                     <div class="text-center">
-                        <button type="submit" class="btn btn-primary">Generate Laporan</button>
+                        <button type="submit" class="btn btn-primary">{{ __('borrowreport.GenerateReport') }}</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
-
-
-
-
 <div class="container">
     <div class="row">
         <div>
@@ -42,7 +39,6 @@
                 target="_blank" class="btn btn-primary">Export to PDF</a>
             <a href="{{ route('borrow-report.export', ['type' => 'excel', 'start_date' => $startDate, 'end_date' => $endDate, 'search' => $search]) }}"
                 class="btn btn-primary">Export to Excel</a> --}}
-
             {{-- <div>
                 <form action="{{ route('borrow-report.export') }}" method="POST">
                     @csrf
@@ -50,7 +46,7 @@
                     <input type="hidden" name="start_date" value="{{ $startDate }}">
                     <input type="hidden" name="end_date" value="{{ $endDate }}">
                     <input type="hidden" name="search" value="{{ $search }}">
-                    <button type="submit">Export ke PDF</button>
+                    <button type="submit">Export to PDF</button>
                 </form>
 
                 <form action="{{ route('borrow-report.export') }}" method="POST">
@@ -59,14 +55,14 @@
                     <input type="hidden" name="start_date" value="{{ $startDate }}">
                     <input type="hidden" name="end_date" value="{{ $endDate }}">
                     <input type="hidden" name="search" value="{{ $search }}">
-                    <button type="submit">Export ke Excel</button>
+                    <button type="submit">Export to Excel</button>
                 </form>
             </div> --}}
 
         </div>
         <div class="col">
             <div class="card">
-                <div class="card-header">Revenue</div>
+                <div class="card-header">{{ __('borrowreport.Revenue') }}</div>
                 <div class="card-body">
                     {{ convertToRupiah($borrows->sum('sub_total')) }}
                 </div>
@@ -75,18 +71,18 @@
             <table id="scroll-horizontal-datatable" class="table table-primary">
                 <thead>
                     <tr>
-                        <th>Kode Peminjaman</th>
-                        <th>Tanggal Peminjaman</th>
-                        <th>Tanggal Pengembalian</th>
-                        <th>Status Peminjaman</th>
-                        <th>Nama Peminjam</th>
-                        <th>Email Peminjam</th>
-                        <th>Nama Barang</th>
-                        <th>Kode Barang</th>
-                        <th>Denda</th>
-                        <th>Total Harga Pinjam</th>
-                        <th>Sub Total</th>
-                        <!-- Tambahkan field lainnya sesuai dengan struktur tabel "borrows" -->
+                        <th>{{ __('borrowreport.BorrowCode') }}</th>
+                        <th>{{ __('borrowreport.BorrowDate') }}</th>
+                        <th>{{ __('borrowreport.ReturnDate') }}</th>
+                        <th>{{ __('borrowreport.BorrowStatus') }}</th>
+                        <th>{{ __('borrowreport.BorrowerName') }}</th>
+                        <th>{{ __('borrowreport.BorrowerEmail') }}</th>
+                        <th>{{ __('borrowreport.ItemName') }}</th>
+                        <th>{{ __('borrowreport.ItemCode') }}</th>
+                        <th>{{ __('borrowreport.LateFee') }}</th>
+                        <th>{{ __('borrowreport.TotalRentalPrice') }}</th>
+                        <th>{{ __('borrowreport.SubTotal') }}</th>
+                        <!-- Add other fields according to the structure of the "borrows" table -->
                     </tr>
                 </thead>
                 <tbody>
@@ -103,19 +99,23 @@
                         <td>{{ convertToRupiah($borrow->late_fee) }}</td>
                         <td>{{ convertToRupiah($borrow->total_rental_price) }}</td>
                         <td>{{ convertToRupiah($borrow->sub_total) }}</td>
-                        <!-- Tambahkan field lainnya sesuai dengan struktur tabel "borrows" -->
+                        <!-- Add other fields according to the structure of the "borrows" table -->
                     </tr>
                     @endforeach
                     {{-- <tr>
-                        <td colspan="10" align="right"><strong>Jumlah Subtotal:</strong></td>
+                        <td colspan="10" align="right"><strong>Total Subtotal:</strong></td>
                         <td>{{ convertToRupiah($borrows->sum('sub_total')) }}</td>
                     </tr> --}}
                 </tbody>
             </table>
             @else
-            <p>Tidak ada data peminjaman yang ditemukan.</p>
+            <p>{{ __('borrowreport.NoBorrowingDataFound') }}</p>
             @endif
         </div>
     </div>
 </div>
 @endsection
+borr
+r
+w
+report.
