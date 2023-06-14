@@ -31,6 +31,17 @@ Route::get('/', function () {
 Route::get('/template', function () {
     return view('layouts.main');
 });
+
+Route::get('locale/{locale}', function ($locale) {
+    // if (!in_array($locale, ['en', 'id'])) {
+    //     abort(400);
+    // }
+
+    app()->setLocale($locale);
+    session()->put('locale', $locale);
+
+    return redirect()->back();
+})->name('locale');
 // Route Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact-send-to-whatsapp', [ContactController::class, 'sendToWhatsapp'])->name('contact.send-to-whatsapp');

@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'User' => 'Nama User',
+    'Item' => 'Nama Item',
     'SearchItemName' => 'Cari Nama Barang...',
     'ItemCode' => 'Kode Barang',
     'ItemName' => 'Nama Barang',

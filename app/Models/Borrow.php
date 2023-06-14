@@ -233,7 +233,7 @@ class Borrow extends Model
         $borrow->total_rental_price = 0;
         $borrow->late_fee = 0;
         $borrow->sub_total = 0;
-        $borrow->borrow_status = 'canceled';
+        $borrow->borrow_status = substr('rejected', 0, 8);
         $borrow->update();
 
         $borrow->user->notify(new BorrowNotification($borrow));

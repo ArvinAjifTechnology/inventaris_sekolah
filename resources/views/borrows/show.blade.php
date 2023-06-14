@@ -38,12 +38,25 @@
                 </p>
             </div>
             <div class="card-footer">
-                @if($borrow->borrow_status==='completed')
+                @if($borrow->borrow_status==='completed' || $borrow->borrow_status==='rejected')
+                @if ($borrow->borrow_status==='completed')
                 <button type="submit" class="btn btn-success" disabled>
                     {{ __('borrows.Completed') }}
                 </button>
+
+                @elseif($borrow->borrow_status==='pending')
+                <button type="submit" class="btn btn-warning" disabled>
+                    {{ __('borrows.Pending') }}
+                </button>
+                <button type="submit" class="btn btn-danger" disabled>
+                    {{ __('borrows.Rejected') }}
+                </button>
+                @else
+
+                @endif
                 @else @can('admin')
-                <a href="{{ url('/admin/borrows/'. $borrow->id . '/edit') }}" class="btn btn-primary">{{ __('borrows.Edit')
+                <a href="{{ url('/admin/borrows/'. $borrow->id . '/edit') }}" class="btn btn-primary">{{
+                    __('borrows.Edit')
                     }}</a>
                 <form action="{{ url('/admin/borrows/'. $borrow->id. '/return') }}" method="POST"
                     style="display: inline-block">
@@ -54,7 +67,8 @@
                     </button>
                 </form>
                 @endcan @can('operator')
-                <a href="{{ url('/operator/borrows/'. $borrow->id . '/edit') }}" class="btn btn-primary">{{ __('borrows.Edit')
+                <a href="{{ url('/operator/borrows/'. $borrow->id . '/edit') }}" class="btn btn-primary">{{
+                    __('borrows.Edit')
                     }}</a>
                 <form action="{{ url('/operator/borrows/'. $borrow->id. '/return') }}" method="POST"
                     style="display: inline-block">

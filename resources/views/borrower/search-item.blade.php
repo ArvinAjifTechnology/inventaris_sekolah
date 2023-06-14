@@ -15,7 +15,7 @@
                         </div>
                         <div class="col-md-2 my-0">
                             <div class="text-center">
-                                <button type="submit" class="btn btn-primary">{{ __('borrowrequest.SearchItem') }}</button>
+                                <button type="submit" class="btn btn-primary">{{ __('borrowrequest.SearchItemName') }}</button>
                             </div>
                         </div>
                     </div>

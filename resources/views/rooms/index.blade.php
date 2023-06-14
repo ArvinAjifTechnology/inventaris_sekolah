@@ -4,7 +4,7 @@
     <div class="row mt-3">
         <div class="col-md-12">
             @can('admin')
-            <a href="{{ route('rooms.create') }}" class="btn btn-primary mb-2">{{ __('rooms.AddRoomsPData') }}</a>
+            <a href="{{ route('rooms.create') }}" class="btn btn-primary mb-2">{{ __('rooms.AddRoomsData') }}</a>
             @endcan
             <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
                 <thead>

@@ -43,7 +43,7 @@
                         <td>
                             <a href="{{ route('admin.users.show', $user->id) }}" class="btn btn-sm btn-success"><i
                                     class="fas fa-eye"></i> {{ __('users.View') }}</a>
-                            <a href="{{ route('admin.users.edit', $user->username) }}" class="btn btn-sm btn-warning"><i
+                            <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-sm btn-warning"><i
                                     class="fas fa-edit"></i> {{ __('users.Edit') }}</a>
                             <form action="{{ route('admin.users.reset-password', $user->id) }}" method="POST"
                                 class="d-inline" onsubmit="return confirm('{{ __('users.AreYouSureResetPassword') }}')">

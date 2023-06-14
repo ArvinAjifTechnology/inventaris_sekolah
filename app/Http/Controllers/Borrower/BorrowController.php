@@ -20,12 +20,7 @@ class BorrowController extends Controller
         // $borrows = Borrow::latest()->where('user_id', auth()->user()->id)->get();
         // $borrows = DB::select("SELECT * FROM borrows WHERE user_id = " . auth()->user()->id . " ORDER BY created_at DESC");
         $user_id = auth()->user()->id;
-        $borrows = DB::select("SELECT borrows.*, items.item_name, CONCAT(users.first_name, ' ', users.last_name) AS full_name
-                                    FROM borrows
-                                    LEFT JOIN items ON borrows.item_id = items.id
-                                    LEFT JOIN users ON borrows.user_id = users.id
-                                    WHERE borrows.user_id = $user_id AND items.condition = 'good'
-                                    ORDER BY borrows.created_at DESC");
+        $borrows = DB::select("SELECT borrows.*, items.item_name, CONCAT(users.first_name, ' ', users.last_name) AS full_name FROM borrows LEFT JOIN items ON borrows.item_id = items.id LEFT JOIN users ON borrows.user_id = users.id WHERE borrows.user_id = $user_id AND items.condition = 'good' ORDER BY borrows.created_at DESC");
 
         return view('borrower.index', compact('borrows'));
     }
@@ -41,33 +36,33 @@ class BorrowController extends Controller
         $search = $request->search;
         // dd($search);
         // $query = Item::query();
-        $query = "SELECT items.*, rooms.room_name FROM items LEFT JOIN rooms ON items.room_id = rooms.id";
+        $query = "SELECT items.*, rooms.room_name FROM items LEFT JOIN rooms ON items.room_id = rooms.id WHERE items.`condition` IN (?, ?)";
         // Pencarian
         if ($search) {
-
-            $query .= " WHERE items.item_name LIKE '%$search%'
+            $query .= " AND (items.item_name LIKE '%$search%'
             OR items.item_code LIKE '%$search%'
             OR items.description LIKE '%$search%'
             OR items.`condition` LIKE '%$search%'
             OR items.rental_price LIKE '%$search%'
             OR items.late_fee_per_day LIKE '%$search%'
             OR items.quantity LIKE '%$search%'
-            OR rooms.room_name LIKE '%$search%'";;
-            // $query->where(function ($q) use ($search) {
-            //     $q->where('item_name', 'LIKE', "%$search%")
-            //         ->orWhere('item_code', 'LIKE', "%$search%")
-            //         ->orWhere('description', 'LIKE', "%$search%")
-            //         ->orWhere('condition', 'LIKE', "%$search%")
-            //         ->orWhere('rental_price', 'LIKE', "%$search%")
-            //         ->orWhere('late_fee_per_day', 'LIKE', "%$search%")
-            //         ->orWhere('quantity', 'LIKE', "%$search%");
-            // })
-            //     ->orWhereHas('room', function ($q) use ($search) {
-            //         $q->where('room_name', 'LIKE', "%$search%");
-            //     });
+            OR rooms.room_name LIKE '%$search%')";
         }
 
-        $items = DB::select($query);
+        $items = DB::select($query, ['good', 'fair']);
+        // $query->where(function ($q) use ($search) {
+        //     $q->where('item_name', 'LIKE', "%$search%")
+        //         ->orWhere('item_code', 'LIKE', "%$search%")
+        //         ->orWhere('description', 'LIKE', "%$search%")
+        //         ->orWhere('condition', 'LIKE', "%$search%")
+        //         ->orWhere('rental_price', 'LIKE', "%$search%")
+        //         ->orWhere('late_fee_per_day', 'LIKE', "%$search%")
+        //         ->orWhere('quantity', 'LIKE', "%$search%");
+        // })
+        //     ->orWhereHas('room', function ($q) use ($search) {
+        //         $q->where('room_name', 'LIKE', "%$search%");
+        //     });
+        // }
         return view('borrower.search-item', compact('items'));
     }
 
