@@ -4,7 +4,7 @@
 <!-- ... -->
 
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center d-flex align-content-center" style="height:100vh">
         <div class="col-md-6">
             <form action="{{ route('admin.users.store') }}" method="POST">
                 @csrf
@@ -62,7 +62,7 @@
                     </select>
                 </div>
 
-                <button type="submit" class="btn btn-primary">{{ __('users.Save') }}</button>
+                <button type="submit" class="btn btn-primary mt-3">{{ __('users.Save') }}</button>
             </form>
         </div>
     </div>

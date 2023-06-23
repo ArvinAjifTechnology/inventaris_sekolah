@@ -9,7 +9,7 @@
             <div class="card">
                 <form action="{{ route('borrow-report.generate') }}" method="post" class="card-body">
                     @csrf
-                    <div class="row justify-content-center d-flex align-content-center">
+                    <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="start_date" class="form-label">{{ __('borrowreport.StartDate') }}:</label>
                             <input type="date" id="start_date" name="start_date" class="form-control" />
@@ -33,7 +33,7 @@
 </div>
 <div class="container">
     <div class="row">
-        <div>
+        {{-- <div> --}}
             {{-- <a
                 href="{{ route('borrow-report.export', ['type' => 'pdf', 'start_date' => $startDate, 'end_date' => $endDate, 'search' => $search]) }}"
                 target="_blank" class="btn btn-primary">Export to PDF</a>
@@ -59,16 +59,17 @@
                 </form>
             </div> --}}
 
-        </div>
+            {{--
+        </div> --}}
         <div class="col">
             <div class="card">
                 <div class="card-header">{{ __('borrowreport.Revenue') }}</div>
-                <div class="card-body">
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
                     {{ convertToRupiah($borrows->sum('sub_total')) }}
                 </div>
             </div>
             @if (!empty($borrows))
-            <table id="scroll-horizontal-datatable" class="table table-primary">
+            <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
                     <tr>
                         <th>{{ __('borrowreport.BorrowCode') }}</th>
@@ -115,7 +116,3 @@
     </div>
 </div>
 @endsection
-borr
-r
-w
-report.

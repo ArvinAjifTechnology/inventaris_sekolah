@@ -35,63 +35,25 @@
                             <span class="badge bg-success">{{ __('borrows.CompletedStatus') }}</span>
                             @elseif($borrow->borrow_status == 'pending')
                             <span class="badge bg-warning">{{ __('borrows.PendingStatus') }}</span>
-                            @else
+                            @elseif($borrow->borrow_status == 'borrowed')
                             <span class="badge bg-primary">{{ __('borrows.BorrowedStatus') }}</span>
+                            @else
+                            <span class="badge bg-danger">{{ __('borrows.Rejected') }}</span>
                             @endif
                         </td>
                         <td>
-                            @can('admin')
-                            <a href="{{ url('/admin/borrows', $borrow->id) }}" class="btn btn-info"><i
-                                    class="fas fa-eye"></i></a>
-                            @endcan
-                            @can('operator')
-                            <a href="{{ url('/operator/borrows', $borrow->id) }}" class="btn btn-info"><i
-                                    class="fas fa-eye"></i></a>
-                            @endcan
                             @can('borrower')
-                            <a href="{{ url('/borrowser/borrows', $borrow->id) }}" class="btn btn-info"><i
+                            <a href="{{ url('/borrower/borrows', $borrow->id) }}" class="btn btn-info"><i
                                     class="fas fa-eye"></i></a>
                             @endcan
                             @if($borrow->borrow_status == 'completed')
                             <button class="btn btn-success" disabled>
                                 {{ __('borrows.CompletedStatus') }}
                             </button>
-                            @else
-                            @can('admin')
-                            <a href="{{ url('/admin/borrows/'.$borrow->id.'/edit') }}" class="btn btn-primary"><i
-                                    class="fas fa-edit"></i></a>
-                            @endcan
-                            @can('operator')
-                            <a href="{{ url('/operator/borrows/'.$borrow->id.'/edit') }}" class="btn btn-primary"><i
-                                    class="fas fa-edit"></i></a>
-                            @endcan
-                            {{-- <form action="{{ url('/admin/borrows/destroy', $borrow->id) }}" method="POST"
-                                style="display: inline-block">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-danger">
-                                    Delete
-                                </button>
-                            </form> --}}
-                            @can('admin')
-                            <form action="{{ url('/admin/borrows/'. $borrow->id. '/return') }}" method="POST"
-                                style="display: inline-block">
-                                @csrf
-                                @method('PUT')
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-undo"></i>
-                                </button>
-                            </form>
-                            @endcan
-                            @can('operator')
-                            <form action="{{ url('/operator/borrows/'. $borrow->id. '/return') }}" method="POST"
-                                style="display: inline-block">
-                                @csrf
-                                @method('PUT')
-                                <button class="btn btn-primary" type="submit">
-                                    <i class="fas fa-undo"></i>
-                                </button>
-                            </form>
-                            @endcan
+                            @elseif($borrow->borrow_status==='rejected')
+                            <button class="btn btn-danger" disabled>
+                                <i class="fas fa-check-circle"></i> {{ __('borrows.Rejected') }}
+                            </button>
                             @endif
                         </td>
                     </tr>

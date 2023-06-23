@@ -22,20 +22,13 @@ class RoomController extends Controller
         if (Gate::allows('admin')) {
             // akses yang diizinkan untuk admin
             $rooms = Room::getAll(); //model
+            $rooms = collect($rooms);
         } elseif (Gate::allows('operator')) {
             $rooms = Room::getAllForOperator();
+            $rooms = collect($rooms);
         } else {
             abort(403, 'Unauthorized');
         }
-        if (Gate::allows('admin')) {
-            // akses yang diizinkan untuk admin
-            $rooms = Room::getAll(); //model
-        } elseif (Gate::allows('operator')) {
-            $rooms = Room::getAllForOperator();
-        } else {
-            abort(403, 'Unauthorized');
-        }
-
         return view('rooms.index', compact('rooms'));
     }
 

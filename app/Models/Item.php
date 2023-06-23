@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class Item extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
 
     protected $casts = [
         'rental_price' => 'float',
@@ -42,13 +43,6 @@ class Item extends Model
 
     public static function insert($request)
     {
-        // DB::unprepared('CREATE TRIGGER tr_item_insert
-        //     BEFORE INSERT ON items
-        //     FOR EACH ROW
-        //     BEGIN
-        //         SET NEW.item_code = CONCAT("ITM", LPAD((SELECT COUNT(*) + 1 FROM items), 6, "0"));
-        //     END;
-        // ');
         DB::insert('INSERT INTO items (item_name,room_id,description, `condition`, rental_price, late_fee_per_day, quantity) VALUES (?, ?, ?, ?, ?, ?, ?)', [
             $request->input('item_name'),
             $request->input('room_id'),

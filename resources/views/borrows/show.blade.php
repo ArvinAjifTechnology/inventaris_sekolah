@@ -25,7 +25,7 @@
                     {{ __('borrows.BorrowQuantity') }}: {{ $borrow->borrow_quantity }}
                 </p>
                 <p class="cborrows.ard-text">
-                    {{ __('BorrowStatus') }}: {{ $borrow->borrow_status }}
+                    {{ __('borrows.BorrowStatus') }}: {{ Str::ucfirst($borrow->borrow_status) }}
                 </p>
                 <p class="card-text">
                     {{ __('borrows.LateFee') }}: {{ convertToRupiah($borrow->late_fee) }}
@@ -48,10 +48,10 @@
                 <button type="submit" class="btn btn-warning" disabled>
                     {{ __('borrows.Pending') }}
                 </button>
+                @else
                 <button type="submit" class="btn btn-danger" disabled>
                     {{ __('borrows.Rejected') }}
                 </button>
-                @else
 
                 @endif
                 @else @can('admin')

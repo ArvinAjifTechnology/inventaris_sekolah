@@ -170,9 +170,11 @@ WHERE items.room_id = rooms.id;
 
 DESC items;
 
-SELECT *
-FROM rooms
-JOIN items ON rooms.id = items.room_id;
+SELECT borrows.borrow_code, users.username, items.item_name, rooms.room_name
+FROM borrows
+JOIN users ON borrows.user_id = users.id
+JOIN items ON borrows.item_id = items.id
+JOIN rooms ON items.room_id = rooms.id;
 
 -- Perhitungan Data Dan Fungsi
 

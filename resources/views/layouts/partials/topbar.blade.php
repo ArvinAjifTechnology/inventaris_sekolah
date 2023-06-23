@@ -8,7 +8,8 @@
             </a>
             <div class="dropdown-menu dropdown-menu-animated dropdown-lg p-0">
                 <form class="p-3">
-                    <input type="text" class="form-control" placeholder="{{ __('menu.Search') }}" aria-label="Recipient's username">
+                    <input type="text" class="form-control" placeholder="{{ __('menu.Search') }}"
+                        aria-label="Recipient's username">
                 </form>
             </div>
         </li>
@@ -24,7 +25,7 @@
 
                 <!-- item-->
                 <a href="{{ url('locale/en') }}" class="dropdown-item notify-item">
-                    <img src="{{ asset('') }}assets/images/flags/us.jpg" alt="user-image" class="me-1" height="12">
+                    <img src="{{ asset('') }}assets/images/flags/en.jpg" alt="user-image" class="me-1" height="12">
                     <span class="align-middle">English</span>
                 </a>
 
@@ -84,7 +85,8 @@
     <div class="app-search dropdown d-none d-lg-block">
         <form>
             <div class="input-group">
-                <input type="text" class="form-control dropdown-toggle" placeholder="{{ __('menu.Search') }}" id="top-search">
+                <input type="text" class="form-control dropdown-toggle" placeholder="{{ __('menu.Search') }}"
+                    id="top-search">
                 <span class="mdi mdi-magnify search-icon"></span>
                 <button class="input-group-text btn-primary" type="submit">{{ __('menu.Search') }}</button>
             </div>
@@ -93,7 +95,8 @@
         <div class="dropdown-menu dropdown-menu-animated dropdown-lg" id="search-dropdown">
             <!-- item-->
             <div class="dropdown-header noti-title">
-                <h5 class="text-overflow mb-2">{{ __('menu.Results') }} <span class="text-danger">17</span> {{ __('menu.Results') }}</h5>
+                <h5 class="text-overflow mb-2">{{ __('menu.Results') }} <span class="text-danger">17</span> {{
+                    __('menu.Results') }}</h5>
             </div>
 
             <!-- item-->

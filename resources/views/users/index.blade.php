@@ -2,7 +2,7 @@
 @section('content')
 
 <div class="container-fluid">
-    <div class="row justify-content-center d-flex align-content-center" style="height: 100vh;">
+    <div class="row justify-content-center d-flex align-content-center">
         <div class="col">
             <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-4 mt-2">{{ __('users.AddUser')
                 }}</a>

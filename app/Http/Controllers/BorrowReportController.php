@@ -39,7 +39,7 @@ class BorrowReportController extends Controller
                     ->orWhere('borrows.borrow_status', 'LIKE', '%' . $search . '%')
                     ->orWhere('items.item_name', 'LIKE', '%' . $search . '%')
                     ->orWhere('items.item_code', 'LIKE', '%' . $search . '%')
-                    ->orWhere('users.name', 'LIKE', '%' . $search . '%')
+                    ->orWhere('users.username', 'LIKE', '%' . $search . '%')
                     ->orWhere('users.email', 'LIKE', '%' . $search . '%');
             })
             ->groupBy('borrows.id')

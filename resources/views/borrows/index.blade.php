@@ -5,10 +5,12 @@
     <div class="row justify-content-center d-flex align-content-center mt-4">
         <div class="col-md-12">
             @can('admin')
-            <a href="{{ url('/admin/borrows/create') }}" class="btn btn-primary btn-sm mb-2">{{ __('borrows.AddBorrow') }}</a>
+            <a href="{{ url('/admin/borrows/create') }}" class="btn btn-primary btn-sm mb-2">{{ __('borrows.AddBorrow')
+                }}</a>
             @endcan
             @can('operator')
-            <a href="{{ url('/operator/borrows/create') }}" class="btn btn-primary btn-sm mb-2">{{ __('borrows.AddBorrow') }}</a>
+            <a href="{{ url('/operator/borrows/create') }}" class="btn btn-primary btn-sm mb-2">{{
+                __('borrows.AddBorrow') }}</a>
             @endcan
             <table id="basic-datatable" class="table table-striped dt-responsive nowrap w-100">
                 <thead>
@@ -99,6 +101,10 @@
                             <a href="{{ url('/operator/borrows/'.$borrow->id.'/edit') }}" class="btn btn-primary"><i
                                     class="fas fa-edit"></i> {{ __('borrows.Edit') }}</a>
                             @endcan
+                            @elseif($borrow->borrow_status==='rejected')
+                            <button class="btn btn-danger" disabled>
+                                <i class="fas fa-check-circle"></i> {{ __('borrows.Rejected') }}
+                            </button>
                             @endif
                         </td>
                         <td>{{ $borrow->item_name }}</td>
@@ -113,8 +119,10 @@
                             <span class="badge bg-success">{{ __('borrows.Completed') }}</span>
                             @elseif($borrow->borrow_status == 'pending')
                             <span class="badge bg-warning">{{ __('borrows.Pending') }}</span>
-                            @else
+                            @elseif($borrow->borrow_status == 'borrowed')
                             <span class="badge bg-primary">{{ __('borrows.Borrowed') }}</span>
+                            @else
+                            <span class="badge bg-danger">{{ __('borrows.Rejected') }}</span>
                             @endif
                         </td>
                     </tr>

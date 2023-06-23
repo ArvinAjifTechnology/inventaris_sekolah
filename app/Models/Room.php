@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 class Room extends Model
 {
     use HasFactory;
+    protected $guarded = ['id'];
 
     public static function getAll()
     {
@@ -20,8 +21,8 @@ class Room extends Model
         $result = DB::select($query);
 
         // Mengonversi hasil ke dalam bentuk koleksi objek jika diperlukan
-        $rooms = collect($result);
-        return $rooms;
+        // $rooms = collect($result);
+        return $result;
     }
 
     public static function getAllForOperator()

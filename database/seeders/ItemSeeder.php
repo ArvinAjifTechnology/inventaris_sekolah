@@ -25,7 +25,7 @@ class ItemSeeder extends Seeder
                 'condition' => $faker->randomElement(['good', 'fair', 'bad']),
                 'rental_price' => $faker->randomFloat(2, 10, 100),
                 'late_fee_per_day' => $faker->randomFloat(2, 1, 10),
-                'quantity' => $faker->numberBetween(1, 20),
+                'quantity' => $faker->numberBetween(1, 99999),
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
