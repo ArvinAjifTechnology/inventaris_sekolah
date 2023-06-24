@@ -3,13 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -24,7 +26,6 @@ class User extends Authenticatable
         'full_name',
         'user_code',
         'username',
-        'name',
         'email',
         'role',
         'gender',
@@ -63,8 +64,7 @@ class User extends Authenticatable
 
     public static function insert($request)
     {
-        DB::insert('INSERT INTO users (name,username,email,first_name, last_name,role, gender, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
-            $request->input('name'),
+        DB::insert('INSERT INTO users (username,email,first_name, last_name,role, gender, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [
             $request->input('username'),
             $request->input('email'),
             $request->input('first_name'),
@@ -75,9 +75,9 @@ class User extends Authenticatable
         ]);
     }
 
-    public static function edit($request, $username)
+    public static function edit($request, $id)
     {
-        DB::update('UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, role = ?, gender = ?, password = ? WHERE username = ?', [
+        DB::update('UPDATE users SET username = ?, email = ?, first_name = ?, last_name = ?, role = ?, gender = ?, password = ? WHERE id = ?', [
             $request->input('username'),
             $request->input('email'),
             $request->input('first_name'),
@@ -85,7 +85,7 @@ class User extends Authenticatable
             $request->input('role'),
             $request->input('gender'),
             bcrypt($request->input('email')),
-            $username
+            $id
         ]);
     }
 

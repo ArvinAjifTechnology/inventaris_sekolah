@@ -17,7 +17,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         User::create([
-            'name' => 'Admin',
             'username' => 'admin',
             'user_code' => 'ADM' . Str::random(6),
             'email' => 'admin@example.com',
@@ -31,7 +30,6 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Operator',
             'username' => 'operator',
             'user_code' => 'OPT' . Str::random(6),
             'email' => 'operator@example.com',
@@ -45,10 +43,9 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
-            'name' => 'Borrower',
             'username' => 'borrower',
             'user_code' => 'BWR' . Str::random(6),
-            'email' => 'borrower@example.com',
+            'email' => 'arvinajif5@gmail.com',
             'first_name' => 'David',
             'last_name' => 'Johnson',
             'role' => 'borrower',
@@ -57,18 +54,18 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
         ]);
-        User::create([
-            'name' => 'Borrower',
-            'username' => 'borrower',
-            'user_code' => 'BWR' . Str::random(6),
-            'email' => 'borrower@example.com',
-            'first_name' => 'David',
-            'last_name' => 'Johnson',
-            'role' => 'borrower',
-            'gender' => 'laki-laki',
-            'email_verified_at' => now(),
-            'password' => Hash::make('password'),
-            'remember_token' => Str::random(10),
-        ]);
+        // User::create([
+        //     // 'name' => 'Borrower',
+        //     'username' => 'borrower',
+        //     'user_code' => 'BWR' . Str::random(6),
+        //     'email' => 'borrower@example.com',
+        //     'first_name' => 'David',
+        //     'last_name' => 'Johnson',
+        //     'role' => 'borrower',
+        //     'gender' => 'laki-laki',
+        //     'email_verified_at' => now(),
+        //     'password' => Hash::make('password'),
+        //     'remember_token' => Str::random(10),
+        // ]);
     }
 }

@@ -77,36 +77,37 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $user = DB::select('select * from users  where username = ?', [$id]);
-        $user = collect($user);
+        $user = DB::selectOne('select * from users  where id = ?', [$id]);
+        // $user = collect($user);
         return view('users.edit', compact('user', 'id'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $username)
+    public function update(Request $request, string $id)
     {
-        $user = DB::select('select * from users where username = ?', [$username]);
+        $user = DB::selectOne('select * from users where id = ?', [$id]);
+        // $user = User::where('id', $id)->first();
+        // dd($user);
         // $user = collect($user);
 
         $validator = Validator::make($request->all(), [
             'first_name' => ['required', 'string'],
             'last_name' => ['required', 'string'],
             // 'user_code' => ['required', 'string', Rule::unique('users')->ignore($user[0]->id)],
-            'username' => ['required', 'string', Rule::unique('users')->ignore($user[0]->id)],
-            'email' => ['required', 'email', Rule::unique('users')->ignore($user[0]->id)],
+            'username' => ['required', 'string', Rule::unique('users')->ignore($user->id)],
+            'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
             'role' => ['required', 'string'],
             'gender' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {
-            return redirect('/admin/users/'. $username.'/edit')
+            return redirect('/admin/users/' . $id . '/edit')
                 ->withErrors($validator)
                 ->withInput();
         }
-        $fullName = $request->input('first_name') . $request->input('last_name');
-        User::edit($request, $username);
+        User::edit($request, $id);
 
         return redirect('/admin/users')->withErrors($validator)->withSuccess('Selamat Data Berhasil Di Update')->with('status', 'Selamat Data Berhasil Di Update')->withInput();
     }
@@ -121,11 +122,11 @@ class UserController extends Controller
             $roomIds = DB::delete('DELETE FROM rooms WHERE user_id = ?', [$user->id]); // Get the room IDs associated with the user
             $borrowIds = DB::delete('DELETE FROM borrows WHERE user_id = ?', [$user->id]); // Get the borrow IDs associated with the user
 
-        User::destroy($username); // Delete the user
+            User::destroy($username); // Delete the user
         }
         if (Gate::allows('admin')) {
             return redirect('/admin/users')->with('status', 'Data berhasil Di Hapus');
-        }elseif (Gate::allows('operator')) {
+        } elseif (Gate::allows('operator')) {
             return redirect('/oprator/users')->with('status', 'Data berhasil Di Hapus');
         } else {
             abort(403, 'Unauthorized');

@@ -51,7 +51,7 @@
             <div class="row d-flex align-items-center">
                 <div class="col-lg-6 text-lg-left text-center">
                     <div class="copyright">
-                        &copy; Copyright <strong>Vesperr</strong>. All Rights Reserved
+                       &copy; Copyright {{ date('Y'); }}  <strong>inventaris_sekolah.com</strong>. All Rights Reserved
                     </div>
                     <div class="credits">
                         <!-- All the links in the footer should remain intact. -->
@@ -65,8 +65,6 @@
                     <nav class="footer-links text-lg-right text-center pt-2 pt-lg-0">
                         <a href="#intro" class="scrollto">Home</a>
                         <a href="#about" class="scrollto">About</a>
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Use</a>
                     </nav>
                 </div>
             </div>

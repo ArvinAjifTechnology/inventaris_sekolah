@@ -28,7 +28,7 @@ class Borrow extends Model
 
         // Menghitung data untuk minggu ini
         $currentWeekData = self::whereBetween('updated_at', [$currentWeekStart, $currentWeekEnd])->sum('sub_total');
-
+        // dd($currentWeekStart, $currentWeekEnd, $currentWeekData);
         return $currentWeekData;
     }
 
@@ -40,7 +40,7 @@ class Borrow extends Model
 
         // Menghitung data untuk minggu sebelumnya
         $previousWeekData = self::whereBetween('updated_at', [$previousWeekStart, $previousWeekEnd])->sum('sub_total');
-        // dd($previousWeekData);
+        // dd($previousWeekStart, $previousWeekEnd, $previousWeekData);
 
         return $previousWeekData;
     }
@@ -233,7 +233,7 @@ class Borrow extends Model
         $borrow->total_rental_price = 0;
         $borrow->late_fee = 0;
         $borrow->sub_total = 0;
-        $borrow->borrow_status = 'canceled';
+        $borrow->borrow_status = substr('rejected', 0, 8);
         $borrow->update();
 
         $borrow->user->notify(new BorrowNotification($borrow));

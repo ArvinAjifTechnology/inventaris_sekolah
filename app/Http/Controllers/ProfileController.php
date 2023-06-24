@@ -49,7 +49,7 @@ class ProfileController extends Controller
 
     public function changePassword(Request $request)
     {
-        $request->validate([
+        $validator = $request->validate([
             'current_password' => 'required',
             'password' => 'required|string|min:8|confirmed',
         ]);
@@ -64,6 +64,6 @@ class ProfileController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect('/dashboard')->with('success', 'Password updated successfully.');
+        return redirect('/dashboard')->with('success', 'Password updated successfully.')->withErrors($validator);
     }
 }

@@ -22,20 +22,13 @@ class RoomController extends Controller
         if (Gate::allows('admin')) {
             // akses yang diizinkan untuk admin
             $rooms = Room::getAll(); //model
+            $rooms = collect($rooms);
         } elseif (Gate::allows('operator')) {
             $rooms = Room::getAllForOperator();
+            $rooms = collect($rooms);
         } else {
             abort(403, 'Unauthorized');
         }
-        if (Gate::allows('admin')) {
-            // akses yang diizinkan untuk admin
-            $rooms = Room::getAll(); //model
-        } elseif (Gate::allows('operator')) {
-            $rooms = Room::getAllForOperator();
-        } else {
-            abort(403, 'Unauthorized');
-        }
-
         return view('rooms.index', compact('rooms'));
     }
 
@@ -60,7 +53,7 @@ class RoomController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'room_name' => ['required', 'string', Rule::unique('rooms')],
+            'room_name' => ['required', 'string:50', Rule::unique('rooms')],
             // 'room_code' => ['required', 'string', Rule::unique('rooms')],
             'user_id' => ['required', 'integer'],
             'description' => ['required', 'string'],

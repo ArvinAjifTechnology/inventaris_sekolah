@@ -1,6 +1,5 @@
 @extends('layouts.main')
 
-
 @section('content')
 <div class="container">
     <div class="row justify-content-center d-flex align-content-center mt-3">
@@ -20,7 +19,7 @@
                 <input type="hidden" name="item_id" value="{{ $request->item_id }}">
                 <input type="hidden" name="user_id" value="{{ $request->user_id }}">
                 <div class="form-group">
-                    <label for="borrow_date">Borrow Date</label>
+                    <label for="borrow_date">{{ __('borrowrequest.BorrowDate') }}</label>
                     <input type="date" id="borrow_date" name="borrow_date"
                         class="form-control @error('borrow_date') is-invalid @enderror"
                         value="{{ old('borrow_date', date('Y-m-d')) }}" min="{{ date('Y-m-d') }}" required>
@@ -29,7 +28,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="return_date">Return Date</label>
+                    <label for="return_date">{{ __('borrowrequest.ReturnDate') }}</label>
                     <input type="date" id="return_date" name="return_date"
                         class="form-control @error('return_date') is-invalid @enderror"
                         value="{{ old('return_date', date('Y-m-d')) }}" min="{{ date('Y-m-d', strtotime('+1 day')) }}"
@@ -39,7 +38,7 @@
                     @enderror
                 </div>
                 <div class="form-group">
-                    <label for="borrow_quantity">Jumlah Pinjam</label>
+                    <label for="borrow_quantity">{{ __('borrowrequest.BorrowQuantity') }}</label>
                     <input type="text" id="borrow_quantity" name="borrow_quantity"
                         class="form-control @error('borrow_quantity') is-invalid @enderror"
                         value="{{ old('borrow_quantity') }}" required>
@@ -47,7 +46,7 @@
                     <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
-                <button type="submit" class="btn btn-primary mt-4">Next</button>
+                <button type="submit" class="btn btn-primary mt-4">{{ __('borrowrequest.Next') }}</button>
             </form>
 
         </div>
