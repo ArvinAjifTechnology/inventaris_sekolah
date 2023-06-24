@@ -24,6 +24,7 @@ return [
     'BorrowStatus' => 'Status Peminjaman',
     'Show' => 'Tampilkan',
     'Completed' => 'Selesai',
+    'Borowed' =>'Di Pinjam',
     'Pending' => 'Belum Diverifikasi',
     'Rejected' => 'Di Tolak',
     'Verify' => 'Verifikasi',

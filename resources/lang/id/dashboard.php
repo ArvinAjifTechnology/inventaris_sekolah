@@ -12,7 +12,7 @@ return [
     'Users' => 'Pengguna',
     'Welcome' => 'Selamat datang',
     'CountOfUsers' => 'Jumlah Pengguna',
-    'CountOfRooms' => 'Jumlah Kamar',
+    'CountOfRooms' => 'Jumlah Ruangan',
     'CountOfBorrows' => 'Jumlah Peminjaman',
     'CountOfItems' => 'Jumlah Barang',
     'Items' => 'Barang',

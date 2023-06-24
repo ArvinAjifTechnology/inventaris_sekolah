@@ -73,6 +73,9 @@
             </li>
 
             @endcan @can('operator')
+                <li class="side-nav-title side-nav-item">
+                    {{ __("menu.MasterData") }}
+                </li>
             <li class="side-nav-item">
                 <a href="{{ url('operator/rooms') }}" class="side-nav-link">
                     <i class="uil-window"></i>
@@ -106,9 +109,6 @@
                 </a>
             </li>
             @endcan @can('operator')
-            <li class="side-nav-title side-nav-item">
-                {{ __("menu.MasterData") }}
-            </li>
             <li class="side-nav-item">
                 <a href="{{ url('operator/borrows') }}" class="side-nav-link">
                     <i class="uil-shopping-cart-alt"></i>

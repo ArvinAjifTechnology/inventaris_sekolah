@@ -20,7 +20,8 @@ class BorrowController extends Controller
         // $borrows = Borrow::latest()->where('user_id', auth()->user()->id)->get();
         // $borrows = DB::select("SELECT * FROM borrows WHERE user_id = " . auth()->user()->id . " ORDER BY created_at DESC");
         $user_id = auth()->user()->id;
-        $borrows = DB::select("SELECT borrows.*, items.item_name, CONCAT(users.first_name, ' ', users.last_name) AS full_name FROM borrows LEFT JOIN items ON borrows.item_id = items.id LEFT JOIN users ON borrows.user_id = users.id WHERE borrows.user_id = $user_id AND items.condition = 'good' ORDER BY borrows.created_at DESC");
+        $borrows = DB::select("SELECT borrows.*, items.item_name, CONCAT(users.first_name, ' ', users.last_name) AS full_name FROM borrows  JOIN items ON borrows.item_id = items.id  JOIN users ON borrows.user_id = users.id WHERE borrows.user_id = $user_id  ORDER BY borrows.created_at DESC");
+        $borrows = collect($borrows);
 
         return view('borrower.index', compact('borrows'));
     }
