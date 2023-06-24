@@ -1,12 +1,19 @@
 <x-mail::message>
-# Introduction
+    # Dari Inventaris Sekolah
+    Halo {{ $borrow->user->full_name }},
 
-The body of your message.
+    Rincian Pengajuan Peminjaman Anda dengan Kode Verifikasi Peminjaman: {{ $borrow->verification_code_for_borrow_request }}
+    yaitu sebagai berikut:
 
-<x-mail::button :url="''">
-Button Text
-</x-mail::button>
+    - Nama Peminjam             : {{ $borrow->user->full_name }}
+    - Nama Barang               : {{ $borrow->item->item_name }}
+    - Kode Barang               : {{ $borrow->item->item_code }}
+    - Tanggal Peminjaman        : {{ $borrow->borrow_date }}
+    - Tanggal Pengembalian      : {{ $borrow->return_date }}
+    - Jumlah Barang             : {{ $borrow->borrow_quantity }}
 
-Thanks,<br>
-{{ config('app.name') }}
+    Maaf, Pengajuan Peminjaman Anda telah ditolak  Oleh {{ auth()->user()->name() }}.
+
+    Terima kasih,
+    {{ config('app.name') }}
 </x-mail::message>

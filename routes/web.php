@@ -42,6 +42,8 @@ Route::get('locale/{locale}', function ($locale) {
 
     return redirect()->back();
 })->name('locale');
+//Route Yang Tidak Perlu Login
+Route::view('/about', 'about.index');
 // Route Contact
 Route::get('/contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('/contact-send-to-whatsapp', [ContactController::class, 'sendToWhatsapp'])->name('contact.send-to-whatsapp');

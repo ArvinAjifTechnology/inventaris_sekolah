@@ -34,7 +34,7 @@
                                 class="form-control" required>
                         </div>
 
-                        <button type="submit" class="btn btn-primary">{{ __('profile.UpdatePassword') }}</button>
+                        <button type="submit" class="btn btn-primary mt-3">{{ __('profile.UpdatePassword') }}</button>
                     </form>
                 </div>
             </div>

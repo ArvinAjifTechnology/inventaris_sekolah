@@ -25,7 +25,7 @@ return [
     'Completed' => 'Completed',
     'Pending' => 'Pending Verification',
     'Rejected' => 'Rejected',
-    'Borowed' => 'Borrowed',
+    'Borrowed' => 'Borrowed',
     'Verify' => 'Verify',
     'Reject' => 'Reject',
     'Return' => 'Return',
