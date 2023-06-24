@@ -189,6 +189,74 @@
         </div>
         <!-- container -->
         @endcan
+        @can('operator')
+        <div class="row">
+            <div class="col-xl-4 col-lg-6">
+                <div class="card widget-flat">
+                    <div class="card-body">
+                        <div class="float-end">
+                            <i class="mdi mdi-cart-plus widget-icon"></i>
+                        </div>
+                        <h5 class="text-muted fw-normal mt-0" title="{{ __('dashboard.NumberOfRooms') }}">{{
+                            __('dashboard.Rooms') }}</h5>
+                        <h3 class="mt-3 mb-3">{{ $room_count }}</h3>
+                        <p class="mb-0 text-muted">
+                            <span class="text-nowrap">{{ __('dashboard.CountOfRooms') }}</span>
+                        </p>
+                    </div> <!-- end card-body -->
+                </div> <!-- end card -->
+            </div> <!-- end col -->
+
+            <div class="col-xl-4 col-lg-6">
+                <div class="card widget-flat">
+                    <div class="card-body">
+                        <div class="float-end">
+                            <i class="mdi mdi-pulse widget-icon"></i>
+                        </div>
+                        <h5 class="text-muted fw-normal mt-0" title="{{ __('dashboard.Borrows') }}">{{
+                            __('dashboard.Borrows') }}</h5>
+                        <h3 class="mt-3 mb-3">{{ $borrowed_quantity }}</h3>
+                        <p class="mb-0 text-muted">
+                            <span class="text-nowrap">{{ __('dashboard.CountOfBorrows') }}</span>
+                        </p>
+                    </div> <!-- end card-body -->
+                </div> <!-- end card -->
+            </div> <!-- end col -->
+
+            <div class="col-xl-4 col-lg-6">
+                <div class="card widget-flat">
+                    <div class="card-body">
+                        <div class="float-end">
+                            <i class="mdi mdi-pulse widget-icon"></i>
+                        </div>
+                        <h5 class="text-muted fw-normal mt-0" title="{{ __('dashboard.Items') }}">{{
+                            __('dashboard.Items') }}</h5>
+                        <h3 class="mt-3 mb-3">{{ $item_count }}</h3>
+                        <p class="mb-0 text-muted">
+                            <span class="text-nowrap">{{ __('dashboard.CountOfItems') }}</span>
+                        </p>
+                    </div> <!-- end card-body -->
+                </div> <!-- end card -->
+            </div> <!-- end col -->
+        </div> <!-- end row -->
+        @endcan
+        @can('borrower')
+        <div class="col-xl-4 col-lg-6">
+            <div class="card widget-flat">
+                <div class="card-body">
+                    <div class="float-end">
+                        <i class="mdi mdi-pulse widget-icon"></i>
+                    </div>
+                    <h5 class="text-muted fw-normal mt-0" title="{{ __('dashboard.Borrows') }}">{{
+                        __('dashboard.Borrows') }}</h5>
+                    <h3 class="mt-3 mb-3">{{ $borrowed_quantity }}</h3>
+                    <p class="mb-0 text-muted">
+                        <span class="text-nowrap">{{ __('dashboard.CountOfBorrows') }}</span>
+                    </p>
+                </div> <!-- end card-body -->
+            </div> <!-- end card -->
+        </div> <!-- end col -->
+        @endcan
     </div>
     <!-- content -->
     @endsection

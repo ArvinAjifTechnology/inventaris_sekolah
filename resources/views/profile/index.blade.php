@@ -16,6 +16,7 @@
     </div>
     <div class="card-footer">
         <a href="{{ route('profile.edit') }}" class="btn btn-primary"> <i class="fas fa-edit"></i> Edit Your Profile</a>
+        <a href="{{ route('password.update') }}" class="btn btn-primary"> <i class="fas fa-edit"></i> Ubah Password</a>
     </div>
 </div>
 @endsection

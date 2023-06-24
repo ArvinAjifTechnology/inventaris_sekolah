@@ -6,7 +6,7 @@
     <div class="row d-flex justify-content-center align-items-center" style="height: 100vh;">
         <div class="col-md-6">
             <div class="card">
-                <div class="card-header">{{ __('profile.Login') }}</div>
+                <div class="card-header">{{ __('profile.ChangePassword') }}</div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('password.update') }}">
                         @csrf

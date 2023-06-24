@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'Login' => 'Masuk',
+    'ChangePassword' => 'Ubah Password',
     'CurrentPassword' => 'Password Saat Ini',
     'NewPassword' => 'Password Baru',
     'ConfirmNewPassword' => 'Konfirmasi Password Baru',

@@ -25,7 +25,7 @@
 
                 <!-- item-->
                 <a href="{{ url('locale/en') }}" class="dropdown-item notify-item">
-                    <img src="{{ asset('') }}assets/images/flags/en.jpg" alt="user-image" class="me-1" height="12">
+                    <img src="{{ asset('') }}assets/images/flags/en.png" alt="user-image" class="me-1" height="12">
                     <span class="align-middle">English</span>
                 </a>
 
